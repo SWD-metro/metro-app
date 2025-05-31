@@ -56,7 +56,7 @@ import androidx.navigation.NavHostController
 import org.com.hcmurs.MainViewModel
 import org.com.hcmurs.Screen
 import org.com.hcmurs.common.enum.LoadStatus
-import org.com.hcmurs.R // Đảm bảo đã import đúng gói R của bạn
+import org.com.hcmurs.R
 
 @Composable
 fun LoginScreen(
@@ -314,7 +314,7 @@ fun LoginScreen(
                             fontSize = 14.sp
                         )
                         TextButton(
-                            onClick = { /* TODO: Navigate to Register screen */ }
+                            onClick = { navController.navigate(Screen.Register.route) }
                         ) {
                             Text(
                                 text = "Sign Up",

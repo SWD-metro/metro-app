@@ -7,6 +7,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -17,9 +18,11 @@ import org.com.hcmurs.ui.screens.detail.DetailScreen
 import org.com.hcmurs.ui.screens.home.HomeScreen
 import org.com.hcmurs.ui.screens.home.HomeViewModel
 import org.com.hcmurs.ui.screens.login.LoginScreen
+import org.com.hcmurs.ui.screens.register.RegisterScreen
 
 sealed class Screen(val route: String) {
     object Login : Screen("login")
+    object Register: Screen("register")
     object Home : Screen("home")
     object Detail : Screen("detail")
     object AddOrEdit : Screen("addOrEdit")
@@ -44,6 +47,9 @@ fun Navigation() {
     NavHost(navController = navController, startDestination = Screen.Login.route) {
         composable(Screen.Login.route) {
             LoginScreen(navController, viewModel = hiltViewModel(), mainViewModel)
+        }
+        composable(Screen.Register.route) {
+            RegisterScreen(navController, viewModel = hiltViewModel(), mainViewModel)
         }
         composable(Screen.Home.route) {
             HomeScreen(navController, viewModel = hiltViewModel<HomeViewModel>(), mainViewModel)
