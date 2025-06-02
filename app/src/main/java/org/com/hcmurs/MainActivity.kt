@@ -14,6 +14,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.com.hcmurs.ui.theme.hcmursTheme
 import dagger.hilt.android.AndroidEntryPoint
+import org.com.hcmurs.ui.screens.metro.qrcode.MetroTicketApp
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -22,7 +23,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             hcmursTheme {
-                Navigation()
+                MetroTicketApp()
             }
         }
     }
