@@ -62,7 +62,16 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation("androidx.compose.material:material-icons-extended:1.6.1")
 
+    implementation("com.google.zxing:core:3.5.2")
+    implementation("com.journeyapps:zxing-android-embedded:4.3.0")
 
+    implementation("androidx.camera:camera-core:1.3.1")
+    implementation("androidx.camera:camera-camera2:1.3.1")
+    implementation("androidx.camera:camera-lifecycle:1.3.1")
+    implementation("androidx.camera:camera-view:1.3.1")
+
+    implementation("com.google.code.gson:gson:2.10.1")
+    implementation("com.google.accompanist:accompanist-permissions:0.32.0")
     implementation(libs.hilt.android)
     //kapt(libs.hilt.android.compiler)
     ksp(libs.hilt.android.compiler)
