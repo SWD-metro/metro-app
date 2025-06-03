@@ -23,7 +23,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             hcmursTheme {
-                MetroTicketApp()
+                Navigation()
             }
         }
     }
