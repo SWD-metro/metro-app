@@ -5,42 +5,52 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import org.com.hcmurs.ui.theme.hcmursTheme
 import dagger.hilt.android.AndroidEntryPoint
-import org.com.hcmurs.ui.screens.metro.qrcode.MetroTicketApp
+import org.com.hcmurs.ui.theme.HcmursAppTheme
+
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
         setContent {
-            hcmursTheme {
-                Navigation()
+            HcmursAppTheme {
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
+                ) {
+                    Navigation()
+                }
             }
         }
     }
 }
 
+
+/*
 @Composable
 fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
+    Surface(
+        modifier = modifier,
+        color = MaterialTheme.colorScheme.surface
+    ) {
+        androidx.compose.material3.Text(
+            text = "Hello $name!",
+        )
+    }
 }
 
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
-    hcmursTheme {
-        Greeting("Metro HCM", Modifier.padding(16.dp))
+    HcmursAppTheme { // Sử dụng tên theme đã thống nhất: HcmursAppTheme
+        Greeting("Metro HCM")
     }
 }
+*/

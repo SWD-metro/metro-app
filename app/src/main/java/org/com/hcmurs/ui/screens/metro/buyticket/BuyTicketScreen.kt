@@ -14,24 +14,28 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ConfirmationNumber
-import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Home // Không còn dùng Home, có thể xóa import này nếu không dùng
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -41,157 +45,167 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import org.com.hcmurs.ui.theme.HcmursAppTheme // Import theme của bạn
 
+// Data classes remains the same, they are good
 data class TicketOption(
     val title: String,
     val price: String,
     val icon: ImageVector = Icons.Default.ConfirmationNumber
 )
+
 data class RouteInfo(
     val from: String,
-    val to: String,
     val details: String = "Xem chi tiết"
 )
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BuyTicketScreen(navController: NavHostController) {
-
-    Scaffold (
+    Scaffold(
         topBar = {
             BuyTicketTopBar(
                 onBackClick = { navController.popBackStack() }
             )
-        }
-    ) { padding ->
-        Column (
-            modifier = Modifier.fillMaxSize()
-                .padding(padding)
-                .background(
-                    brush = Brush.verticalGradient(
-                        colors = listOf(Color(0xFFE3F2FD), Color(0xFFFFFFFF))
-                    )
-                )
+        },
+        containerColor = MaterialTheme.colorScheme.background // Nền của Scaffold là màu background của theme
+    ) { paddingValues ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
                 .verticalScroll(rememberScrollState())
-                .padding(16.dp)
-        ){
+                .padding(horizontal = 16.dp, vertical = 8.dp) // Điều chỉnh padding tổng thể
+        ) {
             // Welcome section
             WelcomeCard()
 
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // Hot section
-            HotSection()
-
             Spacer(modifier = Modifier.height(24.dp))
+
+            // Hot section (Changed to use a more generic SectionHeader)
+            SectionHeader(title = "Vé Nổi bật", icon = "🔥")
+
+            Spacer(modifier = Modifier.height(12.dp))
 
             // Regular tickets
             TicketOptionsSection(navController)
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(32.dp))
 
-            // Student section
-            StudentSection(navController)
+            // Student/Discount section
+            SectionHeader(title = "Ưu đãi", icon = "🌟")
+            Spacer(modifier = Modifier.height(12.dp))
+            StudentDiscountSection(navController)
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(32.dp))
 
             // Routes section
+            SectionHeader(title = "Tuyến đường", icon = "🗺️")
+            Spacer(modifier = Modifier.height(12.dp))
             RoutesSection()
-            Spacer(modifier = Modifier.height(24.dp))
-            LongTermTicketSection()
-            Spacer(modifier = Modifier.height(24.dp))
-            TicketOptionsSection(navController)
+
+            Spacer(modifier = Modifier.height(32.dp))
+
+            // Long term ticket section
+            SectionHeader(title = "Vé dài hạn", icon = "🗓️")
+            Spacer(modifier = Modifier.height(12.dp))
+            LongTermTicketSection(navController)
+
             Spacer(modifier = Modifier.height(80.dp)) // Space for bottom navigation
         }
-
     }
 }
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BuyTicketTopBar(onBackClick: () -> Unit) {
     CenterAlignedTopAppBar(
         title = {
-            Box(
-                modifier = Modifier.fillMaxWidth(),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = "Mua vé",
-                    color = Color(0xFF1565C0),
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Medium
-                )
-            }
+            Text(
+                text = "Mua vé",
+                color = MaterialTheme.colorScheme.onSurface, // Màu chữ tiêu đề từ theme
+                style = MaterialTheme.typography.titleLarge, // Sử dụng typography từ theme
+                fontWeight = FontWeight.Bold // Có thể giữ fontweight nếu muốn nổi bật hơn style mặc định
+            )
         },
         navigationIcon = {
             IconButton(onClick = onBackClick) {
                 Icon(
-                    imageVector = Icons.Default.Home,
-                    contentDescription = "Home",
-                    tint = Color(0xFF1565C0)
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = "Back",
+                    tint = MaterialTheme.colorScheme.primary // Màu icon từ theme
                 )
             }
         },
-        colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = Color.Transparent
+        colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+            containerColor = Color.Transparent, // Nền trong suốt
+            titleContentColor = MaterialTheme.colorScheme.onSurface // Đảm bảo màu chữ tiêu đề đúng
         )
     )
 }
+
 @Composable
 fun WelcomeCard() {
-    Card (
+    Card(
         modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        shape = RoundedCornerShape(20.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer), // Màu nền từ theme
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
-        Row (
+        Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
+                .padding(20.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Character icon
-            Text(
-                text = "🦁",
-                fontSize = 40.sp,
-                modifier = Modifier.padding(end = 12.dp)
-            )
+            Surface(
+                modifier = Modifier.size(56.dp),
+                shape = CircleShape,
+                color = MaterialTheme.colorScheme.onPrimary // Màu trắng tinh khiết trên nền primary
+            ) {
+                Box(contentAlignment = Alignment.Center) {
+                    Text(
+                        text = "🦁",
+                        fontSize = 32.sp // Giữ fontSize cho emoji vì typography không áp dụng cho emoji
+                    )
+                }
+            }
+            Spacer(modifier = Modifier.width(16.dp))
 
             Column {
                 Text(
                     text = "Chào mừng, Anh Tú!",
-                    fontSize = 18.sp,
+                    style = MaterialTheme.typography.titleMedium, // Sử dụng typography từ theme
                     fontWeight = FontWeight.Bold,
-                    color = Color(0xFF1565C0)
+                    color = MaterialTheme.colorScheme.onPrimaryContainer // Màu chữ tương phản từ theme
                 )
                 Text(
                     text = "Bắt đầu các trải nghiệm mới cùng Metro nhé!",
-                    fontSize = 14.sp,
-                    color = Color(0xFF666666)
+                    style = MaterialTheme.typography.bodyMedium, // Sử dụng typography từ theme
+                    color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.8f) // Màu chữ nhạt hơn từ theme
                 )
             }
         }
     }
 }
+
 @Composable
-fun HotSection() {
+fun SectionHeader(title: String, icon: String) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.padding(vertical = 8.dp)
+        modifier = Modifier.padding(vertical = 4.dp)
     ) {
-        Text(text = "🔥", fontSize = 20.sp)
-        Spacer(modifier = Modifier.width(8.dp))
+        Text(text = icon, fontSize = 24.sp) // Giữ fontSize cho emoji
+        Spacer(modifier = Modifier.width(12.dp))
         Text(
-            text = "Nổi bật",
-            fontSize = 18.sp,
-            fontWeight = FontWeight.Bold,
-            color = Color(0xFF1565C0)
+            text = title,
+            style = MaterialTheme.typography.headlineSmall, // Sử dụng typography từ theme
+            fontWeight = FontWeight.ExtraBold,
+            color = MaterialTheme.colorScheme.onSurface // Màu chữ tiêu đề từ theme
         )
-        Spacer(modifier = Modifier.width(8.dp))
-        Text(text = "🔥", fontSize = 20.sp)
     }
 }
+
 @Composable
 fun TicketOptionsSection(navController: NavHostController) {
     val ticketOptions = listOf(
@@ -201,29 +215,24 @@ fun TicketOptionsSection(navController: NavHostController) {
     )
 
     Column(
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         ticketOptions.forEach { ticket ->
-            TicketCard(ticket = ticket,
-                navController = navController)
-
+            TicketCard(ticket = ticket, navController = navController)
         }
     }
 }
 
 @Composable
-fun TicketCard(ticket: TicketOption,
-               navController: NavHostController
-) {
+fun TicketCard(ticket: TicketOption, navController: NavHostController) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable() {
+            .clickable {
                 navController.navigate("ticket_detail/${ticket.title}/${ticket.price}")
-
             },
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface), // Màu nền card từ theme
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Row(
@@ -232,105 +241,76 @@ fun TicketCard(ticket: TicketOption,
                 .padding(20.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Icon(
-                imageVector = ticket.icon,
-                contentDescription = ticket.title,
-                tint = Color(0xFF4A90E2),
-                modifier = Modifier.size(32.dp)
-            )
-
+            Surface(
+                modifier = Modifier.size(48.dp),
+                shape = CircleShape,
+                color = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f) // Nền màu chính nhạt từ theme
+            ) {
+                Box(contentAlignment = Alignment.Center) {
+                    Icon(
+                        imageVector = ticket.icon,
+                        contentDescription = ticket.title,
+                        tint = MaterialTheme.colorScheme.primary, // Màu icon từ theme
+                        modifier = Modifier.size(28.dp)
+                    )
+                }
+            }
             Spacer(modifier = Modifier.width(16.dp))
 
             Column {
                 Text(
                     text = ticket.title,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Medium,
-                    color = Color(0xFF333333)
+                    style = MaterialTheme.typography.titleMedium, // Sử dụng typography từ theme
+                    fontWeight = FontWeight.SemiBold,
+                    color = MaterialTheme.colorScheme.onSurface // Màu chữ trên surface từ theme
                 )
                 Text(
                     text = ticket.price,
-                    fontSize = 14.sp,
-                    color = Color(0xFF666666)
+                    style = MaterialTheme.typography.bodyLarge, // Sử dụng typography từ theme
+                    fontWeight = FontWeight.Medium,
+                    color = MaterialTheme.colorScheme.secondary // Màu giá riêng biệt từ theme
                 )
             }
         }
     }
 }
+
 @Composable
-fun StudentSection(navController: NavHostController) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.padding(vertical = 8.dp)
-    ) {
-        Text(
-            text = "Ưu đãi",
-            fontSize = 18.sp,
-            fontWeight = FontWeight.Bold,
-            color = Color(0xFF1565C0)
-        )
-        Spacer(modifier = Modifier.width(8.dp))
-        Text(
-            text = "Học sinh",
-            fontSize = 18.sp,
-            fontWeight = FontWeight.Bold,
-            color = Color(0xFF1565C0)
-        )
-        Text(text = "🎒", fontSize = 20.sp, modifier = Modifier.padding(start = 4.dp))
-        Spacer(modifier = Modifier.width(16.dp))
-        Text(
-            text = "Sinh viên",
-            fontSize = 18.sp,
-            fontWeight = FontWeight.Bold,
-            color = Color(0xFF1565C0)
-        )
-        Text(text = "🎓", fontSize = 20.sp, modifier = Modifier.padding(start = 4.dp))
-    }
-
-    Spacer(modifier = Modifier.height(12.dp))
-
+fun StudentDiscountSection(navController: NavHostController) {
     TicketCard(
         ticket = TicketOption("Vé tháng HSSV", "150.000 đ")
         ,navController = navController
     )
 }
 
-@Composable()
-fun LongTermTicketSection(){
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.padding(vertical = 8.dp)
-    ){
-        Text(text = "🔥", fontSize = 20.sp)
-
-        Text(
-            text = " Đừng quên mua vé dài hạn",
-            fontSize = 18.sp,
-            fontWeight = FontWeight.Bold,
-            color = Color(0xFF1565C0)
-        )
-        Spacer(modifier = Modifier.width(8.dp))
-        Text(
-            text = "🚆",
-            fontSize = 20.sp
-        )
-    }
-
+@Composable
+fun LongTermTicketSection(navController: NavHostController) {
+    TicketCard(
+        ticket = TicketOption("Vé quý", "850.000 đ"),
+        navController = navController
+    )
+    Spacer(modifier = Modifier.height(16.dp))
+    TicketCard(
+        ticket = TicketOption("Vé năm", "3.000.000 đ"),
+        navController = navController
+    )
 }
+
 @Composable
 fun RoutesSection() {
     val routes = listOf(
-        RouteInfo("Đi từ ga Bến Thành", ""),
-        RouteInfo("Đi từ ga Ba Son", "")
+        RouteInfo("Đi từ ga Bến Thành"),
+        RouteInfo("Đi từ ga Ba Son"),
+        RouteInfo("Đi từ ga Văn Thánh")
     )
 
-    Column {
+    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
         routes.forEach { route ->
             RouteCard(route = route)
-            Spacer(modifier = Modifier.height(12.dp))
         }
     }
 }
+
 @Composable
 fun RouteCard(route: RouteInfo) {
     Card(
@@ -338,7 +318,7 @@ fun RouteCard(route: RouteInfo) {
             .fillMaxWidth()
             .clickable { /* Handle route selection */ },
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface), // Màu nền card từ theme
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Row(
@@ -351,31 +331,29 @@ fun RouteCard(route: RouteInfo) {
             Column {
                 Text(
                     text = route.from,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Medium,
-                    color = Color(0xFF1565C0)
+                    style = MaterialTheme.typography.titleMedium, // Sử dụng typography từ theme
+                    fontWeight = FontWeight.SemiBold,
+                    color = MaterialTheme.colorScheme.onSurface // Màu chữ trên surface từ theme
                 )
-                if (route.to.isNotEmpty()) {
-                    Text(
-                        text = route.to,
-                        fontSize = 14.sp,
-                        color = Color(0xFF666666)
-                    )
-                }
             }
 
             Text(
-                text = "Xem chi tiết",
-                fontSize = 14.sp,
-                color = Color(0xFF4A90E2),
+                text = route.details,
+                style = MaterialTheme.typography.bodyMedium, // Sử dụng typography từ theme
+                fontWeight = FontWeight.Medium,
+                color = MaterialTheme.colorScheme.primary, // Màu chi tiết từ theme
                 modifier = Modifier.clickable { /* Handle details */ }
             )
         }
     }
 }
+
 @Preview(showBackground = true)
 @Composable
 fun BuyTicketScreenPreview() {
-    val navController = rememberNavController()
-    BuyTicketScreen(navController = navController)
+    // Đảm bảo preview sử dụng HcmursAppTheme để thấy đúng màu sắc
+    HcmursAppTheme {
+        val navController = rememberNavController()
+        BuyTicketScreen(navController = navController)
+    }
 }
