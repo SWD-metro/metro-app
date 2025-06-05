@@ -15,7 +15,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import org.com.hcmurs.ui.screens.addoredit.AddOrEditScreen
 import org.com.hcmurs.ui.screens.detail.DetailScreen
-import org.com.hcmurs.ui.screens.home.HomeScreen
+import org.com.hcmurs.ui.screens.home.HomeMetro
 import org.com.hcmurs.ui.screens.home.HomeViewModel
 import org.com.hcmurs.ui.screens.login.LoginScreen
 import org.com.hcmurs.ui.screens.register.RegisterScreen
@@ -63,7 +63,7 @@ fun Navigation() {
         }
     }
 
-    NavHost(navController = navController, startDestination = Screen.Login.route) {
+    NavHost(navController = navController, startDestination = Screen.Home.route) {
         composable(Screen.Login.route) {
             LoginScreen(navController, viewModel = hiltViewModel(), mainViewModel)
         }
@@ -71,7 +71,7 @@ fun Navigation() {
             RegisterScreen(navController, viewModel = hiltViewModel(), mainViewModel)
         }
         composable(Screen.Home.route) {
-            HomeScreen(navController, viewModel = hiltViewModel<HomeViewModel>(), mainViewModel)
+            HomeMetro(navController, viewModel = hiltViewModel<HomeViewModel>(), mainViewModel)
         }
 
 //        composable(Screen.Detail.route){
