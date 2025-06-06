@@ -12,6 +12,7 @@ import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
+import androidx.navigation.NavHostController
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -26,17 +27,30 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.compose.rememberNavController
 import org.com.hcmurs.R // Đảm bảo đúng package R của bạn
+import androidx.compose.ui.input.pointer.pointerInput // Import này cần thiết
+import androidx.compose.foundation.gestures.detectHorizontalDragGestures // Import này cần thiết
+import org.com.hcmurs.Screen // Import sealed class Screen của bạn
 
 @Composable
 fun SplashScreen(
-    // Có thể thêm navController ở đây nếu bạn muốn chuyển màn hình sau splash
-    // navController: NavHostController
+    navController: NavHostController
 ) {
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White) // Màu nền trắng dự phòng
+            .pointerInput(Unit) { // Thêm modifier pointerInput để phát hiện cử chỉ
+                detectHorizontalDragGestures { change, dragAmount ->
+                    change.consume()
+                    if (dragAmount < -50) { // Vuốt sang trái đủ xa (ví dụ -50 pixels)
+                        navController.navigate(Screen.Login.route) { // Điều hướng đến màn hình Login
+                            popUpTo(Screen.Splash.route) { inclusive = true } // Xóa Splash khỏi back stack
+                        }
+                    }
+                }
+            }
     ) {
         // 1. Ảnh nền full màn hình và bị blur
         Image(
@@ -80,13 +94,12 @@ fun SplashScreen(
             ) {
                 // Thêm Logo ở đây
                 Image(
-                    painter = painterResource(id = R.drawable.hurc), // Đảm bảo R.drawable.hurc tồn tại
+                    painter = painterResource(id = R.drawable.hurcremovebg), // Đảm bảo R.drawable.hurc tồn tại
                     contentDescription = "Logo HCMC Metro", // Mô tả logo
                     modifier = Modifier
-                        .size(100.dp) // Điều chỉnh kích thước logo
+                        .size(300.dp) // Điều chỉnh kích thước logo
                         .padding(bottom = 20.dp) // Khoảng cách dưới logo
                 )
-
                 Text(
                     text = "A safe and convenient service for all family members",
                     fontSize = 28.sp,
@@ -108,7 +121,6 @@ fun SplashScreen(
                     modifier = Modifier.fillMaxWidth()
                 )
             }
-
 
             // Phần "swipe left to start"
             Row(
@@ -152,5 +164,8 @@ fun SplashScreen(
 @Preview(showBackground = true, device = "id:pixel_8_pro")
 @Composable
 fun SplashScreenPreview() {
-    SplashScreen()
+    val navController = rememberNavController()
+    SplashScreen(
+        navController = navController
+    )
 }

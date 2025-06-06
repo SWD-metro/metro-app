@@ -18,8 +18,10 @@ import org.com.hcmurs.ui.screens.home.HomeMetro
 import org.com.hcmurs.ui.screens.home.HomeViewModel
 import org.com.hcmurs.ui.screens.login.LoginScreen
 import org.com.hcmurs.ui.screens.register.RegisterScreen
+import org.com.hcmurs.ui.screens.SplashScreen
 
 sealed class Screen(val route: String) {
+    object Splash : Screen("splash")
     object Register: Screen("register")
     object Login : Screen("login")
     object Home : Screen("home")
@@ -56,13 +58,16 @@ fun Navigation() {
     val mainState = mainViewModel.uiState.collectAsState()
     val context = LocalContext.current
     LaunchedEffect(mainState.value.error) {
-        if (mainState.value.error != null && mainState.value.error != "") {
+        if (mainState.value.error != null && mainState.value.error.isNotEmpty()) { // Kiểm tra isNotEmpty()
             Toast.makeText(context, mainState.value.error, Toast.LENGTH_LONG).show()
             mainViewModel.setError("")
         }
     }
 
-    NavHost(navController = navController, startDestination = Screen.Home.route) {
+    NavHost(navController = navController, startDestination = Screen.Splash.route) {
+        composable(Screen.Splash.route) {
+            SplashScreen(navController = navController)
+        }
         composable(Screen.Login.route) {
             LoginScreen(navController, viewModel = hiltViewModel(), mainViewModel)
         }
