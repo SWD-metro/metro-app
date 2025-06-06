@@ -87,7 +87,6 @@ fun SearchStationScreen(
     var showToSuggestions by remember { mutableStateOf(false) }
 
     Scaffold(
-        // topBar đã bị xóa hoàn toàn theo yêu cầu
         bottomBar = {
             AppBottomNavigationBar(
                 navController = navController,
