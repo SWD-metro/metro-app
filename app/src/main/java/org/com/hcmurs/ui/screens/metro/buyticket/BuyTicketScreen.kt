@@ -1,13 +1,12 @@
 package org.com.hcmurs.ui.screens.buyticket
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -33,6 +32,7 @@ import org.com.hcmurs.ui.theme.AppWhite
 import org.com.hcmurs.ui.theme.AppLightGray
 import org.com.hcmurs.ui.theme.AppMediumGray
 import org.com.hcmurs.ui.theme.AppDarkGray
+import org.com.hcmurs.Screen // Import Screen của bạn
 
 // Model đại diện cho một loại vé Metro
 data class MetroTicket(
@@ -41,15 +41,10 @@ data class MetroTicket(
     val description: String,
     val price: String,
     val validity: String, // Ví dụ: "1 ngày", "3 ngày", "1 tháng", "Học sinh/Sinh viên"
-    val color: Color = Color(0xFF388E3C) // Màu mặc định cho card vé - giữ nguyên vì nó là màu vé cụ thể
+    val color: Color = Color(0xFF385F8E) // Giữ nguyên màu vé cụ thể
 )
 
-// Model đại diện cho một ga gợi ý
-data class StationSuggestion(
-    val name: String,
-    val address: String, // Có thể là địa chỉ cụ thể hoặc khu vực của ga
-    val iconResId: Int = R.drawable.hurc // Icon ga tàu điện ngầm. Đổi hurc thành icon ga metro nếu có.
-)
+// Model StationSuggestion đã bị loại bỏ khỏi file này vì không còn sử dụng
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -58,6 +53,13 @@ fun BuyTicketScreen(
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
+
+    // Giữ state cho ga đã chọn từ màn hình SearchStationScreen
+    // Bạn có thể dùng SavedStateHandle hoặc ViewModel để truyền dữ liệu phức tạp hơn
+    // Ở đây đơn giản là lưu trữ tên ga nếu có
+    val selectedStationFrom = navController.currentBackStackEntry?.savedStateHandle?.get<String>("selectedFromStation") ?: "Chọn ga khởi hành"
+    val selectedStationTo = navController.currentBackStackEntry?.savedStateHandle?.get<String>("selectedToStation") ?: "Chọn ga điểm đến"
+
 
     Scaffold(
         topBar = {
@@ -93,46 +95,38 @@ fun BuyTicketScreen(
                         )
                         Spacer(modifier = Modifier.height(12.dp))
 
-                        var searchText by remember { mutableStateOf("") }
-                        OutlinedTextField(
-                            value = searchText,
-                            onValueChange = { searchText = it },
-                            label = { Text("Nhập tên ga...") },
-                            singleLine = true,
-                            leadingIcon = { Icon(Icons.Default.Search, contentDescription = "Search", tint = AppMediumGray) }, // Sử dụng AppMediumGray
-                            modifier = Modifier.fillMaxWidth(),
-                            colors = OutlinedTextFieldDefaults.colors(
-                                focusedBorderColor = BlueDark,
-                                unfocusedBorderColor = AppMediumGray.copy(alpha = 0.5f),
-                                focusedLabelColor = BlueDark,
-                                unfocusedLabelColor = AppMediumGray,
-                                cursorColor = BlueDark
-                            ),
-                            shape = RoundedCornerShape(8.dp)
-                        )
-                        Spacer(modifier = Modifier.height(12.dp))
-
-                        // Các ga gợi ý
-                        val stationSuggestions = listOf(
-                            StationSuggestion("Ga Bến Thành", "Quận 1, TP.HCM"),
-                            StationSuggestion("Ga Nhà Hát Thành Phố", "Quận 1, TP.HCM"),
-                            StationSuggestion("Ga Ba Son", "Quận 1, TP.HCM"),
-                            StationSuggestion("Ga Văn Thánh", "Quận Bình Thạnh, TP.HCM")
-                        )
-                        val filteredSuggestions = if (searchText.isEmpty()) {
-                            stationSuggestions
-                        } else {
-                            stationSuggestions.filter {
-                                it.name.contains(searchText, ignoreCase = true) ||
-                                        it.address.contains(searchText, ignoreCase = true)
+                        // Thay thế OutlinedTextField bằng một click-able Surface
+                        Surface(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(56.dp) // Chiều cao của OutlinedTextField
+                                .clickable {
+                                    // Điều hướng đến SearchStationScreen và yêu cầu focus vào trường "from"
+                                    navController.navigate(Screen.SearchStation.route + "?focusField=from")
+                                },
+                            shape = RoundedCornerShape(8.dp),
+                            border = BorderStroke(1.dp, AppMediumGray.copy(alpha = 0.5f)) // Giống border của OutlinedTextField
+                        ) {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .padding(horizontal = 16.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Search,
+                                    contentDescription = "Search",
+                                    tint = AppMediumGray
+                                )
+                                Spacer(modifier = Modifier.width(12.dp))
+                                Text(
+                                    text = if (selectedStationFrom != "Chọn ga khởi hành") selectedStationFrom else "Nhập tên ga...",
+                                    color = if (selectedStationFrom != "Chọn ga khởi hành") AppDarkGray else AppMediumGray,
+                                    fontSize = 16.sp,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis
+                                )
                             }
-                        }
-
-                        filteredSuggestions.forEach { suggestion ->
-                            StationSuggestionItem(suggestion)
-                        }
-                        if (filteredSuggestions.isEmpty() && searchText.isNotEmpty()) {
-                            Text("Không tìm thấy ga nào.", color = AppMediumGray, modifier = Modifier.padding(top = 8.dp)) // Sử dụng AppMediumGray
                         }
                     }
                 }
@@ -153,7 +147,7 @@ fun BuyTicketScreen(
                         description = "Di chuyển không giới hạn trong 1 ngày kể từ khi kích hoạt.",
                         price = "30.000 VNĐ",
                         validity = "Hiệu lực 24h",
-                        color = Color(0xFF385F8E)
+                        color = Color(0xFF385F8E) // Giữ nguyên màu vé cụ thể
                     ),
                     MetroTicket(
                         id = 2,
@@ -161,7 +155,7 @@ fun BuyTicketScreen(
                         description = "Di chuyển không giới hạn trong 3 ngày liên tiếp.",
                         price = "80.000 VNĐ",
                         validity = "Hiệu lực 72h",
-                        color = Color(0xFF2D3F6C)
+                        color = Color(0xFF2D426C)
                     ),
                     MetroTicket(
                         id = 3,
@@ -201,28 +195,29 @@ fun BuyTicketScreen(
     }
 }
 
-@Composable
-fun StationSuggestionItem(suggestion: StationSuggestion) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp)
-            .clickable { /* TODO: Handle click on station suggestion */ },
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Icon(
-            imageVector = Icons.Default.LocationOn,
-            contentDescription = null,
-            tint = BlueDark, // Sử dụng BlueDark
-            modifier = Modifier.size(24.dp)
-        )
-        Spacer(modifier = Modifier.width(12.dp))
-        Column {
-            Text(text = suggestion.name, fontSize = 16.sp, fontWeight = FontWeight.Medium, color = AppDarkGray) // Sử dụng AppDarkGray
-            Text(text = suggestion.address, fontSize = 12.sp, color = AppMediumGray) // Sử dụng AppMediumGray
-        }
-    }
-}
+// HÀM StationSuggestionItem ĐÃ BỊ XÓA HOẶC COMMENT Ở ĐÂY VÌ KHÔNG CÒN ĐƯỢC SỬ DỤNG TRONG FILE NÀY
+// @Composable
+// fun StationSuggestionItem(suggestion: StationSuggestion) {
+//     Row(
+//         modifier = Modifier
+//             .fillMaxWidth()
+//             .padding(vertical = 8.dp)
+//             .clickable { /* TODO: Handle click on station suggestion */ },
+//         verticalAlignment = Alignment.CenterVertically
+//     ) {
+//         Icon(
+//             imageVector = Icons.Default.LocationOn,
+//             contentDescription = null,
+//             tint = BlueDark,
+//             modifier = Modifier.size(24.dp)
+//         )
+//         Spacer(modifier = Modifier.width(12.dp))
+//         Column {
+//             Text(text = suggestion.name, fontSize = 16.sp, fontWeight = FontWeight.Medium, color = AppDarkGray)
+//             Text(text = suggestion.address, fontSize = 12.sp, color = AppMediumGray)
+//         }
+//     }
+// }
 
 @Composable
 fun TicketCard(ticket: MetroTicket, onClick: () -> Unit) {
@@ -248,7 +243,7 @@ fun TicketCard(ticket: MetroTicket, onClick: () -> Unit) {
                     text = ticket.name,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
-                    color = AppWhite // Sử dụng AppWhite
+                    color = AppWhite
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
@@ -268,7 +263,7 @@ fun TicketCard(ticket: MetroTicket, onClick: () -> Unit) {
                         text = "Loại vé: ${ticket.validity}",
                         fontSize = 11.sp,
                         fontWeight = FontWeight.SemiBold,
-                        color = AppWhite, // Sử dụng AppWhite
+                        color = AppWhite,
                         modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
                     )
                 }
@@ -283,7 +278,7 @@ fun TicketCard(ticket: MetroTicket, onClick: () -> Unit) {
                     text = ticket.price,
                     fontSize = 22.sp,
                     fontWeight = FontWeight.ExtraBold,
-                    color = AppWhite // Sử dụng AppWhite
+                    color = AppWhite
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(

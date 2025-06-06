@@ -19,6 +19,9 @@ import org.com.hcmurs.ui.screens.home.HomeViewModel
 import org.com.hcmurs.ui.screens.login.LoginScreen
 import org.com.hcmurs.ui.screens.register.RegisterScreen
 import org.com.hcmurs.ui.screens.SplashScreen
+import org.com.hcmurs.ui.screens.buyticket.BuyTicketScreen
+import org.com.hcmurs.ui.screens.searchstation.SearchStationScreen
+
 
 sealed class Screen(val route: String) {
     object Splash : Screen("splash")
@@ -33,6 +36,7 @@ sealed class Screen(val route: String) {
     object MyTicket : Screen("myTicket")
 
     // Add new screen routes for the grid items
+    object SearchStation : Screen("searchStation")
     object BuyTicket : Screen("buyTicket")
     object BuyTicketDetail : Screen("buyTicketDetail")
     object Route : Screen("route")
@@ -64,7 +68,7 @@ fun Navigation() {
         }
     }
 
-    NavHost(navController = navController, startDestination = Screen.Splash.route) {
+    NavHost(navController = navController, startDestination = Screen.BuyTicket.route) {
         composable(Screen.Splash.route) {
             SplashScreen(navController = navController)
         }
@@ -77,6 +81,14 @@ fun Navigation() {
         composable(Screen.Home.route) {
             HomeMetro(navController, viewModel = hiltViewModel<HomeViewModel>(), mainViewModel)
         }
+        composable(Screen.SearchStation.route){
+            SearchStationScreen(navController = navController)
+        }
+        composable(Screen.BuyTicket.route){
+            BuyTicketScreen(navController = navController)
+        }
+
+
 
 //        composable(Screen.Detail.route){
 //            DetailScreen(navController, viewModel = hiltViewModel(), mainViewModel)
