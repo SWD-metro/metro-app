@@ -18,7 +18,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.text.style.TextOverflow
@@ -27,9 +26,9 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import org.com.hcmurs.R // Đảm bảo đúng package R của bạn cho các icon/hình ảnh nếu có
-import org.com.hcmurs.ui.components.AppBottomNavigationBar // Import AppBottomNavigationBar
-import org.com.hcmurs.ui.theme.BlueDark // Import các màu sắc tùy chỉnh của bạn
+import org.com.hcmurs.R
+import org.com.hcmurs.ui.components.AppBottomNavigationBar
+import org.com.hcmurs.ui.theme.BlueDark
 import org.com.hcmurs.ui.theme.AppWhite
 import org.com.hcmurs.ui.theme.AppLightGray
 import org.com.hcmurs.ui.theme.AppMediumGray
@@ -69,7 +68,7 @@ fun BuyTicketScreen(
                 currentRoute = currentRoute
             )
         },
-        containerColor = AppLightGray // Sử dụng AppLightGray
+        containerColor = AppLightGray
     ) { paddingValues ->
         LazyColumn(
             modifier = Modifier
@@ -78,12 +77,11 @@ fun BuyTicketScreen(
             contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            // Phần "Tìm kiếm ga"
             item {
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(12.dp),
-                    colors = CardDefaults.cardColors(containerColor = AppWhite), // Sử dụng AppWhite
+                    colors = CardDefaults.cardColors(containerColor = AppWhite),
                     elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
                 ) {
                     Column(modifier = Modifier.padding(16.dp)) {
@@ -91,7 +89,7 @@ fun BuyTicketScreen(
                             text = "Tìm kiếm ga:",
                             fontSize = 20.sp,
                             fontWeight = FontWeight.SemiBold,
-                            color = AppDarkGray // Sử dụng AppDarkGray
+                            color = AppDarkGray
                         )
                         Spacer(modifier = Modifier.height(12.dp))
 
@@ -104,11 +102,11 @@ fun BuyTicketScreen(
                             leadingIcon = { Icon(Icons.Default.Search, contentDescription = "Search", tint = AppMediumGray) }, // Sử dụng AppMediumGray
                             modifier = Modifier.fillMaxWidth(),
                             colors = OutlinedTextFieldDefaults.colors(
-                                focusedBorderColor = BlueDark, // Sử dụng BlueDark
-                                unfocusedBorderColor = AppMediumGray.copy(alpha = 0.5f), // Sử dụng AppMediumGray
-                                focusedLabelColor = BlueDark, // Sử dụng BlueDark
-                                unfocusedLabelColor = AppMediumGray, // Sử dụng AppMediumGray
-                                cursorColor = BlueDark // Sử dụng BlueDark
+                                focusedBorderColor = BlueDark,
+                                unfocusedBorderColor = AppMediumGray.copy(alpha = 0.5f),
+                                focusedLabelColor = BlueDark,
+                                unfocusedLabelColor = AppMediumGray,
+                                cursorColor = BlueDark
                             ),
                             shape = RoundedCornerShape(8.dp)
                         )
@@ -121,8 +119,6 @@ fun BuyTicketScreen(
                             StationSuggestion("Ga Ba Son", "Quận 1, TP.HCM"),
                             StationSuggestion("Ga Văn Thánh", "Quận Bình Thạnh, TP.HCM")
                         )
-
-                        // Lọc ga theo searchText
                         val filteredSuggestions = if (searchText.isEmpty()) {
                             stationSuggestions
                         } else {
@@ -141,14 +137,12 @@ fun BuyTicketScreen(
                     }
                 }
             }
-
-            // Khu vực "Các loại vé Metro"
             item {
                 Text(
                     text = "Các loại vé Metro",
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
-                    color = AppDarkGray, // Sử dụng AppDarkGray
+                    color = AppDarkGray,
                     modifier = Modifier.padding(bottom = 8.dp)
                 )
 
@@ -159,7 +153,7 @@ fun BuyTicketScreen(
                         description = "Di chuyển không giới hạn trong 1 ngày kể từ khi kích hoạt.",
                         price = "30.000 VNĐ",
                         validity = "Hiệu lực 24h",
-                        color = Color(0xFF385F8E) // Giữ nguyên màu vé cụ thể
+                        color = Color(0xFF385F8E)
                     ),
                     MetroTicket(
                         id = 2,
@@ -167,7 +161,7 @@ fun BuyTicketScreen(
                         description = "Di chuyển không giới hạn trong 3 ngày liên tiếp.",
                         price = "80.000 VNĐ",
                         validity = "Hiệu lực 72h",
-                        color = Color(0xFF2D3F6C) // Giữ nguyên màu vé cụ thể
+                        color = Color(0xFF2D3F6C)
                     ),
                     MetroTicket(
                         id = 3,
@@ -175,7 +169,7 @@ fun BuyTicketScreen(
                         description = "Di chuyển không giới hạn trong 1 tháng. Cần đăng ký thông tin cá nhân.",
                         price = "200.000 VNĐ",
                         validity = "Hiệu lực 30 ngày",
-                        color = Color(0xFF1E3F77) // Giữ nguyên màu vé cụ thể
+                        color = Color(0xFF1E3F77)
                     ),
                     MetroTicket(
                         id = 4,
@@ -183,7 +177,7 @@ fun BuyTicketScreen(
                         description = "Vé ưu đãi dành cho Học sinh/Sinh viên. Cần thẻ HSSV hợp lệ.",
                         price = "100.000 VNĐ",
                         validity = "Hiệu lực 1 tháng",
-                        color = Color(0xFF281B9A) // Giữ nguyên màu vé cụ thể
+                        color = Color(0xFF281B9A)
                     ),
                     MetroTicket(
                         id = 5,
@@ -191,7 +185,7 @@ fun BuyTicketScreen(
                         description = "Thanh toán theo từng chặng, tính phí theo quãng đường di chuyển.",
                         price = "Từ 8.000 VNĐ",
                         validity = "Theo chuyến",
-                        color = Color(0xFFA52714) // Giữ nguyên màu vé cụ thể
+                        color = Color(0xFFA52714)
                     )
                 )
                 Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
@@ -260,14 +254,14 @@ fun TicketCard(ticket: MetroTicket, onClick: () -> Unit) {
                 Text(
                     text = ticket.description,
                     fontSize = 12.sp,
-                    color = AppWhite.copy(alpha = 0.8f), // Sử dụng AppWhite
+                    color = AppWhite.copy(alpha = 0.8f),
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Surface(
                     shape = RoundedCornerShape(8.dp),
-                    color = AppWhite.copy(alpha = 0.2f), // Sử dụng AppWhite
+                    color = AppWhite.copy(alpha = 0.2f),
                     modifier = Modifier.wrapContentSize()
                 ) {
                     Text(
@@ -295,13 +289,13 @@ fun TicketCard(ticket: MetroTicket, onClick: () -> Unit) {
                 Text(
                     text = "Thời hạn",
                     fontSize = 10.sp,
-                    color = AppWhite.copy(alpha = 0.7f) // Sử dụng AppWhite
+                    color = AppWhite.copy(alpha = 0.7f)
                 )
                 Text(
                     text = ticket.validity,
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Medium,
-                    color = AppWhite // Sử dụng AppWhite
+                    color = AppWhite
                 )
             }
         }
