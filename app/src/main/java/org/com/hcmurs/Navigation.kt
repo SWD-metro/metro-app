@@ -7,7 +7,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -19,8 +18,13 @@ import org.com.hcmurs.ui.screens.home.HomeMetro
 import org.com.hcmurs.ui.screens.home.HomeViewModel
 import org.com.hcmurs.ui.screens.login.LoginScreen
 import org.com.hcmurs.ui.screens.register.RegisterScreen
+import org.com.hcmurs.ui.screens.SplashScreen
+import org.com.hcmurs.ui.screens.buyticket.BuyTicketScreen
+import org.com.hcmurs.ui.screens.searchstation.SearchStationScreen
+
 
 sealed class Screen(val route: String) {
+    object Splash : Screen("splash")
     object Register: Screen("register")
     object Login : Screen("login")
     object Home : Screen("home")
@@ -32,6 +36,7 @@ sealed class Screen(val route: String) {
     object MyTicket : Screen("myTicket")
 
     // Add new screen routes for the grid items
+    object SearchStation : Screen("searchStation")
     object BuyTicket : Screen("buyTicket")
     object BuyTicketDetail : Screen("buyTicketDetail")
     object Route : Screen("route")
@@ -57,13 +62,16 @@ fun Navigation() {
     val mainState = mainViewModel.uiState.collectAsState()
     val context = LocalContext.current
     LaunchedEffect(mainState.value.error) {
-        if (mainState.value.error != null && mainState.value.error != "") {
+        if (mainState.value.error != null && mainState.value.error.isNotEmpty()) { // Kiểm tra isNotEmpty()
             Toast.makeText(context, mainState.value.error, Toast.LENGTH_LONG).show()
             mainViewModel.setError("")
         }
     }
 
-    NavHost(navController = navController, startDestination = Screen.Home.route) {
+    NavHost(navController = navController, startDestination = Screen.BuyTicket.route) {
+        composable(Screen.Splash.route) {
+            SplashScreen(navController = navController)
+        }
         composable(Screen.Login.route) {
             LoginScreen(navController, viewModel = hiltViewModel(), mainViewModel)
         }
@@ -73,6 +81,14 @@ fun Navigation() {
         composable(Screen.Home.route) {
             HomeMetro(navController, viewModel = hiltViewModel<HomeViewModel>(), mainViewModel)
         }
+        composable(Screen.SearchStation.route){
+            SearchStationScreen(navController = navController)
+        }
+        composable(Screen.BuyTicket.route){
+            BuyTicketScreen(navController = navController)
+        }
+
+
 
 //        composable(Screen.Detail.route){
 //            DetailScreen(navController, viewModel = hiltViewModel(), mainViewModel)

@@ -24,7 +24,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import org.com.hcmurs.ui.components.AppBottomNavigationBar
 
 data class OrderInfo(
     val ticketType: String,
@@ -90,6 +92,8 @@ fun OrderInfoScreen(
             )
         )
     }
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
     // Create order info based on ticket
     val orderInfo = remember(ticketType) {
         when (ticketType) {
@@ -144,7 +148,13 @@ fun OrderInfoScreen(
                 title = "Thông tin đơn hàng",
                 onBackClick = { navController.popBackStack() }
             )
-        }
+        },
+        bottomBar = {
+            AppBottomNavigationBar(
+                navController = navController,
+                currentRoute = currentRoute
+            )
+        },
     ) { padding ->
         Column(
             modifier = Modifier
