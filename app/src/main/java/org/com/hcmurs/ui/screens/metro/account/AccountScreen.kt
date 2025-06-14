@@ -278,11 +278,63 @@ fun AccountScreen(
                 )
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // HURC logo đúng chuẩn
+            }
+            // Content Card
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
+            ) {
+                // Content Card
+                Surface(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(top = 28.dp),
+                    shape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp),
+                    color = Color.White,
+                    shadowElevation = 8.dp
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(top = 28.dp, start = 16.dp, end = 16.dp)
+                            .verticalScroll(rememberScrollState())
+                    ) {
+
+                        // Menu Items
+                        menuItem.forEach { item ->
+                            MenuItemRow(
+                                item = item,
+                                onClick = { onMenuItemClick(item) }
+                            )
+                        }
+
+                        // Divider
+                        HorizontalDivider(
+                            modifier = Modifier.padding(vertical = 8.dp),
+                            color = Color(0xFFE0E0E0)
+                        )
+
+                        // Logout Button
+                        MenuItemRow(
+                            item = MenuItem(
+                                icon = Icons.Default.ExitToApp,
+                                title = "Đăng xuất",
+                                hasArrow = false,
+                                isDestructive = false
+                            ),
+                            onClick = { /* Handle logout */ }
+                        )
+
+                        Spacer(modifier = Modifier.height(50.dp))
+                    }
+                }
+
+                // HURC logo
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .offset(y = (28).dp),
+                        .align(Alignment.TopCenter),
                     contentAlignment = Alignment.Center
                 ) {
                     Surface(
@@ -296,49 +348,6 @@ fun AccountScreen(
                         }
                     }
                 }
-            }
-            // Content Card
-            Surface(
-                modifier = Modifier.fillMaxWidth().weight(1f),
-                shape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp),
-                color = Color.White,
-                shadowElevation = 8.dp
-            ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(16.dp)
-                        .verticalScroll(rememberScrollState())
-                ) {
-                    // Menu Items
-                    menuItem.forEach { item ->
-                        MenuItemRow(
-                            item = item,
-                            onClick = { onMenuItemClick(item) }
-                        )
-                    }
-
-                    // Divider
-                    HorizontalDivider(
-                        modifier = Modifier.padding(vertical = 8.dp),
-                        color = Color(0xFFE0E0E0)
-                    )
-
-                    // Logout Button
-                    MenuItemRow(
-                        item = MenuItem(
-                            icon = Icons.Default.ExitToApp,
-                            title = "Đăng xuất",
-                            hasArrow = false,
-                            isDestructive = false
-                        ),
-                        onClick = { /* Handle logout */ }
-                    )
-
-                    Spacer(modifier = Modifier.height(50.dp))
-
-                }
-
             }
 
 

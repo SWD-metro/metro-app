@@ -1,242 +1,467 @@
-package org.com.hcmurs.ui.screens.metro.home
+package org.com.hcmurs.ui.screens.home
 
-import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
-import org.com.hcmurs.constant.ScreenTitle
+import org.com.hcmurs.MainViewModel
+import org.com.hcmurs.R
+import androidx.navigation.compose.currentBackStackEntryAsState
+import org.com.hcmurs.ui.components.AppBottomNavigationBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomePage(navController: NavHostController) {
+fun HomeMetroScreen(
+    navController: NavHostController,
+    viewModel: HomeViewModel,
+    mainViewModel: MainViewModel
+) {
+    val state by viewModel.uiState.collectAsState()
 
+    val primaryBlue = Color(0xFF4A6FA5)
+    val backgroundColor = Color(0xFFFFFFFF)
+    val cardBackground = Color.White
+    val orange = Color(0xFFFF6B35)
+    val green = Color(0xFF4CAF50)
+
+    var searchInput by remember { mutableStateOf("") }
+    val userName by remember { mutableStateOf("Passenger") }
+
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
+
+    LaunchedEffect(Unit) {
+        viewModel.loadNotes()
+    }
 
     Scaffold(
-        topBar = { HomeTopBar() },
-//        floatingActionButton = {
-//            FloatingActionButton(onClick = {
-//                // TODO: Chuyển hướng đến màn thêm mới
-//            }) {
-//                Icon(Icons.Default.Add, contentDescription = "Add")
-//            }
-//        }
-        modifier = Modifier.background(
-            Color.Cyan
-        )
-    ) { padding ->
-        Column(
+        bottomBar = {
+            AppBottomNavigationBar(
+                navController = navController,
+                currentRoute = currentRoute
+            )
+        },
+        containerColor = backgroundColor
+    ) { innerPadding ->
+        LazyColumn(
             modifier = Modifier
-                .padding(padding)
-                .background(
-                    Color.Cyan
-                )
-                .padding(16.dp)
+                .fillMaxSize()
+                .padding(innerPadding)
         ) {
-            WelcomeSection()
-            QuickActionsSection()
-            Spacer(modifier = Modifier.height(16.dp))
-            New2()
-            Spacer(modifier = Modifier.height(24.dp))
-            NewsSection()
-        }
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun HomeTopBar() {
-    var selectedLanguage by remember { mutableStateOf("Vietnamese") }
-
-    TopAppBar(
-        title = {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text("Trang chủ")
-                LanguageDropdown(selectedLanguage, onLanguageChange = { selectedLanguage = it })
-            }
-        }
-    )
-}
-
-@Composable
-fun LanguageDropdown(selected: String, onLanguageChange: (String) -> Unit) {
-    var expanded by remember { mutableStateOf(false) }
-
-    Box(modifier = Modifier.wrapContentSize(Alignment.TopEnd)) {
-        Text(
-            text = selected,
-            modifier = Modifier
-                .clickable { expanded = true }
-                .padding(8.dp)
-        )
-
-        DropdownMenu(
-            expanded = expanded,
-            onDismissRequest = { expanded = false }
-        ) {
-            listOf("Vietnamese", "English").forEach { lang ->
-                DropdownMenuItem(
-                    text = { Text(lang) },
-                    onClick = {
-                        onLanguageChange(lang)
-                        expanded = false
-                    }
-                )
-            }
-        }
-    }
-}
-
-
-@Composable
-fun WelcomeSection() {
-    Text(
-        text = "Chào mừng bạn đến với hệ thống!",
-        fontSize = 20.sp,
-        fontWeight = FontWeight.Bold
-    )
-}
-
-@OptIn(ExperimentalFoundationApi::class)
-@Composable
-fun QuickActionsSection() {
-    val list = ScreenTitle.values().toList()
-
-    val pages = list.chunked(8) // paginate every 8 items
-    val pagerState = rememberPagerState(
-        initialPage = 0,
-        initialPageOffsetFraction = 0f,
-        pageCount = { pages.size }
-    )
-
-    HorizontalPager(
-        state = pagerState,
-        modifier = Modifier
-            .border(2.dp, Color.Black)
-            .fillMaxWidth()
-            .height(250.dp), // enough for 2 rows
-    ) { page ->
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(4),
-            contentPadding = PaddingValues(10.dp),
-            verticalArrangement = Arrangement.spacedBy(5.dp),
-            horizontalArrangement = Arrangement.spacedBy(5.dp),
-            modifier = Modifier.fillMaxSize()
-        ) {
-            items(pages[page].size) { index ->
-                val item = pages[page][index]
-                Box(
+            item {
+                Box( // Box lớn chứa cả ảnh nền và nội dung phía trên
                     modifier = Modifier
-                        .height(100.dp)
                         .fillMaxWidth()
-                        .background(Color.Green),
-                    contentAlignment = Alignment.Center
+                        .height(300.dp) // Giữ chiều cao tương đối để ảnh hiển thị đủ
                 ) {
-                    Text(text = item.title)
+                    // Background Image
+                    Image(
+                        painter = painterResource(id = R.drawable.home), // Đảm bảo R.drawable.home là ảnh của bạn
+                        contentDescription = null, // Decorative image
+                        contentScale = ContentScale.Crop, // Crop to fill the bounds
+                        modifier = Modifier.fillMaxSize()
+                    )
+
+                    // Overlay content (Good Morning, Search Bar, Notification, and Quick Action Cards)
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(
+                                Brush.verticalGradient(
+                                    colors = listOf(Color.Black.copy(alpha = 0.3f), Color.Transparent)
+                                )
+                            )
+                            .padding(horizontal = 20.dp) // Padding ngang cho toàn bộ nội dung trong Column
+                            .padding(top = 40.dp) // Padding trên cùng
+                    ) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Column {
+                                Text(
+                                    text = "Good Morning,",
+                                    color = Color.White.copy(alpha = 0.8f),
+                                    fontSize = 16.sp
+                                )
+                                Text(
+                                    text = userName,
+                                    color = Color.White,
+                                    fontSize = 24.sp,
+                                    fontWeight = FontWeight.Bold
+                                )
+                            }
+
+                            Box(
+                                modifier = Modifier
+                                    .size(50.dp)
+                                    .background(Color.White, CircleShape)
+                                    .clickable { /* TODO: Open QR Code */ },
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Notifications,
+                                    contentDescription = "Notifications",
+                                    modifier = Modifier.size(24.dp)
+                                )
+                            }
+                        }
+
+                        Spacer(modifier = Modifier.height(20.dp))
+
+                        OutlinedTextField(
+                            value = searchInput,
+                            onValueChange = { searchInput = it },
+                            modifier = Modifier.fillMaxWidth(),
+                            placeholder = {
+                                Text(
+                                    "Which station are you going to?",
+                                    color = Color.Gray.copy(alpha = 0.7f)
+                                )
+                            },
+                            colors = OutlinedTextFieldDefaults.colors(
+                                focusedBorderColor = Color.Transparent,
+                                unfocusedBorderColor = Color.Transparent,
+                                focusedContainerColor = Color.White,
+                                unfocusedContainerColor = Color.White
+                            ),
+                            shape = RoundedCornerShape(12.dp),
+                            leadingIcon = {
+                                Icon(
+                                    imageVector = Icons.Default.Search,
+                                    contentDescription = "Search",
+                                    tint = Color.Gray
+                                )
+                            }
+                        )
+
+                        Spacer(modifier = Modifier.height(20.dp)) // Khoảng cách giữa search bar và Quick Action Cards
+
+                        // Quick Action Cards now inside the same Column
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(12.dp)
+                        ) {
+                            QuickActionCard(
+                                modifier = Modifier.weight(1f),
+                                title = "Book ticket to",
+                                subtitle = "Ben Thanh Station",
+                                backgroundColor = cardBackground,
+                                onClick = { /* TODO: Navigate to ticket booking for Ben Thanh */ }
+                            )
+                            QuickActionCard(
+                                modifier = Modifier.weight(1f),
+                                title = "Book ticket to",
+                                subtitle = "Suoi Tien Station",
+                                backgroundColor = cardBackground,
+                                onClick = { /* TODO: Navigate to ticket booking for Suoi Tien */ }
+                            )
+                            QuickActionCard(
+                                modifier = Modifier.weight(1f),
+                                title = "View Map",
+                                subtitle = "Metro Lines",
+                                backgroundColor = cardBackground,
+                                onClick = { /* TODO: Navigate to metro map */ }
+                            )
+                        }
+
+                        // Spacer này sẽ đẩy nội dung phía dưới của Column lên trên
+                        Spacer(modifier = Modifier.weight(1f)) // Dùng weight để đẩy mọi thứ lên trên và card nằm cuối Column
+                    }
                 }
             }
-        }
-    }
-}
 
-@Composable
-fun New2() {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(12.dp)
-    ) {
-        QuickActionTile(title = "Quản lý node", color = Color(0xFF4FC3F7)) {
-            // TODO: navController.navigate("node_manager")
-        }
-        QuickActionTile(title = "Giám sát", color = Color(0xFF81C784)) {
-            // TODO: navController.navigate("monitoring")
-        }
-    }
-}
+            // Các phần nội dung khác vẫn như cũ, nhưng không cần Spacer bù trừ nữa
+            item {
+                Spacer(modifier = Modifier.height(20.dp)) // Khoảng cách sau phần ảnh nền và card
+                Column(
+                    modifier = Modifier.padding(horizontal = 20.dp)
+                ) {
+                    Text(
+                        text = "Your Tickets",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.Black
+                    )
 
-@Composable
-fun QuickActionTile(title: String, color: Color, onClick: () -> Unit) {
-    Box(
-        modifier = Modifier
-//            .weight(1f)
-            .height(100.dp)
-            .background(color)
-            .clickable { onClick() },
-        contentAlignment = Alignment.Center
-    ) {
-        Text(text = title, color = Color.White, fontWeight = FontWeight.Bold)
-    }
-}
+                    Spacer(modifier = Modifier.height(12.dp))
 
-@Composable
-fun NewsSection() {
-    val scrollState = rememberScrollState()
+                    Card(
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = CardDefaults.cardColors(containerColor = cardBackground),
+                        shape = RoundedCornerShape(16.dp),
+                        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+                    ) {
+                        Column(
+                            modifier = Modifier.padding(20.dp)
+                        ) {
+                            Text(
+                                text = "Monday, February 19, 2024",
+                                fontSize = 14.sp,
+                                color = Color.Gray
+                            )
 
-    Column {
-        Text(
-            text = "Tin tức mới nhất",
-            fontSize = 18.sp,
-            fontWeight = FontWeight.SemiBold,
-            modifier = Modifier.padding(bottom = 8.dp)
-        )
+                            Spacer(modifier = Modifier.height(12.dp))
 
-        Row(
-            modifier = Modifier
-                .horizontalScroll(scrollState)
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            repeat(10) {
-                NewsTile(title = "Bản tin #$it")
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Box(
+                                    modifier = Modifier
+                                        .background(orange, RoundedCornerShape(4.dp))
+                                        .padding(horizontal = 8.dp, vertical = 4.dp)
+                                ) {
+                                    Text(
+                                        text = "Fastest",
+                                        color = Color.White,
+                                        fontSize = 12.sp,
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                }
+
+                                Spacer(modifier = Modifier.width(8.dp))
+
+                                Text(
+                                    text = "Departure: Ben Thanh",
+                                    fontSize = 14.sp,
+                                    color = Color.Gray
+                                )
+                            }
+
+                            Spacer(modifier = Modifier.height(16.dp))
+
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                Column {
+                                    Row(verticalAlignment = Alignment.CenterVertically) {
+                                        Box(
+                                            modifier = Modifier
+                                                .size(8.dp)
+                                                .background(green, CircleShape)
+                                        )
+                                        Spacer(modifier = Modifier.width(8.dp))
+                                        Text(
+                                            text = "Departure",
+                                            fontSize = 14.sp,
+                                            fontWeight = FontWeight.Medium
+                                        )
+                                    }
+                                    Text(
+                                        text = "Ben Thanh",
+                                        fontSize = 12.sp,
+                                        color = Color.Gray
+                                    )
+                                }
+
+                                Text(
+                                    text = "Est. 35 min",
+                                    fontSize = 12.sp,
+                                    color = Color.Gray
+                                )
+
+                                Column {
+                                    Row(verticalAlignment = Alignment.CenterVertically) {
+                                        Box(
+                                            modifier = Modifier
+                                                .size(8.dp)
+                                                .background(orange, CircleShape)
+                                        )
+                                        Spacer(modifier = Modifier.width(8.dp))
+                                        Text(
+                                            text = "Arrival",
+                                            fontSize = 14.sp,
+                                            fontWeight = FontWeight.Medium
+                                        )
+                                    }
+                                    Text(
+                                        text = "Suoi Tien",
+                                        fontSize = 12.sp,
+                                        color = Color.Gray
+                                    )
+                                }
+                            }
+
+                            Spacer(modifier = Modifier.height(16.dp))
+
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Subway,
+                                    contentDescription = "Metro Line",
+                                    tint = Color.Gray,
+                                    modifier = Modifier.size(16.dp)
+                                )
+                                Spacer(modifier = Modifier.width(8.dp))
+                                Text(
+                                    text = "Line 1 | Train arrives at 15:30 at Ben Thanh Station",
+                                    fontSize = 12.sp,
+                                    color = Color.Gray
+                                )
+                            }
+
+                            Spacer(modifier = Modifier.height(16.dp))
+
+                            Button(
+                                onClick = { /* TODO: Show barcode */ },
+                                modifier = Modifier.fillMaxWidth(),
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = primaryBlue
+                                ),
+                                shape = RoundedCornerShape(12.dp)
+                            ) {
+                                Text(
+                                    text = "View Ticket QR Code",
+                                    color = Color.White,
+                                    fontWeight = FontWeight.Medium
+                                )
+                            }
+                        }
+                    }
+                }
             }
 
-            Spacer(modifier = Modifier.width(30.dp)) // cảm giác scroll mượt hơn
+            item {
+                Spacer(modifier = Modifier.height(20.dp))
+                Column(
+                    modifier = Modifier.padding(horizontal = 20.dp)
+                ) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "News & Offers",
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.Black
+                        )
+
+                        TextButton(onClick = { /* TODO: See all news */ }) {
+                            Text(
+                                text = "See All >",
+                                color = primaryBlue,
+                                fontSize = 14.sp
+                            )
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    LazyRow(
+                        horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        items(3) { index ->
+                            NewsCard(
+                                imageRes = R.drawable.loginbackground, // TODO: Replace with actual news images (e.g., R.drawable.news_metro_1)
+                                modifier = Modifier.width(200.dp)
+                            )
+                        }
+                    }
+                }
+            }
+            item {
+                Spacer(modifier = Modifier.height(20.dp))
+            }
         }
     }
 }
 
 @Composable
-fun NewsTile(title: String) {
-    Box(
-        modifier = Modifier
-            .width(150.dp)
-            .height(100.dp)
-            .background(Color(0xFFCE93D8)),
-        contentAlignment = Alignment.Center
+private fun QuickActionCard(
+    modifier: Modifier = Modifier,
+    title: String,
+    subtitle: String,
+    backgroundColor: Color,
+    onClick: () -> Unit
+) {
+    Card(
+        modifier = modifier.clickable(onClick = onClick),
+        colors = CardDefaults.cardColors(containerColor = backgroundColor),
+        shape = RoundedCornerShape(12.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
-        Text(title, color = Color.White, fontWeight = FontWeight.Medium)
+        Column(
+            modifier = Modifier.padding(12.dp)
+        ) {
+            Text(
+                text = title,
+                fontSize = 10.sp,
+                color = Color.Gray
+            )
+            Spacer(modifier = Modifier.height(4.dp))
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    imageVector = Icons.Default.LocationOn,
+                    contentDescription = null,
+                    tint = Color.Black,
+                    modifier = Modifier.size(12.dp)
+                )
+                Spacer(modifier = Modifier.width(4.dp))
+                Text(
+                    text = subtitle,
+                    fontSize = 11.sp,
+                    fontWeight = FontWeight.Medium,
+                    color = Color.Black
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun NewsCard(
+    imageRes: Int,
+    modifier: Modifier = Modifier
+) {
+    Card(
+        modifier = modifier,
+        shape = RoundedCornerShape(12.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+    ) {
+        Image(
+            painter = painterResource(id = imageRes),
+            contentDescription = "News",
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(120.dp)
+        )
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun HomePagePreview() {
-    val navController = rememberNavController()
-    HomePage(navController = navController)
+fun HomeMetroScreenPreview() {
+    HomeMetroScreen(
+        navController = NavHostController(LocalContext.current),
+        viewModel = HomeViewModel(null, null),
+        mainViewModel = MainViewModel()
+    )
 }
