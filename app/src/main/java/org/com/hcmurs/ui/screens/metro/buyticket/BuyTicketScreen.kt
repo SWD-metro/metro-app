@@ -32,21 +32,17 @@ import org.com.hcmurs.ui.theme.AppWhite
 import org.com.hcmurs.ui.theme.AppLightGray
 import org.com.hcmurs.ui.theme.AppMediumGray
 import org.com.hcmurs.ui.theme.AppDarkGray
-import org.com.hcmurs.Screen // Import Screen của bạn
+import org.com.hcmurs.Screen
 
-// Model đại diện cho một loại vé Metro
 data class MetroTicket(
     val id: Int,
     val name: String,
     val description: String,
     val price: String,
-    val validity: String, // Ví dụ: "1 ngày", "3 ngày", "1 tháng", "Học sinh/Sinh viên"
-    val color: Color = Color(0xFF385F8E) // Giữ nguyên màu vé cụ thể
+    val validity: String,
+    val color: Color = Color(0xFF385F8E)
 )
 
-// Model StationSuggestion đã bị loại bỏ khỏi file này vì không còn sử dụng
-
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BuyTicketScreen(
     navController: NavHostController
@@ -54,9 +50,7 @@ fun BuyTicketScreen(
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
-    // Giữ state cho ga đã chọn từ màn hình SearchStationScreen
-    // Bạn có thể dùng SavedStateHandle hoặc ViewModel để truyền dữ liệu phức tạp hơn
-    // Ở đây đơn giản là lưu trữ tên ga nếu có
+
     val selectedStationFrom = navController.currentBackStackEntry?.savedStateHandle?.get<String>("selectedFromStation") ?: "Chọn ga khởi hành"
     val selectedStationTo = navController.currentBackStackEntry?.savedStateHandle?.get<String>("selectedToStation") ?: "Chọn ga điểm đến"
 
