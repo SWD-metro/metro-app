@@ -19,7 +19,9 @@ import org.com.hcmurs.ui.screens.home.HomeViewModel
 import org.com.hcmurs.ui.screens.login.LoginScreen
 import org.com.hcmurs.ui.screens.register.RegisterScreen
 import org.com.hcmurs.ui.screens.SplashScreen
-import org.com.hcmurs.ui.screens.buyticket.BuyTicketScreen
+import org.com.hcmurs.ui.screens.metro.buyticket.BuyTicketScreen
+// THÊM IMPORT CHO MÀN HÌNH MỚI
+import org.com.hcmurs.ui.screens.metro.buyticket.OrderInfoScreen
 import org.com.hcmurs.ui.screens.searchstation.SearchStationScreen
 
 
@@ -53,6 +55,9 @@ sealed class Screen(val route: String) {
     // Test
     object UserProfile : Screen("userProfile")
     object OsmdroidMap : Screen("osmdroidMap")
+
+    // THÊM VÀO: Route cho màn hình chi tiết đơn hàng
+    object OrderInfo : Screen("order_info_screen")
 }
 
 @Composable
@@ -62,7 +67,7 @@ fun Navigation() {
     val mainState = mainViewModel.uiState.collectAsState()
     val context = LocalContext.current
     LaunchedEffect(mainState.value.error) {
-        if (mainState.value.error != null && mainState.value.error.isNotEmpty()) { // Kiểm tra isNotEmpty()
+        if (mainState.value.error != null && mainState.value.error.isNotEmpty()) {
             Toast.makeText(context, mainState.value.error, Toast.LENGTH_LONG).show()
             mainViewModel.setError("")
         }
@@ -88,11 +93,12 @@ fun Navigation() {
             BuyTicketScreen(navController = navController)
         }
 
-
-
-//        composable(Screen.Detail.route){
-//            DetailScreen(navController, viewModel = hiltViewModel(), mainViewModel)
-//        }
+        composable(
+            route = "${Screen.OrderInfo.route}/{ticketType}",
+            arguments = listOf(navArgument("ticketType") { type = NavType.StringType })
+        ) {
+            OrderInfoScreen(navController = navController)
+        }
 
         composable(Screen.Detail.route + "?noteIndex={noteIndex}",
             arguments = listOf(

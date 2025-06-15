@@ -1,4 +1,4 @@
-package org.com.hcmurs.ui.screens.buyticket
+package org.com.hcmurs.ui.screens.metro.buyticket
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
@@ -6,33 +6,30 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import org.com.hcmurs.R
+import org.com.hcmurs.Screen
 import org.com.hcmurs.ui.components.AppBottomNavigationBar
-import org.com.hcmurs.ui.theme.BlueDark
+import org.com.hcmurs.ui.components.topNav.CustomTopAppBar
 import org.com.hcmurs.ui.theme.AppWhite
 import org.com.hcmurs.ui.theme.AppLightGray
 import org.com.hcmurs.ui.theme.AppMediumGray
 import org.com.hcmurs.ui.theme.AppDarkGray
-import org.com.hcmurs.Screen
+
 
 data class MetroTicket(
     val id: Int,
@@ -50,13 +47,23 @@ fun BuyTicketScreen(
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
-
     val selectedStationFrom = navController.currentBackStackEntry?.savedStateHandle?.get<String>("selectedFromStation") ?: "Chọn ga khởi hành"
     val selectedStationTo = navController.currentBackStackEntry?.savedStateHandle?.get<String>("selectedToStation") ?: "Chọn ga điểm đến"
 
-
     Scaffold(
         topBar = {
+            CustomTopAppBar(
+                title = "Mua vé",
+                navigationIcon = {
+                    IconButton(onClick = { /* Có thể navigate về Home hoặc không làm gì */ }) {
+                        Icon(
+                            imageVector = Icons.Default.Home,
+                            contentDescription = "Trang chủ",
+                            tint = Color(0xFF1565C0)
+                        )
+                    }
+                }
+            )
         },
         bottomBar = {
             AppBottomNavigationBar(
@@ -89,17 +96,15 @@ fun BuyTicketScreen(
                         )
                         Spacer(modifier = Modifier.height(12.dp))
 
-                        // Thay thế OutlinedTextField bằng một click-able Surface
                         Surface(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .height(56.dp) // Chiều cao của OutlinedTextField
+                                .height(56.dp)
                                 .clickable {
-                                    // Điều hướng đến SearchStationScreen và yêu cầu focus vào trường "from"
                                     navController.navigate(Screen.SearchStation.route + "?focusField=from")
                                 },
                             shape = RoundedCornerShape(8.dp),
-                            border = BorderStroke(1.dp, AppMediumGray.copy(alpha = 0.5f)) // Giống border của OutlinedTextField
+                            border = BorderStroke(1.dp, AppMediumGray.copy(alpha = 0.5f))
                         ) {
                             Row(
                                 modifier = Modifier
@@ -135,52 +140,16 @@ fun BuyTicketScreen(
                 )
 
                 val metroTickets = listOf(
-                    MetroTicket(
-                        id = 1,
-                        name = "Vé 1 Ngày",
-                        description = "Di chuyển không giới hạn trong 1 ngày kể từ khi kích hoạt.",
-                        price = "30.000 VNĐ",
-                        validity = "Hiệu lực 24h",
-                        color = Color(0xFF385F8E) // Giữ nguyên màu vé cụ thể
-                    ),
-                    MetroTicket(
-                        id = 2,
-                        name = "Vé 3 Ngày",
-                        description = "Di chuyển không giới hạn trong 3 ngày liên tiếp.",
-                        price = "80.000 VNĐ",
-                        validity = "Hiệu lực 72h",
-                        color = Color(0xFF2D426C)
-                    ),
-                    MetroTicket(
-                        id = 3,
-                        name = "Vé Tháng",
-                        description = "Di chuyển không giới hạn trong 1 tháng. Cần đăng ký thông tin cá nhân.",
-                        price = "200.000 VNĐ",
-                        validity = "Hiệu lực 30 ngày",
-                        color = Color(0xFF1E3F77)
-                    ),
-                    MetroTicket(
-                        id = 4,
-                        name = "Vé HSSV",
-                        description = "Vé ưu đãi dành cho Học sinh/Sinh viên. Cần thẻ HSSV hợp lệ.",
-                        price = "100.000 VNĐ",
-                        validity = "Hiệu lực 1 tháng",
-                        color = Color(0xFF281B9A)
-                    ),
-                    MetroTicket(
-                        id = 5,
-                        name = "Vé Lượt",
-                        description = "Thanh toán theo từng chặng, tính phí theo quãng đường di chuyển.",
-                        price = "Từ 8.000 VNĐ",
-                        validity = "Theo chuyến",
-                        color = Color(0xFFA52714)
-                    )
+                    MetroTicket(id = 1, name = "Vé 1 ngày", description = "Di chuyển không giới hạn trong 1 ngày.", price = "40.000 VNĐ", validity = "Hiệu lực 24h", color = Color(0xFF385F8E)),
+                    MetroTicket(id = 2, name = "Vé 3 ngày", description = "Di chuyển không giới hạn trong 3 ngày.", price = "90.000 VNĐ", validity = "Hiệu lực 72h", color = Color(0xFF2D426C)),
+                    MetroTicket(id = 3, name = "Vé tháng", description = "Di chuyển không giới hạn trong 1 tháng.", price = "300.000 VNĐ", validity = "Hiệu lực 30 ngày", color = Color(0xFF1E3F77))
+                    // Thêm các vé khác nếu bạn muốn
                 )
                 Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                     metroTickets.forEach { ticket ->
                         TicketCard(ticket = ticket) {
-                            // TODO: Handle click on ticket, e.g., navigate to detail screen
-                            // navController.navigate(Screen.BuyTicketDetail.route + "/${ticket.id}")
+                            // Logic điều hướng khi nhấn vào vé
+                            navController.navigate("order_info_screen/${ticket.name}")
                         }
                     }
                 }
@@ -189,32 +158,11 @@ fun BuyTicketScreen(
     }
 }
 
-// HÀM StationSuggestionItem ĐÃ BỊ XÓA HOẶC COMMENT Ở ĐÂY VÌ KHÔNG CÒN ĐƯỢC SỬ DỤNG TRONG FILE NÀY
-// @Composable
-// fun StationSuggestionItem(suggestion: StationSuggestion) {
-//     Row(
-//         modifier = Modifier
-//             .fillMaxWidth()
-//             .padding(vertical = 8.dp)
-//             .clickable { /* TODO: Handle click on station suggestion */ },
-//         verticalAlignment = Alignment.CenterVertically
-//     ) {
-//         Icon(
-//             imageVector = Icons.Default.LocationOn,
-//             contentDescription = null,
-//             tint = BlueDark,
-//             modifier = Modifier.size(24.dp)
-//         )
-//         Spacer(modifier = Modifier.width(12.dp))
-//         Column {
-//             Text(text = suggestion.name, fontSize = 16.sp, fontWeight = FontWeight.Medium, color = AppDarkGray)
-//             Text(text = suggestion.address, fontSize = 12.sp, color = AppMediumGray)
-//         }
-//     }
-// }
+
 
 @Composable
 fun TicketCard(ticket: MetroTicket, onClick: () -> Unit) {
+    // ... nội dung của TicketCard giữ nguyên ...
     Card(
         modifier = Modifier
             .fillMaxWidth()

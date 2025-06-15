@@ -1,4 +1,3 @@
-// In D:\...\searchstation\SearchStationScreen.kt
 package org.com.hcmurs.ui.screens.searchstation
 
 import androidx.compose.foundation.border
@@ -10,6 +9,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -23,15 +23,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import org.com.hcmurs.repositories.station.Station
+import org.com.hcmurs.ui.components.AppBottomNavigationBar
+import org.com.hcmurs.ui.components.topNav.CustomTopAppBar
 import org.com.hcmurs.ui.theme.AppDarkGray
 import org.com.hcmurs.ui.theme.AppLightGray
 import org.com.hcmurs.ui.theme.AppMediumGray
 import org.com.hcmurs.ui.theme.AppWhite
 import org.com.hcmurs.ui.theme.BlueDark
 
-// Enum để xác định ô input nào đang được người dùng chọn
 enum class ActiveInput {
     FROM, TO
 }
@@ -41,15 +43,36 @@ fun SearchStationScreen(
     navController: NavHostController,
     viewModel: SearchStationViewModel = hiltViewModel()
 ) {
-    // Lắng nghe trạng thái UI từ ViewModel
     val uiState by viewModel.uiState.collectAsState()
 
-    // Các state cục bộ của giao diện
     var fromStationText by remember { mutableStateOf("") }
     var toStationText by remember { mutableStateOf("") }
     var activeInput by remember { mutableStateOf<ActiveInput?>(null) }
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
 
-    Scaffold(containerColor = AppLightGray) { paddingValues ->
+    Scaffold(
+        topBar = {
+            CustomTopAppBar(
+                title = "Chọn ga",
+                navigationIcon = {
+                    IconButton(onClick = { navController.popBackStack() }) {
+                        Icon(
+                            imageVector = Icons.Default.ArrowBack,
+                            contentDescription = "Quay lại",
+                            tint = Color(0xFF1565C0)
+                        )
+                    }
+                }
+            )
+        },
+        bottomBar = {
+            AppBottomNavigationBar(
+                navController = navController,
+                currentRoute = currentRoute
+            )
+        },
+        containerColor = AppLightGray) { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -57,7 +80,6 @@ fun SearchStationScreen(
                 .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Card chứa 2 ô input điểm đi và điểm đến
             StationSelectionInputs(
                 fromStationText = fromStationText,
                 toStationText = toStationText,
@@ -67,7 +89,6 @@ fun SearchStationScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Danh sách các nhà ga (chiếm hết không gian còn lại)
             Box(modifier = Modifier.weight(1f)) {
                 StationList(
                     uiState = uiState,
@@ -75,19 +96,18 @@ fun SearchStationScreen(
                         when (activeInput) {
                             ActiveInput.FROM -> fromStationText = selectedStation.name
                             ActiveInput.TO -> toStationText = selectedStation.name
-                            null -> { /* Không làm gì nếu không có ô nào được chọn */ }
+                            null -> {  }
                         }
-                        activeInput = null // Reset ô được chọn sau khi đã chọn xong
+                        activeInput = null
                     }
                 )
             }
 
-            // Các nút bấm "Quay lại" và "Hoàn tất"
+
             ActionButtons(
                 navController = navController,
                 isCompleteEnabled = fromStationText.isNotEmpty() && toStationText.isNotEmpty()
             ) {
-                // Xử lý khi nhấn nút "Hoàn tất"
                 navController.previousBackStackEntry?.savedStateHandle?.set("selectedFromStation", fromStationText)
                 navController.previousBackStackEntry?.savedStateHandle?.set("selectedToStation", toStationText)
                 navController.popBackStack()
@@ -194,6 +214,7 @@ private fun BoxScope.StationList(
                 }
             }
         }
+        else -> {}
     }
 }
 
@@ -261,9 +282,6 @@ private fun ActionButtons(
 @Composable
 fun PreviewSearchStationScreen() {
     val navController = rememberNavController()
-    // SearchStationScreen(navController = navController)
-    // Để preview toàn bộ màn hình, bạn sẽ cần tạo một ViewModel giả mạo.
-    // Thay vào đó, chúng ta có thể preview các thành phần nhỏ hơn.
     Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
         ReadOnlyTextField(
             label = "Điểm đi",
