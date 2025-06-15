@@ -1,6 +1,6 @@
 package org.com.hcmurs.ui.components
 
-import androidx.compose.animation.core.animateFloatAsState // Import để tạo hiệu ứng animation
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
