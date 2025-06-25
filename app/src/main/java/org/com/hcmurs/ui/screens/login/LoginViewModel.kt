@@ -1,52 +1,180 @@
 package org.com.hcmurs.ui.screens.login
 
+import android.content.Intent
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import org.com.hcmurs.common.enum.LoadStatus
-import org.com.hcmurs.repositories.Api
-import org.com.hcmurs.repositories.MainLog
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import org.com.hcmurs.common.enum.LoadStatus
+import org.com.hcmurs.oauth.GoogleAuthManager
+import org.com.hcmurs.repositories.AuthRepository
+import org.com.hcmurs.repositories.apis.UserProfileData
 import javax.inject.Inject
-
-data class LoginUiState(
-    val username: String = "",
-    val password: String = "",
-    val status: LoadStatus = LoadStatus.Init()
-)
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val log: MainLog?,
-    private val api: Api?
+    private val authRepository: AuthRepository,
+    private val googleAuthManager: GoogleAuthManager
 ) : ViewModel() {
-    val _uiState = MutableStateFlow(LoginUiState())
-    val uiState = _uiState.asStateFlow()
 
-    fun updateUsername(username: String) {
-        _uiState.value = _uiState.value.copy(username = username)
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading: StateFlow<Boolean> = _isLoading
+
+    private val _errorMessage = MutableStateFlow<String?>(null)
+    val errorMessage: StateFlow<String?> = _errorMessage
+
+    private val _isAuthenticated = MutableStateFlow(false)
+    val isAuthenticated: StateFlow<Boolean> = _isAuthenticated
+
+    private val _signInIntent = MutableStateFlow<Intent?>(null)
+    val signInIntent: StateFlow<Intent?> = _signInIntent
+
+    init {
+        checkAuthenticationStatus()
     }
 
-    fun updatePassword(password: String) {
-        _uiState.value = _uiState.value.copy(password = password)
-    }
-
-    fun reset() {
-        _uiState.value = _uiState.value.copy(status = LoadStatus.Init())
-    }
-
-    fun login() {
+    // THÊM: Kiểm tra trạng thái đăng nhập và load profile
+    private fun checkAuthenticationStatus() {
         viewModelScope.launch {
-            _uiState.value = _uiState.value.copy(status = LoadStatus.Loading())
-            try {
-                var result = api?.login(uiState.value.username, uiState.value.password)
-                _uiState.value = _uiState.value.copy(status = LoadStatus.Success())
-            } catch (ex: Exception) {
-                _uiState.value =
-                    _uiState.value.copy(status = LoadStatus.Error(ex.message.toString()))
+            if (authRepository.isAuthenticated()) {
+                _isAuthenticated.value = true
+                // Load profile nếu user đã đăng nhập
+                authRepository.fetchUserProfile()
             }
+        }
+    }
+
+
+    // Initiate Google Sign-In process
+    fun initiateGoogleSignIn() {
+        viewModelScope.launch {
+            Log.d("LoginFlow", "Starting Google sign-in process")
+            _isLoading.value = true
+            _errorMessage.value = null
+
+            try {
+                val result = googleAuthManager.signIn()
+                Log.d("LoginFlow", "Google sign-in preparation result: $result")
+                result.fold(
+                    onSuccess = { intent ->
+                        Log.d("LoginFlow", "Google sign-in intent created successfully")
+                        _signInIntent.value = intent
+                    },
+                    onFailure = { error ->
+                        Log.e("LoginFlow", "Failed to initialize sign-in", error)
+                        _errorMessage.value = "Failed to initialize sign-in: ${error.message}"
+                    }
+                )
+            } catch (e: Exception) {
+                Log.e("LoginFlow", "Exception during sign-in initialization", e)
+                _errorMessage.value = "Error: ${e.message}"
+            } finally {
+                _isLoading.value = false
+            }
+        }
+    }
+
+    // Handle the result from Google Sign-In
+    fun handleGoogleSignInResult(data: Intent?) {
+        Log.d("LoginFlow", "Handling Google sign-in result: ${data != null}")
+        viewModelScope.launch {
+            _isLoading.value = true
+            _errorMessage.value = null
+
+            try {
+                if (data == null) {
+                    Log.w("LoginFlow", "Received null intent from Google sign-in")
+                    _errorMessage.value = "Sign-in canceled or failed"
+                    return@launch
+                }
+
+                Log.d("LoginFlow", "Extracting ID token from Google sign-in result")
+                val idTokenResult = googleAuthManager.getGoogleIdToken(data)
+                idTokenResult.fold(
+                    onSuccess = { idToken ->
+                        Log.d("LoginFlow", "Successfully obtained Google ID token, length: ${idToken.length}")
+                        // Send ID token to backend
+                        Log.d("LoginFlow", "Sending ID token to backend server")
+                        val jwtToken = authRepository.loginWithGoogle(idToken)
+                        Log.d("LoginFlow", "Backend authentication complete, token received: ${jwtToken.isNotEmpty()}")
+
+                        if (jwtToken.isNotEmpty()) {
+                            Log.d("LoginFlow", "Authentication successful, proceeding to home")
+                            _isAuthenticated.value = true
+                        } else {
+                            Log.e("LoginFlow", "Empty JWT token received from server")
+                            _errorMessage.value = "Failed to get JWT token from server"
+                        }
+                    },
+                    onFailure = { error ->
+                        Log.e("LoginFlow", "Failed to get Google ID token", error)
+                        _errorMessage.value = "Google Sign-In failed: ${error.message}"
+                    }
+                )
+            } catch (e: Exception) {
+                Log.e("LoginFlow", "Exception during Google sign-in handling", e)
+                _errorMessage.value = "Error: ${e.message}"
+            } finally {
+                _isLoading.value = false
+                // Reset the intent after handling
+                _signInIntent.value = null
+            }
+        }
+    }
+
+    // Sign out user
+    fun logout() {
+        viewModelScope.launch {
+            _isLoading.value = true
+
+            try {
+                // Gọi hàm logout từ AuthRepository để xóa token và profile
+                authRepository.logout()
+
+                // Thực hiện signOut từ Google
+                val result = googleAuthManager.signOut()
+                result.fold(
+                    onSuccess = {
+                        Log.d("LoginViewModel", "Google signOut successful")
+                    },
+                    onFailure = { error ->
+                        Log.w("LoginViewModel", "Google signOut failed: ${error.message}")
+                        // Không hiển thị lỗi cho user vì đã xóa token local
+                    }
+                )
+
+                // Cập nhật trạng thái authenticated
+                _isAuthenticated.value = false
+                _errorMessage.value = null
+
+                Log.d("LoginViewModel", "Logout completed successfully")
+
+            } catch (e: Exception) {
+                Log.e("LoginViewModel", "Error during logout: ${e.message}", e)
+                _errorMessage.value = "Error during logout: ${e.message}"
+            } finally {
+                _isLoading.value = false
+            }
+        }
+    }
+
+    // For direct access with ActivityResultLauncher
+    fun signInWithGoogle(): Intent {
+        return googleAuthManager.getSignInIntent()
+    }
+    fun updateLoginError(errorMessage: String) {
+        _errorMessage.value = errorMessage
+        _isLoading.value = false
+    }
+    // HÀM MỚI: LẤY STATEFLOW CỦA USER PROFILE TỪ REPOSITORY
+    val userProfile: StateFlow<UserProfileData?> = authRepository.userProfile
+
+    fun refreshUserProfile() {
+        viewModelScope.launch {
+            authRepository.fetchUserProfile()
         }
     }
 }

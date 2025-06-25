@@ -78,7 +78,7 @@ fun Navigation() {
             SplashScreen(navController = navController)
         }
         composable(Screen.Login.route) {
-            LoginScreen(navController, viewModel = hiltViewModel(), mainViewModel)
+            LoginScreen(navController)
         }
         composable(Screen.Register.route) {
             RegisterScreen(navController, viewModel = hiltViewModel(), mainViewModel)

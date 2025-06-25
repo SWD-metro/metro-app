@@ -66,10 +66,12 @@ dependencies {
 
     implementation(libs.androidx.material.icons.extended)
     implementation(libs.androidx.navigation.compose)
+    implementation(libs.logging.interceptor)
 
     ksp(libs.hilt.android.compiler)
     ksp(libs.androidx.room.compiler)
-
+    implementation(libs.androidx.hilt.compiler)
+    implementation(libs.hilt.android.gradle.plugin)
     implementation(libs.hilt.android)
     implementation(libs.androidx.hilt.navigation.compose)
 
@@ -77,11 +79,13 @@ dependencies {
 
 
     implementation(libs.okhttp)
-    implementation(libs.logging.interceptor)
 
     implementation(libs.gson)
     implementation (libs.retrofit)
     implementation (libs.converter.gson)
+    implementation(libs.okhttp.urlconnection)
+    implementation (libs.play.services.auth) // hoặc bản mới nhất
+    implementation(libs.kotlinx.coroutines.play.services)
 
     implementation(libs.accompanist.pager)
     implementation(libs.androidx.core.splashscreen)
@@ -116,7 +120,9 @@ dependencies {
 
 
 }
-
+configurations.all {
+    exclude(group = "com.intellij", module = "annotations")
+}
 //kapt {
 //    correctErrorTypes = true
 //}
