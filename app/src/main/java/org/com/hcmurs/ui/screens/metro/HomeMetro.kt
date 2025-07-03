@@ -29,10 +29,13 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import org.com.hcmurs.constant.ScreenTitle
+import org.com.hcmurs.constant.UserRole
+import org.com.metro.ui.components.quickaction.QuickActionsSection
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomePage(navController: NavHostController) {
+fun HomePage(navController: NavHostController,
+             role: UserRole = UserRole.GUEST,) {
 
 
     Scaffold(
@@ -57,7 +60,7 @@ fun HomePage(navController: NavHostController) {
                 .padding(16.dp)
         ) {
             WelcomeSection()
-            QuickActionsSection()
+            QuickActionsSection(navController, userRole = role)
             Spacer(modifier = Modifier.height(16.dp))
             New2()
             Spacer(modifier = Modifier.height(24.dp))
@@ -125,47 +128,6 @@ fun WelcomeSection() {
 }
 
 @OptIn(ExperimentalFoundationApi::class)
-@Composable
-fun QuickActionsSection() {
-    val list = ScreenTitle.values().toList()
-
-    val pages = list.chunked(8) // paginate every 8 items
-    val pagerState = rememberPagerState(
-        initialPage = 0,
-        initialPageOffsetFraction = 0f,
-        pageCount = { pages.size }
-    )
-
-    HorizontalPager(
-        state = pagerState,
-        modifier = Modifier
-            .border(2.dp, Color.Black)
-            .fillMaxWidth()
-            .height(250.dp), // enough for 2 rows
-    ) { page ->
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(4),
-            contentPadding = PaddingValues(10.dp),
-            verticalArrangement = Arrangement.spacedBy(5.dp),
-            horizontalArrangement = Arrangement.spacedBy(5.dp),
-            modifier = Modifier.fillMaxSize()
-        ) {
-            items(pages[page].size) { index ->
-                val item = pages[page][index]
-                Box(
-                    modifier = Modifier
-                        .height(100.dp)
-                        .fillMaxWidth()
-                        .background(Color.Green),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(text = item.title)
-                }
-            }
-        }
-    }
-}
-
 @Composable
 fun New2() {
     Row(

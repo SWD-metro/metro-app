@@ -5,6 +5,7 @@ package org.com.hcmurs.repositories.station
 import org.com.hcmurs.repositories.station.StationsService
 import org.com.hcmurs.repositories.station.StationsResponse
 import retrofit2.Response
+import retrofit2.http.GET
 import javax.inject.Inject
 
 // Interface định nghĩa các hành động

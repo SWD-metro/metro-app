@@ -23,6 +23,7 @@ import org.com.hcmurs.ui.screens.metro.buyticket.BuyTicketScreen
 // THÊM IMPORT CHO MÀN HÌNH MỚI
 import org.com.hcmurs.ui.screens.metro.buyticket.OrderInfoScreen
 import org.com.hcmurs.ui.screens.searchstation.SearchStationScreen
+import org.com.metro.ui.screens.metro.home.HomeScreen
 
 
 sealed class Screen(val route: String) {
@@ -51,6 +52,10 @@ sealed class Screen(val route: String) {
     object Setting : Screen("setting")
     object CooperationLink : Screen("cooperationLink")
     object Introduction : Screen("introduction")
+    object ScanQrCode : Screen("scanQR/{stationId}/{stationName}/{actionType}") {
+        fun createRoute(stationId: Int, stationName: String, actionType: String) = "scanQR/$stationId/$stationName/$actionType"
+        const val defaultRoute = "scanQR/0/None"
+    }
 
     // Test
     object UserProfile : Screen("userProfile")
@@ -83,8 +88,8 @@ fun Navigation() {
         composable(Screen.Register.route) {
             RegisterScreen(navController, viewModel = hiltViewModel(), mainViewModel)
         }
-        composable(Screen.Home.route) {
-            HomeMetro(navController, viewModel = hiltViewModel<HomeViewModel>(), mainViewModel)
+        composable(org.com.hcmurs.Screen.Home.route) {
+            HomeScreen(navController)
         }
         composable(Screen.SearchStation.route){
             SearchStationScreen(navController = navController)

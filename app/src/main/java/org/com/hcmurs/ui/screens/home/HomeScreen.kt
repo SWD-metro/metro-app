@@ -27,13 +27,16 @@ import androidx.navigation.NavHostController
 import org.com.hcmurs.MainViewModel
 import org.com.hcmurs.R
 import androidx.navigation.compose.currentBackStackEntryAsState
+import org.com.hcmurs.constant.UserRole
 import org.com.hcmurs.ui.components.AppBottomNavigationBar
+import org.com.metro.ui.components.quickaction.QuickActionsSection
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeMetro(
     navController: NavHostController,
     viewModel: HomeViewModel,
+    role: UserRole = UserRole.GUEST,
     mainViewModel: MainViewModel
 ) {
     val state by viewModel.uiState.collectAsState()
@@ -72,7 +75,7 @@ fun HomeMetro(
                 Box( // Box lớn chứa cả ảnh nền và nội dung phía trên
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(300.dp) // Giữ chiều cao tương đối để ảnh hiển thị đủ
+                        .height(450.dp) // Giữ chiều cao tương đối để ảnh hiển thị đủ
                 ) {
                     // Background Image
                     Image(
@@ -160,30 +163,10 @@ fun HomeMetro(
 
                         // Quick Action Cards now inside the same Column
                         Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.spacedBy(12.dp)
+                            modifier = Modifier
+                                .offset(y = 30.dp)
                         ) {
-                            QuickActionCard(
-                                modifier = Modifier.weight(1f),
-                                title = "Book ticket to",
-                                subtitle = "Ben Thanh Station",
-                                backgroundColor = cardBackground,
-                                onClick = { /* TODO: Navigate to ticket booking for Ben Thanh */ }
-                            )
-                            QuickActionCard(
-                                modifier = Modifier.weight(1f),
-                                title = "Book ticket to",
-                                subtitle = "Suoi Tien Station",
-                                backgroundColor = cardBackground,
-                                onClick = { /* TODO: Navigate to ticket booking for Suoi Tien */ }
-                            )
-                            QuickActionCard(
-                                modifier = Modifier.weight(1f),
-                                title = "View Map",
-                                subtitle = "Metro Lines",
-                                backgroundColor = cardBackground,
-                                onClick = { /* TODO: Navigate to metro map */ }
-                            )
+                            QuickActionsSection(navController, userRole = role)
                         }
 
                         // Spacer này sẽ đẩy nội dung phía dưới của Column lên trên
@@ -386,50 +369,6 @@ fun HomeMetro(
             }
             item {
                 Spacer(modifier = Modifier.height(20.dp))
-            }
-        }
-    }
-}
-
-@Composable
-private fun QuickActionCard(
-    modifier: Modifier = Modifier,
-    title: String,
-    subtitle: String,
-    backgroundColor: Color,
-    onClick: () -> Unit
-) {
-    Card(
-        modifier = modifier.clickable(onClick = onClick),
-        colors = CardDefaults.cardColors(containerColor = backgroundColor),
-        shape = RoundedCornerShape(12.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
-    ) {
-        Column(
-            modifier = Modifier.padding(12.dp)
-        ) {
-            Text(
-                text = title,
-                fontSize = 10.sp,
-                color = Color.Gray
-            )
-            Spacer(modifier = Modifier.height(4.dp))
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    imageVector = Icons.Default.LocationOn,
-                    contentDescription = null,
-                    tint = Color.Black,
-                    modifier = Modifier.size(12.dp)
-                )
-                Spacer(modifier = Modifier.width(4.dp))
-                Text(
-                    text = subtitle,
-                    fontSize = 11.sp,
-                    fontWeight = FontWeight.Medium,
-                    color = Color.Black
-                )
             }
         }
     }
