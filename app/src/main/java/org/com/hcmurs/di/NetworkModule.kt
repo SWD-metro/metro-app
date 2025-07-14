@@ -16,6 +16,8 @@ import okhttp3.logging.HttpLoggingInterceptor
 import org.com.hcmurs.repositories.apis.auth.AuthApi
 import org.com.hcmurs.repositories.apis.auth.SharedPreferencesTokenProvider
 import org.com.hcmurs.repositories.apis.auth.TokenProvider
+import org.com.hcmurs.repositories.apis.request.RequestApi
+import org.com.hcmurs.repositories.apis.request.RequestRepository
 import org.com.hcmurs.repositories.station.StationsService // Import Service của bạn
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -301,18 +303,18 @@ object NetworkModule {
 //    fun providePublicBlogRepository(api: PublicBlogApi): BlogRepository {
 //        return BlogRepository(api)
 //    }
-//    //request
-//    @Provides
-//    @Singleton
-//    fun provideRequestApi(retrofit: Retrofit): RequestApi {
-//        return retrofit.create(RequestApi::class.java)
-//    }
-//
-//    @Provides
-//    @Singleton
-//    fun provideRequestRepository(api: RequestApi): RequestRepository {
-//        return RequestRepository(api)
-//    }
+    //request
+    @Provides
+    @Singleton
+    fun provideRequestApi(retrofit: Retrofit): RequestApi {
+        return retrofit.create(RequestApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideRequestRepository(api: RequestApi): RequestRepository {
+        return RequestRepository(api)
+    }
 //
 //    //feedback
 //    @Provides

@@ -1,11 +1,20 @@
-// ui.theme.Color.kt
 package org.com.hcmurs.ui.theme
 
+import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.ui.graphics.Color
 
-// --- Định nghĩa các màu sắc tùy chỉnh của bạn ---
+val GreenPrimary = Color(0xFF347433)
+val LightOrange = Color(0xFFFF6F3C)
+val LightYellow = Color(0xFFFFC107)
+val LightBeige = Color(0xFFB4D2BA)
+val PaleYellow = Color(0xFFDCE2AA)
+val EarthBrown = Color(0xFFB57F50)
+val DarkGreen = Color(0xFF4B543B)
+val ErrorRed = Color(0xFFD32F2F)
 
-// Các màu tím và hồng (nếu bạn vẫn muốn giữ chúng)
+
+
 val Purple80 = Color(0xFFD0BCFF)
 val PurpleGrey80 = Color(0xFFCCC2DC)
 val Pink80 = Color(0xFFEFB8C8)

@@ -19,6 +19,9 @@ import org.com.hcmurs.ui.screens.home.HomeViewModel
 import org.com.hcmurs.ui.screens.login.LoginScreen
 import org.com.hcmurs.ui.screens.register.RegisterScreen
 import org.com.hcmurs.ui.screens.SplashScreen
+import org.com.hcmurs.ui.screens.metro.account.CCCDScreen
+import org.com.hcmurs.ui.screens.metro.account.LinkCCCDScreen
+import org.com.hcmurs.ui.screens.metro.account.RegisterFormScreen
 import org.com.hcmurs.ui.screens.metro.buyticket.BuyTicketScreen
 // THÊM IMPORT CHO MÀN HÌNH MỚI
 import org.com.hcmurs.ui.screens.metro.buyticket.OrderInfoScreen
@@ -36,8 +39,11 @@ sealed class Screen(val route: String) {
     object Feedback : Screen("feedback")
     object RedeemCodeForTicket : Screen("redeemCodeForTicket")
     object MyTicket : Screen("myTicket")
+    object CCCD : Screen("cccd")
+    object RegisterCCCD : Screen("registerCCCD")
+    object LinkCCCD : Screen("linkCCCD")
 
-    // Add new screen routes for the grid items
+        // Add new screen routes for the grid items
     object SearchStation : Screen("searchStation")
     object BuyTicket : Screen("buyTicket")
     object BuyTicketDetail : Screen("buyTicketDetail")
@@ -92,7 +98,16 @@ fun Navigation() {
         composable(Screen.BuyTicket.route){
             BuyTicketScreen(navController = navController)
         }
+        composable(Screen.CCCD.route) {
+            CCCDScreen(navController)
+        }
+        composable(Screen.RegisterCCCD.route) {
+            RegisterFormScreen(navController)
+        }
 
+        composable(Screen.LinkCCCD.route) {
+            LinkCCCDScreen(navController)
+        }
         composable(
             route = "${Screen.OrderInfo.route}/{ticketType}",
             arguments = listOf(navArgument("ticketType") { type = NavType.StringType })
