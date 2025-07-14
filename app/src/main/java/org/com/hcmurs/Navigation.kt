@@ -73,12 +73,12 @@ fun Navigation() {
         }
     }
 
-    NavHost(navController = navController, startDestination = Screen.BuyTicket.route) {
+    NavHost(navController = navController, startDestination = Screen.Login.route) {
         composable(Screen.Splash.route) {
             SplashScreen(navController = navController)
         }
         composable(Screen.Login.route) {
-            LoginScreen(navController, viewModel = hiltViewModel(), mainViewModel)
+            LoginScreen(navController, viewModel = hiltViewModel())
         }
         composable(Screen.Register.route) {
             RegisterScreen(navController, viewModel = hiltViewModel(), mainViewModel)

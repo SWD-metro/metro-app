@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.commonizer.OptimisticNumberCommonizationEnabledKey.alias
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
@@ -9,12 +11,12 @@ plugins {
 
 android {
     namespace = "org.com.hcmurs"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "org.com.hcmurs"
-        minSdk = 24
-        targetSdk = 34
+        minSdk = 26
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
@@ -22,8 +24,8 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
-        manifestPlaceholders["appAuthRedirectScheme"] = "org.com.hcmurs"
 
+        manifestPlaceholders["appAuthRedirectScheme"] = "org.com.hcmurs"
     }
 
     buildTypes {
@@ -53,11 +55,11 @@ android {
 }
 
 dependencies {
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
-
+    implementation (libs.play.services.auth) // hoặc bản mới nhất
+    implementation(libs.kotlinx.coroutines.play.services)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
@@ -67,6 +69,8 @@ dependencies {
     implementation(libs.androidx.material.icons.extended)
     implementation(libs.androidx.navigation.compose)
 
+    implementation(libs.logging.interceptor)
+
     ksp(libs.hilt.android.compiler)
     ksp(libs.androidx.room.compiler)
 
@@ -75,25 +79,36 @@ dependencies {
 
     implementation(libs.composeIcons.fontAwesome)
 
+    implementation(libs.jackson.datatype.jsr310)
+    implementation(libs.jackson.annotations)
+    implementation(libs.jackson.core)
+    implementation(libs.jackson.databind)
 
     implementation(libs.okhttp)
-    implementation(libs.logging.interceptor)
 
     implementation(libs.gson)
     implementation (libs.retrofit)
     implementation (libs.converter.gson)
-
+    implementation(libs.okhttp.urlconnection)
     implementation(libs.accompanist.pager)
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.coil.compose)
 
     implementation(libs.coil.network.okhttp)
 
+    // QR Code Scanning
+    implementation(libs.androidx.camera.view)
+    implementation (libs.androidx.camera.camera2)
+    implementation (libs.androidx.camera.lifecycle)
+    implementation (libs.androidx.camera.view.v131)
+    implementation (libs.barcode.scanning)
+
     implementation(libs.osmdroid.android)
 
     implementation(libs.appauth)
     implementation(libs.androidx.browser)
     implementation(libs.androidx.animation)
+    implementation("com.stripe:stripe-android:20.42.0")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
@@ -102,19 +117,6 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-
-    implementation("androidx.camera:camera-core:1.3.1")
-    implementation("androidx.camera:camera-camera2:1.3.1")
-    implementation("androidx.camera:camera-lifecycle:1.3.1")
-    implementation("androidx.camera:camera-view:1.3.1")
-
-    implementation("com.google.zxing:core:3.5.2")
-    implementation("com.journeyapps:zxing-android-embedded:4.3.0")
-    implementation("com.google.code.gson:gson:2.10.1")
-    implementation("com.google.accompanist:accompanist-permissions:0.32.0")
-    implementation("androidx.compose.material:material-icons-extended:1.6.1")
-
-
 }
 
 //kapt {

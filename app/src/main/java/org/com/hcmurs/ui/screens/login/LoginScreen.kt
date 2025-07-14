@@ -1,5 +1,9 @@
 package org.com.hcmurs.ui.screens.login
 
+import android.app.Activity
+import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -12,314 +16,254 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material.icons.filled.Visibility
-import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.blur
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
-import org.com.hcmurs.MainViewModel
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+import coil3.compose.AsyncImage
+import org.com.hcmurs.R
 import org.com.hcmurs.Screen
 import org.com.hcmurs.common.enum.LoadStatus
-import org.com.hcmurs.R
 
 @Composable
 fun LoginScreen(
-    navController: NavHostController,
-    viewModel: LoginViewModel,
-    mainViewModel: MainViewModel
+    navController: NavController,
+    viewModel: LoginViewModel = hiltViewModel(),
 ) {
-    val state = viewModel.uiState.collectAsState()
-    var passwordVisible by remember { mutableStateOf(false) }
+    val isLoading by viewModel.isLoading.collectAsState()
+    val errorMessage by viewModel.errorMessage.collectAsState()
+    val isAuthenticated by viewModel.isAuthenticated.collectAsState()
 
-    // Define colors for dark theme
-    val cyanBlue = Color(0xFF39C7FF)
-    val darkBlue = Color(0xFF1A1B3A)
-    val darkPurple = Color(0xFF2D1B69)
-    val lightGray = Color(0xFFB8B8CC)
-    val whiteText = Color.White
+    val context = LocalContext.current
 
+    // Create launcher for Google Sign-In
+    val googleSignInLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        Log.d("LoginFlow", "Google sign-in activity result: ${result.resultCode}")
+        if (result.resultCode == Activity.RESULT_OK) {
+            Log.d("LoginFlow", "Google sign-in completed successfully, processing result")
+            viewModel.handleGoogleSignInResult(result.data)
+        } else {
+            Log.w("LoginFlow", "Google sign-in canceled or failed with resultCode: ${result.resultCode}")
+            viewModel.updateLoginError("Sign-in was canceled or failed")
+        }
+    }
+
+    // Navigate when authenticated
+//    LaunchedEffect(isAuthenticated) {
+//        Log.d("LoginFlow", "Authentication state changed: $isAuthenticated")
+//        if (isAuthenticated) {
+//            Log.d("LoginFlow", "User authenticated, navigating to home screen")
+//            navController.navigate("account") {
+//                popUpTo("login") { inclusive = true }
+//            }
+//        }
+//    }
+    val userProfile by viewModel.userProfile.collectAsState()
+
+    LaunchedEffect(isAuthenticated, userProfile) {
+        if (isAuthenticated && userProfile != null) {
+            val role = userProfile?.role ?: "unknown"
+            Log.d("LoginFlow", "User role: $role")
+
+            when (role) {
+                "ROLE_CUSTOMER" -> {
+                    navController.navigate(Screen.Home.route) {
+                        popUpTo("login") { inclusive = true }
+                    }
+                }
+                "ROLE_STAFF" -> {
+//                    navController.navigate(Screen.StaffHomeScreen.route) {
+//                        popUpTo("login") { inclusive = true }
+//                    }
+                }
+                else -> {
+                    Log.w("LoginFlow", "Unknown role, defaulting to account screen")
+                    navController.navigate("account") {
+                        popUpTo("login") { inclusive = true }
+                    }
+                }
+            }
+        }
+    }
+
+    // Convert your states to LoadStatus for LoginScreenContent
+    val status = when {
+        isLoading -> LoadStatus.Loading()
+        errorMessage != null -> LoadStatus.Error(errorMessage!!)
+        isAuthenticated -> LoadStatus.Success()
+        else -> LoadStatus.Init()
+    }
+
+    LoginScreenContent(
+        navController = navController,
+        status = status,
+        onGoogleLoginClick = {
+            val signInIntent = viewModel.signInWithGoogle()
+            googleSignInLauncher.launch(signInIntent)
+        },
+        onFacebookLoginClick = {
+            // Add Facebook login logic here if needed
+            // For now, this is a placeholder since your original code only had Google login
+        }
+    )
+}
+
+@Composable
+private fun LoginScreenContent(
+    navController: NavController,
+    status: LoadStatus,
+    onGoogleLoginClick: () -> Unit,
+    onFacebookLoginClick: () -> Unit
+) {
     Box(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.White)
     ) {
         // Background Image
-        Image(
-            painter = painterResource(id = R.drawable.loginbackground),
-            contentDescription = "Background",
-            contentScale = ContentScale.Crop,
-            modifier = Modifier.fillMaxSize()
+        AsyncImage(
+            model = R.drawable.login_banner,
+            contentDescription = "Social link",
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(300.dp)
+                .align(Alignment.TopCenter),
+            contentScale = ContentScale.Crop
         )
 
-        // Dark overlay
-        Box(
+        // White surface that floats at the bottom of the image
+        Surface(
+            shape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp),
+            color = Color.White,
+            shadowElevation = 8.dp,
             modifier = Modifier
-                .fillMaxSize()
-                .background(
-                    Brush.verticalGradient(
-                        colors = listOf(
-                            Color.Black.copy(alpha = 0.4f),
-                            Color.Black.copy(alpha = 0.8f)
-                        )
-                    )
-                )
-        )
-
-        // Main content Column
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 32.dp),
-            verticalArrangement = Arrangement.Top,
-            horizontalAlignment = Alignment.CenterHorizontally
+                .fillMaxWidth()
+                .align(Alignment.TopCenter)
+                .padding(top = 250.dp)
         ) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .weight(1f),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
+                    .padding(16.dp)
             ) {
-                Spacer(modifier = Modifier.height(24.dp))
-                Text(
-                    text = "Welcome Back",
-                    color = whiteText,
-                    fontSize = 32.sp,
-                    fontWeight = FontWeight.Bold,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.padding(top = 64.dp)
-                )
-                Spacer(modifier = Modifier.height(32.dp))
-            }
-
-
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(2f),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Bottom
-            ) {
-                if (state.value.status is LoadStatus.Loading) {
-                } else if (state.value.status is LoadStatus.Success) {
-                    LaunchedEffect(Unit) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    IconButton(onClick = {
                         navController.navigate(Screen.Home.route)
-                    }
-                } else {
-                    if (state.value.status is LoadStatus.Error) {
-                        mainViewModel.setError(state.value.status.description)
-                        viewModel.reset()
+                    }) {
+                        Icon(
+                            imageVector = Icons.Default.ArrowBack,
+                            contentDescription = "Back",
+                            tint = Color.Gray
+                        )
                     }
 
-                    OutlinedTextField(
-                        value = state.value.username,
-                        onValueChange = { viewModel.updateUsername(it) },
-                        modifier = Modifier.fillMaxWidth(),
-                        placeholder = { Text("Username", color = lightGray) },
-                        leadingIcon = {
-                            Icon(
-                                imageVector = Icons.Default.Person,
-                                contentDescription = "Username Icon",
-                                tint = lightGray,
-                                modifier = Modifier.size(20.dp)
-                            )
-                        },
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-                        singleLine = true,
-                        colors = OutlinedTextFieldDefaults.colors(
-                            focusedBorderColor = cyanBlue,
-                            unfocusedBorderColor = lightGray.copy(alpha = 0.5f),
-                            focusedTextColor = whiteText,
-                            unfocusedTextColor = whiteText,
-                            cursorColor = cyanBlue
-                        ),
-                        shape = RoundedCornerShape(12.dp)
+                    Text(
+                        text = "Welcome to HCMURS",
+                        style = MaterialTheme.typography.headlineMedium,
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold
                     )
 
-                    Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.width(48.dp))
+                }
 
-                    OutlinedTextField(
-                        value = state.value.password,
-                        onValueChange = { viewModel.updatePassword(it) },
-                        modifier = Modifier.fillMaxWidth(),
-                        placeholder = { Text("Password", color = lightGray) },
-                        leadingIcon = {
-                            Icon(
-                                imageVector = Icons.Default.Lock,
-                                contentDescription = "Password Icon",
-                                tint = lightGray,
-                                modifier = Modifier.size(20.dp)
-                            )
-                        },
-                        trailingIcon = {
-                            IconButton(onClick = { passwordVisible = !passwordVisible }) {
-                                Icon(
-                                    imageVector = if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff,
-                                    contentDescription = if (passwordVisible) "Hide password" else "Show password",
-                                    tint = lightGray,
-                                    modifier = Modifier.size(20.dp)
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Text(
+                    text = "Ho Chi Minh Urban Railway System",
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = Color.Gray,
+                    modifier = Modifier.fillMaxWidth(),
+                    textAlign = TextAlign.Center
+                )
+
+                Spacer(modifier = Modifier.height(32.dp))
+
+                when (status) {
+                    is LoadStatus.Loading -> {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 32.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                CircularProgressIndicator(
+                                    color = MaterialTheme.colorScheme.primary,
+                                    strokeWidth = 3.dp
+                                )
+                                Spacer(modifier = Modifier.height(16.dp))
+                                Text(
+                                    text = "Authenticating...",
+                                    fontSize = 15.sp,
+                                    fontWeight = FontWeight.Medium,
+                                    color = Color.DarkGray
                                 )
                             }
-                        },
-                        visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-                        singleLine = true,
-                        colors = OutlinedTextFieldDefaults.colors(
-                            focusedBorderColor = cyanBlue,
-                            unfocusedBorderColor = lightGray.copy(alpha = 0.5f),
-                            focusedTextColor = whiteText,
-                            unfocusedTextColor = whiteText,
-                            cursorColor = cyanBlue
-                        ),
-                        shape = RoundedCornerShape(12.dp)
-                    )
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.End
-                    ) {
-                        TextButton(
-                            onClick = { /* TODO: Implement forgot password logic */ }
-                        ) {
-                            Text(
-                                text = "Forgot Password?",
-                                color = lightGray,
-                                fontSize = 14.sp
-                            )
                         }
                     }
 
-                    Spacer(modifier = Modifier.height(24.dp))
-
-                    Button(
-                        onClick = { viewModel.login() },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(56.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = cyanBlue
-                        ),
-                        shape = RoundedCornerShape(12.dp)
-                    ) {
-                        Text(
-                            text = "Login",
-                            style = MaterialTheme.typography.titleMedium.copy(
-                                fontWeight = FontWeight.SemiBold,
-                                fontSize = 16.sp
-                            ),
-                            color = Color.Black
+                    else -> {
+                        LoginButton(
+                            onClick = onGoogleLoginClick,
+                            text = "Continue with Google",
+                            logoRes = R.drawable.google,
+                            backgroundColor = Color.White,
+                            contentColor = Color.Black
                         )
-                    }
 
-                    Spacer(modifier = Modifier.height(16.dp))
+                        Spacer(modifier = Modifier.height(16.dp))
 
-                    OutlinedButton(
-                        onClick = { /* TODO: Implement Facebook login */ },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(56.dp),
-                        colors = ButtonDefaults.outlinedButtonColors(
-                            containerColor = Color.Transparent,
-                            contentColor = whiteText
-                        ),
-                        border = androidx.compose.foundation.BorderStroke(
-                            1.dp,
-                            lightGray.copy(alpha = 0.3f)
-                        ),
-                        shape = RoundedCornerShape(12.dp)
-                    ) {
-                        Text(
-                            text = "Facebook",
-                            style = MaterialTheme.typography.titleMedium.copy(
-                                fontWeight = FontWeight.Medium,
-                                fontSize = 16.sp
-                            ),
-                            color = whiteText
+                        LoginButton(
+                            onClick = onFacebookLoginClick,
+                            text = "Continue with Facebook",
+                            logoRes = R.drawable.fb,
+                            backgroundColor = Color(0xFF1877F2),
+                            contentColor = Color.White
                         )
-                    }
 
-                    Spacer(modifier = Modifier.height(12.dp))
-
-                    // Google button
-                    OutlinedButton(
-                        onClick = { /* TODO: Implement Google login */ },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(56.dp),
-                        colors = ButtonDefaults.outlinedButtonColors(
-                            containerColor = Color.Transparent,
-                            contentColor = whiteText
-                        ),
-                        border = androidx.compose.foundation.BorderStroke(
-                            1.dp,
-                            lightGray.copy(alpha = 0.3f)
-                        ),
-                        shape = RoundedCornerShape(12.dp)
-                    ) {
-                        Text(
-                            text = "Google",
-                            style = MaterialTheme.typography.titleMedium.copy(
-                                fontWeight = FontWeight.Medium,
-                                fontSize = 16.sp
-                            ),
-                            color = whiteText
-                        )
-                    }
-
-                    Spacer(modifier = Modifier.height(32.dp))
-
-                    Row(
-                        horizontalArrangement = Arrangement.Center,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = "Don't have account? ",
-                            color = lightGray,
-                            fontSize = 14.sp
-                        )
-                        TextButton(
-                            onClick = { navController.navigate(Screen.Register.route) }
-                        ) {
+                        // Show error message if there's an error
+                        if (status is LoadStatus.Error) {
+                            Spacer(modifier = Modifier.height(16.dp))
                             Text(
-                                text = "Sign Up",
-                                color = cyanBlue,
-                                fontWeight = FontWeight.SemiBold,
+                                text = status.description,
+                                color = MaterialTheme.colorScheme.error,
+                                modifier = Modifier.fillMaxWidth(),
+                                textAlign = TextAlign.Center,
                                 fontSize = 14.sp
                             )
                         }
@@ -330,20 +274,83 @@ fun LoginScreen(
     }
 }
 
+@Composable
+private fun LoginButton(
+    onClick: () -> Unit,
+    text: String,
+    logoRes: Int,
+    backgroundColor: Color,
+    contentColor: Color
+) {
+    Button(
+        onClick = onClick,
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(56.dp),
+        colors = ButtonDefaults.buttonColors(containerColor = backgroundColor),
+        shape = RoundedCornerShape(8.dp),
+        elevation = ButtonDefaults.buttonElevation(defaultElevation = 2.dp)
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
+        ) {
+            Image(
+                painter = painterResource(id = logoRes),
+                contentDescription = "$text logo",
+                modifier = Modifier.size(30.dp)
+            )
+            Spacer(modifier = Modifier.width(16.dp))
+            Text(
+                text = text,
+                color = contentColor,
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Medium
+            )
+        }
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
-fun LoginScreenPreview() {
-    val dummyLoginViewModel = LoginViewModel(null, null)
-    val dummyMainViewModel = MainViewModel()
+fun LoginScreenInitPreview() {
+    LoginScreenContent(
+        navController = rememberNavController(),
+        status = LoadStatus.Init(),
+        onGoogleLoginClick = {},
+        onFacebookLoginClick = {}
+    )
+}
 
-    LaunchedEffect(Unit) {
-        dummyLoginViewModel.updateUsername("user@example.com")
-        dummyLoginViewModel.updatePassword("password123")
-    }
+@Preview(showBackground = true)
+@Composable
+fun LoginScreenLoadingPreview() {
+    LoginScreenContent(
+        navController = rememberNavController(),
+        status = LoadStatus.Loading(),
+        onGoogleLoginClick = {},
+        onFacebookLoginClick = {}
+    )
+}
 
-    LoginScreen(
-        navController = NavHostController(LocalContext.current),
-        viewModel = dummyLoginViewModel,
-        mainViewModel = dummyMainViewModel
+@Preview(showBackground = true)
+@Composable
+fun LoginScreenSuccessPreview() {
+    LoginScreenContent(
+        navController = rememberNavController(),
+        status = LoadStatus.Success(),
+        onGoogleLoginClick = {},
+        onFacebookLoginClick = {}
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun LoginScreenErrorPreview() {
+    LoginScreenContent(
+        navController = rememberNavController(),
+        status = LoadStatus.Error("An error occurred"),
+        onGoogleLoginClick = {},
+        onFacebookLoginClick = {}
     )
 }
