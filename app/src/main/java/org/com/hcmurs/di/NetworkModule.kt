@@ -16,6 +16,8 @@ import okhttp3.logging.HttpLoggingInterceptor
 import org.com.hcmurs.repositories.apis.auth.AuthApi
 import org.com.hcmurs.repositories.apis.auth.SharedPreferencesTokenProvider
 import org.com.hcmurs.repositories.apis.auth.TokenProvider
+import org.com.hcmurs.repositories.apis.feedback.FeedbackApi
+import org.com.hcmurs.repositories.apis.feedback.FeedbackRepository
 import org.com.hcmurs.repositories.apis.request.RequestApi
 import org.com.hcmurs.repositories.apis.request.RequestRepository
 import org.com.hcmurs.repositories.station.StationsService // Import Service của bạn
@@ -316,18 +318,18 @@ object NetworkModule {
         return RequestRepository(api)
     }
 //
-//    //feedback
-//    @Provides
-//    @Singleton
-//    fun provideFeedbackApi(retrofit: Retrofit): FeedbackApi {
-//        return retrofit.create(FeedbackApi::class.java)
-//    }
-//
-//    @Provides
-//    @Singleton
-//    fun provideFeedbackRepository(api: FeedbackApi): FeedbackRepository {
-//        return FeedbackRepository(api)
-//    }
+    //feedback
+    @Provides
+    @Singleton
+    fun provideFeedbackApi(retrofit: Retrofit): FeedbackApi {
+        return retrofit.create(FeedbackApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideFeedbackRepository(api: FeedbackApi): FeedbackRepository {
+        return FeedbackRepository(api)
+    }
 //    // payment
 //    @Provides
 //    @Singleton
