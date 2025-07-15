@@ -1,6 +1,5 @@
 package org.com.hcmurs.utils
 
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import org.com.hcmurs.Screen
 import org.com.hcmurs.constant.ScreenTitle
 
@@ -21,11 +20,12 @@ fun getNavigationRoute(screenTitle: ScreenTitle): String {
         ScreenTitle.SETTING -> Screen.Setting.route
         ScreenTitle.COOPERATION_LINK -> Screen.CooperationLink.route
         ScreenTitle.INTRODUCTION -> Screen.Introduction.route
+        ScreenTitle.SCAN_QR_CODE -> Screen.ScanQrCode.route
     }
 }
 
 fun navigateToHome(navController: androidx.navigation.NavController) {
-    navController.navigate(Screen.HomeMetro.route)
+    navController.navigate(Screen.Home.route)
 //    {
 //        popUpTo(navController.graph.findStartDestination().id) {
 //            saveState = true

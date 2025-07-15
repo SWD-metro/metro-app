@@ -1,3 +1,41 @@
 <resources>
     <string name="app_name">hcmurs</string>
+    <string name="intro_title">
+        Welcome to <font color="#39c7a5">Digital Store</font>\n
+        a <font color="#39c7a5">Gateway</font> to the Latest Tech
+    </string>
+    <string name="intro_sub_title">Sign in to explore a wide range of cutting-edge
+ digital products. Don’t have an account yet?
+ Register now and enjoy a seamless
+and secure shopping experience</string>
+    <string name="letgo">"Let's Get Started"</string>
+    <string name="auth_navigation">Already have an account?</string>
+    <string name="sign">"Sign in"</string>
+
+    <!-- Screen Titles -->
+    <string name="buy_ticket">Buy Ticket</string>
+    <string name="route">Journey</string>
+    <string name="my_ticket">My Ticket</string>
+    <string name="maps">Map</string>
+    <string name="redeem_code_for_ticket">Redeem</string>
+    <string name="virtual_tour">Virtual Tour</string>
+    <string name="ticket_information">Ticket</string>
+    <string name="account">Account</string>
+    <string name="feedback">Feedback</string>
+    <string name="event">Event</string>
+    <string name="construction_image">Construction images</string>
+    <string name="setting">Setting</string>
+    <string name="cooperation_link">Link</string>
+    <string name="introduction">About us</string>
+    <string name="scan_qr_code">Scan QR</string>
+
+    <!-- Home Screen -->
+    <string name="news">News</string>
+    <string name="see_all">See all</string>
+    <string name="vietnamese">Vietnamese</string>
+    <string name="english">English</string>
+    <string name="metro_upgrade_title">New Metro system upgraded</string>
+    <string name="metro_guide_title">GO!METRO with diverse travel modes</string>
+    <string name="account_guide_title">Account usage guide</string>
+    <string name="tap_to_view">Tap to view now</string>
 </resources>
