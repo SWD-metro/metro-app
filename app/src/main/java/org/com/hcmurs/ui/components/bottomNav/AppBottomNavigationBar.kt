@@ -1,4 +1,4 @@
-package org.com.hcmurs.ui.components
+package org.com.hcmurs.ui.components.bottomNav
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -37,7 +37,7 @@ fun AppBottomNavigationBar(
         BottomNavItem(Icons.Default.Home, "Home", Screen.Home.route),
         BottomNavItem(Icons.Default.Search, "Search", Screen.BuyTicket.route),
         BottomNavItem(Icons.Default.QrCodeScanner, "My Ticket", Screen.Home.route),
-        BottomNavItem(Icons.Default.Settings, "Account", Screen.Home.route)
+        BottomNavItem(Icons.Default.Settings, "Account", Screen.Account.route)
     )
 
     val selectedColor = Color(0xFF4A6FA5)
