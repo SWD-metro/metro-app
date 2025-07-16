@@ -70,8 +70,8 @@ import androidx.compose.ui.res.painterResource // Để tải ảnh từ drawabl
 
 import org.com.hcmurs.ui.components.bottomNav.AppBottomNavigationBar
 import org.com.hcmurs.ui.components.topNav.CustomTopAppBar
-//import org.com.hcmurs.ui.screens.scanqr.ActionType
-//import org.com.hcmurs.ui.screens.scanqr.ScanQRViewModel
+import org.com.hcmurs.ui.screens.scanqr.ActionType
+import org.com.hcmurs.ui.screens.scanqr.ScanQRViewModel
 import org.com.hcmurs.ui.theme.BlueDark
 import org.com.hcmurs.ui.theme.BluePrimary
 
@@ -80,11 +80,11 @@ sealed class Screen(val route: String) {
     object Login : Screen("login")
     object Home : Screen("home")
     object Feedback : Screen("feedback")
-//    object StaffStationSelectionScreen : Screen("stationSelect/{actionType}") {
-//        fun createRoute(actionType: ActionType): String {
-//            return "stationSelect/${actionType.name}"
-//        }
-//    }
+    object StaffStationSelectionScreen : Screen("stationSelect/{actionType}") {
+        fun createRoute(actionType: ActionType): String {
+            return "stationSelect/${actionType.name}"
+        }
+    }
     object RedeemCodeForTicket : Screen("redeemCodeForTicket")
     object MyTicket : Screen("myTicket")
     object StaffAccount : Screen("staffAccount")

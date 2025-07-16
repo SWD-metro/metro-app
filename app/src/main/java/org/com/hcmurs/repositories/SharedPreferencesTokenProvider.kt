@@ -1,6 +1,7 @@
-package org.com.hcmurs.repositories.apis.auth
+package org.com.hcmurs.repositories
 
 import android.content.SharedPreferences
+import org.com.hcmurs.security.TokenProvider
 import javax.inject.Inject
 import javax.inject.Singleton
 
