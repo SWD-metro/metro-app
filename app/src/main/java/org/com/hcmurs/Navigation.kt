@@ -129,6 +129,8 @@ sealed class Screen(val route: String) {
     object Notification : Screen("notification")
     object OsmdroidMap : Screen("osmdroidMap")
     object Search : Screen("search_screen") // Đảm bảo route này tồn tại nếu bạn dùng nó trong BottomNav
+
+
 }
 
 @SuppressLint("UnrememberedGetBackStackEntry")
