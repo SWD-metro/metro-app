@@ -29,7 +29,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import org.com.metro.Screen
+import org.com.hcmurs.Screen
 
 @Composable
 fun StaffAccountQuickAccess(
