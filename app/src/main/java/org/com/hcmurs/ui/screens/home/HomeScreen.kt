@@ -27,7 +27,7 @@ import androidx.navigation.NavHostController
 import org.com.hcmurs.MainViewModel
 import org.com.hcmurs.R
 import androidx.navigation.compose.currentBackStackEntryAsState
-import org.com.hcmurs.ui.components.AppBottomNavigationBar
+import org.com.hcmurs.ui.components.bottomNav.AppBottomNavigationBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

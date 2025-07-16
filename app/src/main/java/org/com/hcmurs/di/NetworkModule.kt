@@ -16,6 +16,8 @@ import okhttp3.logging.HttpLoggingInterceptor
 import org.com.hcmurs.repositories.apis.auth.AuthApi
 import org.com.hcmurs.repositories.apis.auth.SharedPreferencesTokenProvider
 import org.com.hcmurs.repositories.apis.auth.TokenProvider
+import org.com.hcmurs.repositories.apis.blog.BlogRepository
+import org.com.hcmurs.repositories.apis.blog.PublicBlogApi
 import org.com.hcmurs.repositories.apis.request.RequestApi
 import org.com.hcmurs.repositories.apis.request.RequestRepository
 import org.com.hcmurs.repositories.station.StationsService // Import Service của bạn
@@ -277,32 +279,32 @@ object NetworkModule {
 //        return WeatherRepository(api)
 //    }
 //
-//    //Blog
-//    @Provides
-//    @Named("publicRetrofit")
-//    @Singleton
-//    fun providePublicRetrofit(okHttpClient: OkHttpClient): Retrofit {
-//        val publicClient = okHttpClient.newBuilder()
-//            .build()
-//
-//        return Retrofit.Builder()
-//            .baseUrl(BASE_URL)
-//            .client(publicClient)
-//            .addConverterFactory(GsonConverterFactory.create())
-//            .build()
-//    }
-//
-//    @Provides
-//    @Singleton
-//    fun providePublicBlogApi(@Named("publicRetrofit") retrofit: Retrofit): PublicBlogApi {
-//        return retrofit.create(PublicBlogApi::class.java)
-//    }
-//
-//    @Provides
-//    @Singleton
-//    fun providePublicBlogRepository(api: PublicBlogApi): BlogRepository {
-//        return BlogRepository(api)
-//    }
+    //Blog
+    @Provides
+    @Named("publicRetrofit")
+    @Singleton
+    fun providePublicRetrofit(okHttpClient: OkHttpClient): Retrofit {
+        val publicClient = okHttpClient.newBuilder()
+            .build()
+
+        return Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .client(publicClient)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+    }
+
+    @Provides
+    @Singleton
+    fun providePublicBlogApi(@Named("publicRetrofit") retrofit: Retrofit): PublicBlogApi {
+        return retrofit.create(PublicBlogApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun providePublicBlogRepository(api: PublicBlogApi): BlogRepository {
+        return BlogRepository(api)
+    }
     //request
     @Provides
     @Singleton
