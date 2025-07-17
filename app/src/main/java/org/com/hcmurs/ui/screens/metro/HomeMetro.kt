@@ -159,7 +159,7 @@ fun QuickActionsSection() {
                         .background(Color.Green),
                     contentAlignment = Alignment.Center
                 ) {
-                    Text(text = item.title)
+//                    Text(text = item.title)
                 }
             }
         }

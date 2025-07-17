@@ -35,7 +35,6 @@ import coil3.compose.AsyncImage
 import org.com.hcmurs.R
 import org.com.hcmurs.ui.components.floatingButton.FloatingButton
 import org.com.hcmurs.ui.components.quickaction.StaffAccountQuickAccess
-import org.com.hcmurs.ui.components.topbar.HomeTopBar
 import org.com.hcmurs.ui.screens.login.LoginViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -102,10 +101,6 @@ fun StaffHomeScreen(
             //     // Staff-specific content
             // }
         }
-
-        HomeTopBar(
-            modifier = Modifier.align(Alignment.TopCenter)
-        )
 
         // Optional: Floating button cho staff nếu cần
         FloatingButton(

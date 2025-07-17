@@ -57,7 +57,6 @@ import com.google.gson.Gson
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.common.InputImage
 import org.com.hcmurs.repositories.apis.ticket.ScanQRResponse
-import org.com.hcmurs.ui.components.topbar.ScanQRTopBar
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
@@ -121,7 +120,6 @@ fun ScanQRScreen(
 
     Scaffold(
         topBar = {
-            ScanQRTopBar(navController)
         }
     ) { paddingValues ->
         Box(
