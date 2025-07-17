@@ -1,5 +1,7 @@
 package org.com.hcmurs.ui.screens.metro.buyticket
 
+import android.widget.Button
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -14,11 +16,12 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -27,8 +30,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -39,11 +40,22 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import org.com.hcmurs.R
-import org.com.hcmurs.ui.components.AppBottomNavigationBar
+import org.com.hcmurs.repositories.apis.ticket.TicketType
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.draw.clip
+import org.com.hcmurs.Screen
+import androidx.compose.material3.*
+
+private val PrimaryGreen = Color(0xFF4CAF50)
+private val DarkGreen = Color(0xFF388E3C)
+private val LightGreenBackground = Color(0xFFE8F5E9)
+private val TextPrimaryColor = Color(0xFF212121)
+private val TextSecondaryColor = Color(0xFF757575)
+private val ErrorColor = Color(0xFFD32F2F)
 
 data class TicketDetailInfo(
     val type: String,
@@ -53,144 +65,21 @@ data class TicketDetailInfo(
     val description: String = ""
 )
 
+
+data class TicketDetailUiState(
+    val ticketDetail: TicketType? = null,
+    val isLoading: Boolean = false,
+    val errorMessage: String? = null
+)
 @Composable
 fun HurcLogo(modifier: Modifier = Modifier) {
     Image(
-        painter = painterResource(id = R.drawable.hurc),
+        painter = painterResource(id = org.com.hcmurs.R.drawable.hurc),
         contentDescription = "HURC Logo",
         modifier = modifier
     )
 }
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun TicketDetailScreen(
-    navController: NavHostController,
-    ticketType: String = "Vé 1 ngày",
-    ticketPrice: String = "40.000 đ"
-) {
 
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentRoute = navBackStackEntry?.destination?.route
-    // Create ticket detail based on type
-    val ticketDetail = remember (ticketType) {
-        when (ticketType) {
-            "Vé 1 ngày" -> TicketDetailInfo(
-                type = "Vé 1 ngày",
-                price = "40.000 đ",
-                validity = "24h kể từ thời điểm kích hoạt",
-                note = "Tự động kích hoạt sau 30 ngày kể từ ngày mua vé",
-                description = "Vé cho phép sử dụng tất cả các tuyến Metro trong 24 giờ"
-            )
-            "Vé 3 ngày" -> TicketDetailInfo(
-                type = "Vé 3 ngày",
-                price = "90.000 đ",
-                validity = "72h kể từ thời điểm kích hoạt",
-                note = "Tự động kích hoạt sau 30 ngày kể từ ngày mua vé",
-                description = "Vé cho phép sử dụng tất cả các tuyến Metro trong 3 ngày liên tiếp"
-            )
-            "Vé tháng" -> TicketDetailInfo(
-                type = "Vé tháng",
-                price = "300.000 đ",
-                validity = "30 ngày kể từ thời điểm kích hoạt",
-                note = "Tự động kích hoạt sau 30 ngày kể từ ngày mua vé",
-                description = "Vé cho phép sử dụng không giới hạn tất cả các tuyến Metro trong 1 tháng"
-            )
-            "Vé tháng HSSV" -> TicketDetailInfo(
-                type = "Vé tháng HSSV",
-                price = "150.000 đ",
-                validity = "30 ngày kể từ thời điểm kích hoạt",
-                note = "Tự động kích hoạt sau 30 ngày kể từ ngày mua vé. Chỉ dành cho học sinh, sinh viên có thẻ hợp lệ",
-                description = "Vé ưu đãi cho học sinh, sinh viên sử dụng trong 1 tháng"
-            )
-            else -> TicketDetailInfo(
-                type = ticketType,
-                price = ticketPrice,
-                validity = "Theo quy định",
-                note = "Vui lòng xem chi tiết tại quầy vé",
-                description = "Thông tin chi tiết về vé"
-            )
-        }
-    }
-    Scaffold(
-        topBar = {
-            TicketDetailTopBar(
-                title = ticketDetail.type,
-                onBackClick = { navController.popBackStack() }
-            )
-        },
-        bottomBar = {
-            AppBottomNavigationBar(
-                navController = navController,
-                currentRoute = currentRoute
-            )
-        },
-    ) { padding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(padding)
-                .background(
-                    brush = Brush.verticalGradient(
-                        colors = listOf(Color(0xFFE3F2FD), Color(0xFFFFFFFF))
-                    )
-                )
-                .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Spacer(modifier = Modifier.height(32.dp))
-
-            // Ticket Card
-            TicketDetailCard(ticketDetail = ticketDetail)
-
-            Spacer(modifier = Modifier.height(32.dp))
-
-            // Buy Button
-            Button(
-                onClick = {
-                    // Handle purchase logic
-                    // You can navigate to payment screen here
-                    // navController.navigate("payment_screen")
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(56.dp),
-                shape = RoundedCornerShape(16.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFF1976D2)
-                )
-            ) {
-                Text(
-                    text = "Mua ngay: ${ticketDetail.price}",
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.White
-                )
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // Cancel Button
-            OutlinedButton(
-                onClick = { navController.popBackStack() },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(56.dp),
-                shape = RoundedCornerShape(16.dp),
-                colors = ButtonDefaults.outlinedButtonColors(
-                    contentColor = Color(0xFF1976D2)
-                )
-            ) {
-                Text(
-                    text = "Hủy",
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Medium
-                )
-            }
-
-            Spacer(modifier = Modifier.weight(1f))
-        }
-    }
-}
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TicketDetailTopBar(
@@ -201,7 +90,7 @@ fun TicketDetailTopBar(
         title = {
             Text(
                 text = title,
-                color = Color(0xFF1565C0),
+                color = DarkGreen,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold
             )
@@ -211,140 +100,259 @@ fun TicketDetailTopBar(
                 Icon(
                     imageVector = Icons.Default.ArrowBack,
                     contentDescription = "Back",
-                    tint = Color(0xFF1565C0)
+                    tint = DarkGreen
                 )
             }
         },
         colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = Color.Transparent
+            containerColor = Color.Transparent // Nền trong suốt để hòa vào gradient
         )
     )
 }
+
 @Composable
-fun TicketDetailCard(ticketDetail: TicketDetailInfo) {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = Color.White
-        ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(24.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            // HURC Logo Area
-            HurcLogo(modifier = Modifier.size(80.dp))
-
-            Spacer(modifier = Modifier.height(24.dp))
-
-            // Ticket Information
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                // Ticket Type
-                TicketInfoRow(
-                    label = "Loại vé:",
-                    value = ticketDetail.type,
-                    valueColor = Color(0xFF333333)
-                )
-
-                // Validity
-                TicketInfoRow(
-                    label = "HSD:",
-                    value = ticketDetail.validity,
-                    valueColor = Color(0xFF333333)
-                )
-
-                // Note
-                TicketInfoRow(
-                    label = "Lưu ý:",
-                    value = ticketDetail.note,
-                    valueColor = Color(0xFFE53935)
-                )
-
-                // Description if available
-                if (ticketDetail.description.isNotEmpty()) {
-                    Spacer(modifier = Modifier.height(8.dp))
-
-                    Card(
-                        modifier = Modifier.fillMaxWidth(),
-                        colors = CardDefaults.cardColors(
-                            containerColor = Color(0xFFF5F5F5)
-                        ),
-                        shape = RoundedCornerShape(8.dp)
-                    ) {
-                        Text(
-                            text = ticketDetail.description,
-                            fontSize = 14.sp,
-                            color = Color(0xFF666666),
-                            modifier = Modifier.padding(12.dp),
-                            lineHeight = 20.sp
-                        )
-                    }
-                }
-            }
-
-            Spacer(modifier = Modifier.height(24.dp))
-
-            // Price Highlight
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(
-                    containerColor = Color(0xFF1976D2).copy(alpha = 0.1f)
-                ),
-                shape = RoundedCornerShape(12.dp)
-            ) {
-                Text(
-                    text = "Giá: ${ticketDetail.price}",
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color(0xFF1976D2),
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp)
-                )
-            }
-        }
-    }
-}
-@Composable
-fun TicketInfoRow(
-    label: String,
-    value: String,
-    valueColor: Color = Color(0xFF333333)
-) {
+fun TicketInfoRow(label: String, value: String, valueColor: Color = TextPrimaryColor) {
     Column(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 12.dp)
     ) {
         Text(
             text = label,
             fontSize = 14.sp,
             fontWeight = FontWeight.Medium,
-            color = Color(0xFF1976D2),
-            modifier = Modifier.padding(bottom = 4.dp)
+            color = TextSecondaryColor
         )
-
+        Spacer(modifier = Modifier.height(4.dp))
         Text(
             text = value,
             fontSize = 16.sp,
             color = valueColor,
-            lineHeight = 22.sp
+            lineHeight = 22.sp,
+            fontWeight = FontWeight.SemiBold
         )
     }
 }
+
+@Composable
+fun TicketDetailCard(ticketDetail: TicketType) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(20.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.White),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+    ) {
+        Column(modifier = Modifier.fillMaxWidth()) {
+            // Header của Card
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(
+                        brush = Brush.horizontalGradient(
+                            colors = listOf(LightGreenBackground, Color(0xFFF1F8E9))
+                        )
+                    )
+                    .padding(vertical = 24.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                HurcLogo(modifier = Modifier.size(72.dp))
+            }
+
+            // Phần thông tin chi tiết
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(20.dp)
+            ) {
+                // Tên vé
+                Text(
+                    text = ticketDetail.description,
+                    fontSize = 22.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = TextPrimaryColor,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
+                )
+                Spacer(modifier = Modifier.height(24.dp))
+
+                // Các thông tin chi tiết
+                val validityText = when (ticketDetail.validityDuration) {
+                    "ONE_DAY" -> "24h kể từ thời điểm kích hoạt"
+                    "THREE_DAYS" -> "72h kể từ thời điểm kích hoạt"
+                    "ONE_WEEK" -> "7 ngày kể từ thời điểm kích hoạt"
+                    "ONE_MONTH" -> "30 ngày kể từ thời điểm kích hoạt"
+                    "SINGLE" -> "Sử dụng một lần"
+                    else -> "Theo quy định"
+                }
+                TicketInfoRow(label = "Hạn sử dụng:", value = validityText)
+                Divider(color = Color.Black.copy(alpha = 0.08f))
+
+                val noteText = when (ticketDetail.name) {
+                    "One Day", "Three Days", "One Week", "One Month" -> "Tự động kích hoạt sau 30 ngày kể từ ngày mua."
+                    "Student Monthly" -> "Tự động kích hoạt sau 30 ngày. Chỉ dành cho HSSV có thẻ hợp lệ."
+                    else -> "Vui lòng xem chi tiết tại quầy vé."
+                }
+                TicketInfoRow(label = "Lưu ý:", value = noteText, valueColor = ErrorColor)
+                Divider(color = Color.Black.copy(alpha = 0.08f))
+
+                val detailedDescription = when (ticketDetail.name) {
+                    "One Day" -> "Vé cho phép sử dụng tất cả các tuyến Metro trong 24 giờ."
+                    "Three Days" -> "Vé cho phép sử dụng tất cả các tuyến Metro trong 3 ngày."
+                    "One Week" -> "Sử dụng không giới hạn tất cả các tuyến Metro trong 7 ngày."
+                    "One Month" -> "Sử dụng không giới hạn tất cả các tuyến Metro trong 1 tháng."
+                    "Student Monthly" -> "Vé ưu đãi cho học sinh, sinh viên sử dụng trong 1 tháng."
+                    else -> "Thông tin chi tiết về vé."
+                }
+                TicketInfoRow(label = "Mô tả:", value = detailedDescription)
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                // Phần giá vé
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(12.dp))
+                        .background(LightGreenBackground)
+                        .padding(16.dp)
+                ) {
+                    Text(
+                        text = "Giá: ${ticketDetail.price} đ",
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.ExtraBold,
+                        color = DarkGreen,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+            }
+        }
+    }
+}
+
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun TicketDetailScreen(
+    navController: NavHostController,
+    viewModel: TicketDetailViewModel = hiltViewModel()
+) {
+    val uiState by viewModel.uiState.collectAsState()
+
+    Scaffold(
+        topBar = {
+            TicketDetailTopBar(
+                title = uiState.ticketDetail?.description ?: "Chi tiết vé",
+                onBackClick = { navController.popBackStack() }
+            )
+        },
+        containerColor = Color.Transparent
+    ) { padding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding)
+                .background(
+                    brush = Brush.verticalGradient(
+                        colors = listOf(Color.White, LightGreenBackground),
+                        startY = 0f,
+                        endY = 1500f
+                    )
+                )
+                .padding(horizontal = 16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            // LOGIC GỐC: Hiển thị UI dựa trên state
+            when {
+                uiState.isLoading -> {
+                    Box(Modifier.fillMaxSize(), Alignment.Center) {
+                        CircularProgressIndicator(color = PrimaryGreen)
+                    }
+                }
+                uiState.errorMessage != null -> {
+                    Text(
+                        text = "Lỗi tải chi tiết vé: ${uiState.errorMessage}",
+                        color = ErrorColor,
+                        modifier = Modifier.padding(16.dp)
+                    )
+                }
+                uiState.ticketDetail != null -> {
+                    Column(
+                        modifier = Modifier.fillMaxSize(),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Spacer(modifier = Modifier.height(16.dp))
+                        TicketDetailCard(ticketDetail = uiState.ticketDetail!!)
+                        Spacer(modifier = Modifier.weight(1f))
+
+                        Button(
+                            onClick = {
+
+                                uiState.ticketDetail!!.id.let { id ->
+                                    navController.navigate(Screen.OrderInfo.createRoute(id))
+                                }
+                            },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(56.dp),
+                            shape = RoundedCornerShape(16.dp),
+                            colors = ButtonDefaults.buttonColors(containerColor = PrimaryGreen)
+                        ) {
+                            Text(
+                                text = "Tiếp tục",
+                                fontSize = 18.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = Color.White
+                            )                        }
+
+                        Spacer(modifier = Modifier.height(12.dp))
+
+                        // Nút Hủy
+                        OutlinedButton(
+                            onClick = { navController.popBackStack() },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(56.dp),
+                            shape = RoundedCornerShape(16.dp),
+                            border = BorderStroke(1.dp, PrimaryGreen.copy(alpha = 0.5f)),
+                            colors = ButtonDefaults.outlinedButtonColors(contentColor = PrimaryGreen)
+                        ) {
+                            Text(
+                                text = "Hủy",
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Medium
+                            )
+
+                        }
+
+                        /* LOGIC GỐC: Giữ lại phần code đã được comment
+                        // Payment selection section...
+                        */
+
+                        Spacer(modifier = Modifier.height(16.dp))
+                    }
+                }
+                else -> {
+                    Text(
+                        text = "Không tìm thấy thông tin vé.",
+                        color = TextSecondaryColor,
+                        modifier = Modifier.padding(16.dp)
+                    )
+                }
+            }
+        }
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
 fun TicketDetailScreenPreview() {
     val navController = rememberNavController()
-    TicketDetailScreen(
-        navController = navController,
-        ticketType = "Vé 1 ngày",
-        ticketPrice = "40.000 đ"
-    )
+    TicketDetailScreen(navController = navController)
 }
+
+
+
+
+
+
+

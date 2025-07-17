@@ -6,3 +6,8 @@ sealed class LoadStatus(val description: String = "") {
     class Success(): LoadStatus()
     class Error(val error: String): LoadStatus(error)
 }
+
+enum class SplashScreenState {
+    Splash,
+    ReadyToLogin
+}

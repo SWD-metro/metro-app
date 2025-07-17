@@ -30,7 +30,7 @@ import org.com.hcmurs.ui.screens.staffhome.StaffAccountScreen
 import org.com.hcmurs.ui.screens.metro.account.LinkCCCDScreen
 import org.com.hcmurs.ui.screens.metro.account.RegisterFormScreen
 import org.com.hcmurs.ui.screens.metro.buyticket.BuyTicketScreen
-//import org.com.hcmurs.ui.screens.metro.buyticket.FareMatrixViewModel
+import org.com.hcmurs.ui.screens.metro.buyticket.FareMatrixViewModel
 import org.com.hcmurs.ui.screens.metro.buyticket.OrderInfoScreen
 import org.com.hcmurs.ui.screens.metro.buyticket.TicketDetailScreen
 //import org.com.hcmurs.ui.screens.metro.cooperationlink.CooperationLinkScreen
@@ -46,9 +46,9 @@ import org.com.hcmurs.ui.screens.osmap.OsmdroidMapScreen
 //import org.com.hcmurs.ui.screens.scanqr.ScanQRScreen
 //import org.com.hcmurs.ui.screens.stationselection.CalculatedFareScreen
 //import org.com.hcmurs.ui.screens.metro.setting.NotificationScreen
-//import org.com.hcmurs.ui.screens.stationselection.OrderFareInfoScreen
-//import org.com.hcmurs.ui.screens.stationselection.StationSelectionScreen
-//import org.com.hcmurs.ui.screens.stationselection.StationSelectionViewModel
+import org.com.hcmurs.ui.screens.stationselection.OrderFareInfoScreen
+import org.com.hcmurs.ui.screens.stationselection.StationSelectionScreen
+import org.com.hcmurs.ui.screens.stationselection.StationSelectionViewModel
 import androidx.compose.runtime.getValue
 //import org.com.hcmurs.ui.screens.metro.myticket.TicketQRCodeScreen
 import androidx.compose.material3.Scaffold
@@ -356,27 +356,27 @@ fun Navigation(
 //                    )
 //                }
 //
-//                composable(
-//                    route = Screen.OrderFareInfo.route,
-//                    arguments = listOf(
-//                        navArgument("entryStationId") { type = NavType.IntType },
-//                        navArgument("exitStationId") { type = NavType.IntType }
-//                    )
-//                ) { backStackEntry ->
-//                    val parentEntry = remember(backStackEntry) { navController.getBackStackEntry(Screen.TicketFlow.route) }
-//                    val fareMatrixViewModel: FareMatrixViewModel = hiltViewModel(parentEntry)
-//                    val stationViewModel: StationSelectionViewModel = hiltViewModel(parentEntry)
-//                    val entryId = backStackEntry.arguments?.getInt("entryStationId") ?: 0
-//                    val exitId = backStackEntry.arguments?.getInt("exitStationId") ?: 0
-//
-//                    OrderFareInfoScreen(
-//                        navController = navController,
-//                        entryStationId = entryId,
-//                        exitStationId = exitId,
-//                        fareMatrixViewModel = fareMatrixViewModel,
-//                        stationViewModel = stationViewModel
-//                    )
-//                }
+                composable(
+                    route = Screen.OrderFareInfo.route,
+                    arguments = listOf(
+                        navArgument("entryStationId") { type = NavType.IntType },
+                        navArgument("exitStationId") { type = NavType.IntType }
+                    )
+                ) { backStackEntry ->
+                    val parentEntry = remember(backStackEntry) { navController.getBackStackEntry(Screen.TicketFlow.route) }
+                    val fareMatrixViewModel: FareMatrixViewModel = hiltViewModel(parentEntry)
+                    val stationViewModel: StationSelectionViewModel = hiltViewModel(parentEntry)
+                    val entryId = backStackEntry.arguments?.getInt("entryStationId") ?: 0
+                    val exitId = backStackEntry.arguments?.getInt("exitStationId") ?: 0
+
+                    OrderFareInfoScreen(
+                        navController = navController,
+                        entryStationId = entryId,
+                        exitStationId = exitId,
+                        fareMatrixViewModel = fareMatrixViewModel,
+                        stationViewModel = stationViewModel
+                    )
+                }
 //            }
 //            composable(
 //                route = Screen.TicketQRCode.route,
@@ -423,9 +423,9 @@ fun Navigation(
                 composable(Screen.BuyTicketDetail.route) {
                     TicketDetailScreen(navController)
                 }
-                composable(Screen.OrderInfo.route) {
-                    OrderInfoScreen(navController)
-                }
+//                composable(Screen.OrderInfo.route) {
+//                    OrderInfoScreen(navController)
+//                }
 //            composable(Screen.Route.route) {
 //                RouteScreen(navController)
 //            }
