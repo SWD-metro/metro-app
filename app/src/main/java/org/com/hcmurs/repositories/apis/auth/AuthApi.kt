@@ -26,6 +26,8 @@ data class UserProfileData(
     val name: String,
     val email: String,
     val role: String,
+    val isStudent: Boolean
+
    )
 
 interface AuthApi {

@@ -1,6 +1,5 @@
 package org.com.hcmurs.ui.screens.metro.setting
 
-
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -8,6 +7,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -15,31 +15,31 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ChevronRight
-import androidx.compose.material.icons.filled.KeyboardArrowRight
+import androidx.compose.material.icons.filled.Language
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.Divider
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
-import androidx.compose.material.icons.filled.Language
-
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+import org.com.hcmurs.ui.theme.BluePrimary
 
 @Composable
 fun SettingsItem(
@@ -48,7 +48,7 @@ fun SettingsItem(
     subtitle: String? = null,
     onClick: () -> Unit
 ) {
-    Row (
+    Row(
         modifier = Modifier
             .fillMaxWidth()
             .clickable() { onClick() }
@@ -92,50 +92,60 @@ fun SettingsItem(
         )
     }
 }
-@Preview(showBackground = true)
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SettingScreen() {
-    Column (modifier = Modifier.fillMaxSize()
-        .background(Color(0xFFF5F5F5))) {
+fun SettingScreen(
+    navController: NavController
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0xFFF5F5F5))
+    ) {
         //Top app bar
         CenterAlignedTopAppBar(
             title = {
-                Text(text="Cài đặt",
-                    color =Color.White,
-                    fontSize =18.sp,
+                Text(
+                    text = "Cài đặt",
+                    color = Color.White,
+                    fontSize = 18.sp,
                     fontWeight = FontWeight.Medium,
-                    textAlign= TextAlign.Center
+                    textAlign = TextAlign.Center
                 )
             },
 
             navigationIcon = {
-                IconButton (onClick = { /* Handle back navigation */ }) {
-                    Icon(Icons.Default.ArrowBack,
-                        contentDescription = "Back",
-                        tint = Color.White)
+                IconButton(onClick = { navController.navigateUp() }) {
+                    Icon(Icons.Default.ArrowBack, contentDescription = "Back")
                 }
             },
             colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = Color(0xFF1976D2)
+                containerColor = BluePrimary
             )
         )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
         // Setting card
-        Card (
-            modifier = Modifier.fillMaxWidth()
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
                 .padding(horizontal = 16.dp),
             colors = CardDefaults.cardColors(containerColor = Color.White),
             elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-            shape= RoundedCornerShape(12.dp)
-        ){
-            Column {
+            shape = RoundedCornerShape(12.dp)
+        ) {
+            Column(
+            ) {
                 SettingsItem(
-                    icon=Icons.Default.Notifications,
-                    title="Thông báo",
-                    onClick={ }
+                    icon = Icons.Default.Notifications,
+                    title = "Thông báo",
+                    onClick = { }
                 )
                 Divider(
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
                         .padding(start = 56.dp),
                     color = Color(0xFFE0E0E0),
                     thickness = 0.5.dp
@@ -146,7 +156,8 @@ fun SettingScreen() {
                     onClick = { /* Handle privacy */ }
                 )
                 Divider(
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
                         .padding(start = 56.dp),
                     color = Color(0xFFE0E0E0),
                     thickness = 0.5.dp
@@ -159,13 +170,14 @@ fun SettingScreen() {
                 )
             }
 
-
-
         }
-
-
 
     }
 
+}
 
+@Preview(showBackground = true)
+@Composable
+fun SettingScreenPreview() {
+    SettingScreen(navController = rememberNavController()) // Replace with actual NavController in real use
 }
