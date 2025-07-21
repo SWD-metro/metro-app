@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
@@ -25,11 +26,8 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Notifications
-import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
@@ -70,12 +68,7 @@ fun AppHomeScreen(
         LazyColumn(
             state = listState,
             modifier = Modifier
-                .fillMaxSize()
-                .background(
-                    Brush.verticalGradient(
-                        colors = listOf(Color(0xFFE8F5E8), Color.White)
-                    )
-                ),
+                .fillMaxSize(),
             contentPadding = PaddingValues(top = 0.dp, bottom = 240.dp)
         ) {
             item {
@@ -95,8 +88,8 @@ fun AppHomeScreen(
                                     colors = listOf(Color.Black.copy(alpha = 0.3f), Color.Transparent)
                                 )
                             )
+                            .statusBarsPadding() // <-- THÊM MODIFIER NÀY
                             .padding(horizontal = 20.dp)
-                            .padding(top = 40.dp)
                     ) {
                         Row(
                             modifier = Modifier.fillMaxWidth(),
@@ -172,8 +165,6 @@ fun AppHomeScreen(
                         ) {
                             QuickActionsSection(navController, userRole = role)
                         }
-
-                        Spacer(modifier = Modifier.weight(1f))
                     }
                 }
             }

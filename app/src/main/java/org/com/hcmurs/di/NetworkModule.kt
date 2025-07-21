@@ -18,6 +18,7 @@ import org.com.hcmurs.repositories.apis.auth.SharedPreferencesTokenProvider
 import org.com.hcmurs.repositories.apis.auth.TokenProvider
 import org.com.hcmurs.repositories.apis.blog.BlogRepository
 import org.com.hcmurs.repositories.apis.blog.PublicBlogApi
+import org.com.hcmurs.repositories.apis.currency.CurrencyApi
 import org.com.hcmurs.repositories.apis.feedback.FeedbackApi
 import org.com.hcmurs.repositories.apis.feedback.FeedbackRepository
 import org.com.hcmurs.repositories.apis.order.OrderDaysApi
@@ -52,13 +53,15 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 class NetworkModule {
     private val BASE_URL = "http://10.0.2.2:4003/"
- //   private val BASE_URL = "http://192.168.88.172:4003/"
+    //    private val BASE_URL = "http://192.168.88.172:4003/"
+    // private val BASE_URL = "http://172.20.10.9:4003/"
     private val BASE_BLOG = "http://10.0.2.2:4007/"
     private val BASE_STATION = "http://192.168.88.172:4004/"
     private val BASE_PHONE = "http://192.168.1.14:4003/"
     private val BASE_STATION_ = "http://10.0.2.2:4004/"
     private val BASE_WEATHER_URL = "https://api.open-meteo.com/v1/"
-
+    private val BASE_CURRENCY_URL = "https://api.exchangerate-api.com/"
+//    private val BASE_URL= "http://10.87.15.67:4003/"
 
     @Provides
     @Singleton
@@ -301,15 +304,30 @@ class NetworkModule {
 
     //Blog
     @Provides
+    @Singleton
+    @Named("publicClient")
+    fun providePublicOkHttpClient(
+        @Named("ApiKey") apiKeyInterceptor: Interceptor,
+        cookieManager: CookieManager
+    ): OkHttpClient {
+        return OkHttpClient.Builder()
+            .addInterceptor(apiKeyInterceptor)
+            .addInterceptor(HttpLoggingInterceptor().apply {
+                level = HttpLoggingInterceptor.Level.BODY
+            })
+            .cookieJar(JavaNetCookieJar(cookieManager))
+            .build()
+    }
+
+
+
+    @Provides
     @Named("publicRetrofit")
     @Singleton
-    fun providePublicRetrofit(okHttpClient: OkHttpClient): Retrofit {
-        val publicClient = okHttpClient.newBuilder()
-            .build()
-
+    fun providePublicRetrofit(@Named("publicClient") okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
             .baseUrl(BASE_URL)
-            .client(publicClient)
+            .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
@@ -337,30 +355,47 @@ class NetworkModule {
     fun provideRequestRepository(api: RequestApi): RequestRepository {
         return RequestRepository(api)
     }
-    
-//feedback
-@Provides
-@Singleton
-fun provideFeedbackApi(retrofit: Retrofit): FeedbackApi {
-    return retrofit.create(FeedbackApi::class.java)
-}
+
+    //feedback
+    @Provides
+    @Singleton
+    fun provideFeedbackApi(retrofit: Retrofit): FeedbackApi {
+        return retrofit.create(FeedbackApi::class.java)
+    }
 
     @Provides
     @Singleton
     fun provideFeedbackRepository(api: FeedbackApi): FeedbackRepository {
         return FeedbackRepository(api)
     }
-// payment
-@Provides
-@Singleton
+    // payment
+    @Provides
+    @Singleton
     fun providePaymentApi(retrofit: Retrofit): PaymentApi {
-    return retrofit.create(PaymentApi::class.java)
-}
+        return retrofit.create(PaymentApi::class.java)
+    }
 
     @Provides
     @Singleton
     fun providePaymentRepository(api: PaymentApi): PaymentRepository {
         return PaymentRepository(api)
+    }
+
+    // Currency API
+    @Provides
+    @Named("currencyRetrofit")
+    @Singleton
+    fun provideCurrencyRetrofit(): Retrofit {
+        return Retrofit.Builder()
+            .baseUrl(BASE_CURRENCY_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideCurrencyApi(@Named("currencyRetrofit") retrofit: Retrofit): CurrencyApi {
+        return retrofit.create(CurrencyApi::class.java)
     }
 
 }

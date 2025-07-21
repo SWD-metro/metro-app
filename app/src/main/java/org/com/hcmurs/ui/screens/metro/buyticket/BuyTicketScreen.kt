@@ -1,5 +1,6 @@
 package org.com.hcmurs.ui.screens.metro.buyticket
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -55,11 +56,13 @@ import androidx.compose.ui.draw.clip
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.compose.ui.text.style.TextOverflow
-
-// Thêm imports cho insets
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.navigationBarsPadding
-import androidx.compose.foundation.layout.safeDrawingPadding // Hoặc safeContentPadding, safeGesturesPadding
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Route
+import androidx.compose.ui.res.stringResource
+import org.com.hcmurs.R
+import org.com.hcmurs.ui.screens.login.LoginViewModel
+import org.com.hcmurs.utils.CurrencyManager
 
 
 // Define colors consistently
@@ -86,36 +89,13 @@ data class RouteInfo(
     val details: String = "Xem chi tiết"
 )
 
-// --- SECTION HEADER ---
-@Composable
-fun SectionHeader(title: String, icon: ImageVector) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp)
-    ) {
-        Icon(
-            imageVector = icon,
-            contentDescription = title,
-            tint = BlueDark,
-            modifier = Modifier.size(24.dp)
-        )
-        Spacer(modifier = Modifier.width(8.dp))
-        Text(
-            text = title,
-            color = TextPrimaryColor,
-            fontSize = 18.sp,
-            fontWeight = FontWeight.Bold
-        )
-    }
-}
-
 // --- TICKET CARD ---
 @Composable
 fun TicketCard(
     ticket: TicketType,
-    navController: NavHostController
+    navController: NavHostController,
+    viewModel: LoginViewModel,
+    currencyManager: CurrencyManager
 ) {
     Card(
         modifier = Modifier
@@ -178,6 +158,31 @@ fun TicketCard(
     }
 }
 
+// --- SECTION HEADER ---
+@Composable
+fun SectionHeader(title: String, icon: ImageVector) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp)
+    ) {
+        Icon(
+            imageVector = icon,
+            contentDescription = title,
+            tint = BlueDark,
+            modifier = Modifier.size(24.dp)
+        )
+        Spacer(modifier = Modifier.width(8.dp))
+        Text(
+            text = title,
+            color = TextPrimaryColor,
+            fontSize = 18.sp,
+            fontWeight = FontWeight.Bold
+        )
+    }
+}
+
 @Composable
 fun SearchStationCard(
     navController: NavHostController,
@@ -234,16 +239,21 @@ fun SearchStationCard(
     }
 }
 
-
-// --- TICKET OPTIONS SECTION ---
+@SuppressLint("SuspiciousIndentation")
 @Composable
 fun TicketOptionsSection(
     navController: NavHostController,
-    viewModel: BuyTicketViewModel
+    viewModel: BuyTicketViewModel,
+    loginViewModel: LoginViewModel,
+    currencyManager: CurrencyManager
 ) {
     val ticketOptions by viewModel.ticketTypes.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
     val errorMessage by viewModel.errorMessage.collectAsState()
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val selectedStationFrom = navBackStackEntry?.savedStateHandle?.get<String>("selectedFromStation") ?: "Chọn ga khởi hành"
+    val selectedStationTo = navBackStackEntry?.savedStateHandle?.get<String>("selectedToStation") ?: "Chọn ga điểm đến"
+
 
     LaunchedEffect(Unit) {
         if (ticketOptions.isEmpty() && !isLoading && errorMessage == null) {
@@ -252,35 +262,84 @@ fun TicketOptionsSection(
     }
 
     if (isLoading) {
-        Box(modifier = Modifier.fillMaxWidth().height(100.dp), contentAlignment = Alignment.Center) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(100.dp),
+            contentAlignment = Alignment.Center
+        ) {
             CircularProgressIndicator(color = BluePrimary)
         }
     } else if (errorMessage != null) {
-        Text(text = "Lỗi tải dữ liệu: $errorMessage", color = Color.Red, modifier = Modifier.padding(16.dp))
+        Text(
+            text = stringResource(R.string.error_loading_tickets, errorMessage!!),
+            color = Color.Red,
+            modifier = Modifier.padding(16.dp)
+        )
     } else {
-        Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-            if (ticketOptions.isEmpty()) {
-                Text(
-                    text = "Hiện không có loại vé nào khả dụng.",
-                    color = TextSecondaryColor,
-                    fontSize = 16.sp,
-                    modifier = Modifier.padding(vertical = 16.dp)
+
+        val ticketSingle = ticketOptions.find { it.name == "Vé đơn" }
+        val ticketStudent = ticketOptions.find { it.name == "Vé sinh viên" }
+        val otherTickets =
+            ticketOptions.filterNot { it.name == "Vé đơn" || it.name == "Vé sinh viên" }
+
+
+
+        Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+            ticketSingle?.let {
+                SectionHeader(
+                    title = stringResource(R.string.route_ticket_section),
+                    icon = Icons.Default.Route
                 )
-            } else {
-                ticketOptions.forEach { ticket ->
-                    TicketCard(ticket = ticket, navController = navController)
+                SearchStationCard(
+                    navController = navController,
+                    selectedStationFrom = selectedStationFrom,
+                    selectedStationTo = selectedStationTo
+                )
+
+            }
+
+            ticketStudent?.let {
+                SectionHeader(
+                    title = stringResource(R.string.student_ticket_section),
+                    icon = Icons.Default.School
+                )
+
+                TicketCard(
+                    ticket = it,
+                    navController = navController,
+                    viewModel = loginViewModel,
+                    currencyManager = currencyManager
+                )
+            }
+
+            if (otherTickets.isNotEmpty()) {
+                SectionHeader(
+                    title = stringResource(R.string.other_tickets_section),
+                    icon = Icons.Default.LocalActivity
+                )
+
+                otherTickets.forEach { ticket ->
+                    TicketCard(
+                        ticket = ticket,
+                        navController = navController,
+                        viewModel = loginViewModel,
+                        currencyManager = currencyManager
+                    )
                 }
             }
         }
     }
 }
 
+
 // --- MAIN SCREEN: BUY TICKET SCREEN (WITHOUT SCAFFOLD) ---
 @Composable
 fun BuyTicketScreen(
     navController: NavHostController,
+    currencyManager: CurrencyManager,
     buyTicketViewModel: BuyTicketViewModel = hiltViewModel(),
-    fareMatrixViewModel: FareMatrixViewModel = hiltViewModel()
+    loginViewModel: LoginViewModel = hiltViewModel()
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val selectedStationFrom = navBackStackEntry?.savedStateHandle?.get<String>("selectedFromStation") ?: "Chọn ga khởi hành"
@@ -301,45 +360,17 @@ fun BuyTicketScreen(
             .verticalScroll(rememberScrollState())
             .padding(horizontal = 16.dp)
     ) {
-        Spacer(modifier = Modifier.height(16.dp))
-        SearchStationCard(
-            navController = navController,
-            selectedStationFrom = selectedStationFrom,
-            selectedStationTo = selectedStationTo
-        )
+//        Spacer(modifier = Modifier.height(16.dp))
+//        SearchStationCard(
+//            navController = navController,
+//            selectedStationFrom = selectedStationFrom,
+//            selectedStationTo = selectedStationTo
+//        )
         Spacer(modifier = Modifier.height(24.dp))
-
-        SectionHeader(title = "Mua vé theo lượt", icon = Icons.Default.LocalActivity)
         Spacer(modifier = Modifier.height(12.dp))
-        TicketOptionsSection(navController, buyTicketViewModel)
+        TicketOptionsSection(navController, buyTicketViewModel, loginViewModel, currencyManager)
 
-        Spacer(modifier = Modifier.height(24.dp))
-
-        SectionHeader(title = "Ưu đãi Học sinh - Sinh viên", icon = Icons.Default.School)
-        Spacer(modifier = Modifier.height(12.dp))
-
-        TicketCard(
-            ticket = TicketType(
-                id = 0, name = "Student Monthly", description = "Vé tháng HSSV", price = 150000,
-                validityDuration = "ONE_MONTH", isActive = true, createdAt = "", updatedAt = ""
-            ),
-            navController = navController
-        )
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        SectionHeader(title = "Vé dài hạn", icon = Icons.Default.DateRange)
-        Spacer(modifier = Modifier.height(12.dp))
-        TicketOptionsSection(navController, buyTicketViewModel)
-
-        Spacer(modifier = Modifier.height(16.dp)) // Add some bottom padding if needed, adjust 80.dp
     }
 
 }
 
-@Preview(showBackground = true)
-@Composable
-fun BuyTicketScreenPreview() {
-    val navController = rememberNavController()
-    BuyTicketScreen(navController = navController)
-}

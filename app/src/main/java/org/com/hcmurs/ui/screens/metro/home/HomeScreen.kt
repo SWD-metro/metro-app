@@ -21,8 +21,9 @@ import org.com.hcmurs.ui.screens.login.LoginViewModel
 import org.com.hcmurs.ui.screens.news.BlogSection
 
 @Composable
-fun HomeScreen(navController: NavHostController,
-               loginViewModel: LoginViewModel = hiltViewModel()
+fun HomeScreen(
+    navController: NavHostController,
+    loginViewModel: LoginViewModel = hiltViewModel()
 ) {
     val userProfile by loginViewModel.userProfile.collectAsState()
     val userName = userProfile?.name ?: "Guest"
@@ -31,7 +32,7 @@ fun HomeScreen(navController: NavHostController,
         showFloatingButton = true,
         role = UserRole.USER,
         userName = userName
-        ) {
+    ) {
 
         item {
             Spacer(modifier = Modifier.height(20.dp))
