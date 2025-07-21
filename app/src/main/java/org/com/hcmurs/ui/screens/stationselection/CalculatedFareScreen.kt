@@ -16,23 +16,18 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.DirectionsBus
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -50,15 +45,16 @@ import androidx.navigation.NavHostController
 import org.com.hcmurs.FareMatrix
 import org.com.hcmurs.Screen
 import org.com.hcmurs.ui.screens.metro.buyticket.FareMatrixViewModel
-import org.com.hcmurs.ui.theme.DarkGreen
+import org.com.hcmurs.ui.theme.BlueDark
+import org.com.hcmurs.ui.theme.BluePrimary
+import org.com.hcmurs.ui.theme.AppLightGray
 
-private val PrimaryGreen = Color(0xFF4CAF50)
-private val DarkGreen = Color(0xFF388E3C)
-private val LightGreenBackground = Color(0xFFE8F5E9)
+
 private val TextPrimaryColor = Color(0xFF212121)
 private val TextSecondaryColor = Color(0xFF757575)
 private val WarningColor = Color(0xFFD32F2F)
-
+private val SuccessColor = Color(0xFF4CAF50) // Added for potential success messages or a different aesthetic for entry/exit stations
+private val AccentOrange = Color(0xFFFF9800) // A slightly softer orange for contrast
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -68,92 +64,77 @@ fun CalculatedFareScreen(
     exitStationId: Int,
     viewModel: FareMatrixViewModel,
     stationViewModel: StationSelectionViewModel = hiltViewModel()
-
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val fare = uiState.calculatedFare
     val stationUiState by stationViewModel.uiState.collectAsState()
-
+    val currentFareResponse = uiState.calculatedFare
     val entryStation = stationUiState.stations.find { it.stationId == entryStationId }
     val exitStation = stationUiState.stations.find { it.stationId == exitStationId }
 
-    Scaffold (
-        topBar = {
-            CenterAlignedTopAppBar(
-                title = { Text("Xác nhận hành trình", color = DarkGreen, fontWeight = FontWeight.Bold) },
-                navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Back", tint = DarkGreen)
-                    }
-                },
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = Color.White)
-            )
-        }
-    ) { padding ->
-        val currentFareResponse = uiState.calculatedFare
-        Column (
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(padding)
-                .background(
-                    brush = Brush.verticalGradient(
-                        colors = listOf(Color.White, LightGreenBackground),
-                        startY = 0f,
-                        endY = 1500f
-                    )
+    Column (
+        modifier = Modifier
+            .fillMaxSize()
+            .background(
+                brush = Brush.verticalGradient(
+                    colors = listOf(Color.White, AppLightGray.copy(alpha = 0.6f)), // Softer gradient end
+                    startY = 0f,
+                    endY = 1500f
                 )
-                .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.SpaceBetween
-        ) {
-            if (uiState.isLoading) {
-                CircularProgressIndicator(color = PrimaryGreen)
-            }else if (currentFareResponse != null && entryStation != null && exitStation != null) {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Spacer(modifier = Modifier.height(16.dp))
-                    FareDetailCard(
-                        entryStationName = entryStation.name,
-                        exitStationName = exitStation.name,
-                        fare = currentFareResponse.data!!
-                    )
-                }
-            } else {
-                Text(
-                    text = uiState.errorMessage ?: "Không thể tính giá vé. Vui lòng thử lại.",
-                    color = Color.Red,
-                    textAlign = TextAlign.Center
+            )
+            .padding(24.dp), // Increased overall padding for more breathing room
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.SpaceBetween
+    ) {
+        if (uiState.isLoading) {
+            CircularProgressIndicator(color = BluePrimary, modifier = Modifier.size(48.dp)) // Larger indicator
+        } else if (currentFareResponse != null && entryStation != null && exitStation != null) {
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                FareDetailCard(
+                    entryStationName = entryStation.name,
+                    exitStationName = exitStation.name,
+                    fare = currentFareResponse.data!!
                 )
             }
+        } else {
+            Text(
+                text = uiState.errorMessage ?: "Không thể tính giá vé. Vui lòng thử lại.",
+                color = WarningColor,
+                textAlign = TextAlign.Center,
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Medium,
+                modifier = Modifier.padding(top = 32.dp)
+            )
+        }
 
-            // Các nút hành động
-            Column {
-                Button (
-                    onClick = {
-                        if (entryStation != null && exitStation != null) {
-                            navController.navigate(
-                                Screen.OrderFareInfo.createRoute(
-                                        entryStationId = entryStation.stationId,
-                                    exitStationId = exitStation.stationId
-                                )
+        // Action buttons
+        Column {
+            Button (
+                onClick = {
+                    if (entryStation != null && exitStation != null) {
+                        navController.navigate(
+                            Screen.OrderFareInfo.createRoute(
+                                entryStationId = entryStation.stationId,
+                                exitStationId = exitStation.stationId
                             )
-                        }
-                    },
-                    modifier = Modifier.fillMaxWidth().height(56.dp),
-                    shape = RoundedCornerShape(16.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = PrimaryGreen),
-                    enabled = fare != null
-                ) {
-                    Text("Xác nhận mua vé", fontSize = 18.sp, fontWeight = FontWeight.Bold, color = Color.White)
-                }
-                Spacer(modifier = Modifier.height(12.dp))
-                OutlinedButton(
-                    onClick = { navController.popBackStack() },
-                    modifier = Modifier.fillMaxWidth().height(56.dp),
-                    shape = RoundedCornerShape(16.dp),
-                    border = BorderStroke(1.dp, PrimaryGreen.copy(alpha = 0.5f))
-                ) {
-                    Text("Chọn lại ga", fontSize = 16.sp, fontWeight = FontWeight.Medium, color = PrimaryGreen)
-                }
+                        )
+                    }
+                },
+                modifier = Modifier.fillMaxWidth().height(56.dp),
+                shape = RoundedCornerShape(16.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = BluePrimary),
+                enabled = fare != null
+            ) {
+                Text("Xác nhận mua vé", fontSize = 18.sp, fontWeight = FontWeight.Bold, color = Color.White)
+            }
+            Spacer(modifier = Modifier.height(12.dp))
+            OutlinedButton(
+                onClick = { navController.popBackStack() },
+                modifier = Modifier.fillMaxWidth().height(56.dp),
+                shape = RoundedCornerShape(16.dp),
+                border = BorderStroke(1.dp, BluePrimary.copy(alpha = 0.5f))
+            ) {
+                Text("Chọn lại ga", fontSize = 16.sp, fontWeight = FontWeight.Medium, color = BluePrimary)
             }
         }
     }
@@ -165,7 +146,7 @@ fun FareDetailCard(entryStationName: String, exitStationName: String, fare: Fare
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp) // Increased elevation for more depth
     ) {
         Column(
             modifier = Modifier.padding(24.dp),
@@ -175,56 +156,52 @@ fun FareDetailCard(entryStationName: String, exitStationName: String, fare: Fare
                 "HÀNH TRÌNH CỦA BẠN",
                 fontSize = 14.sp,
                 color = TextSecondaryColor,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                letterSpacing = 0.5.sp // Slight letter spacing for titles
             )
             Spacer(modifier = Modifier.height(24.dp))
-
-            Divider(color = LightGreenBackground.copy(alpha=0.8f), thickness = 1.dp)
-
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                InfoRow(title = "Hạn sử dụng:", value = "Theo quy định")
-                InfoRow(title = "Lưu ý:", value = "Tự động kích hoạt sau 30 ngày kể từ ngày mua.", valueColor = WarningColor)
-                InfoRow(title = "Mô tả:", value = "Vé cho phép di chuyển một lượt giữa ${entryStationName} và ${exitStationName}.")
-            }
-            Spacer(modifier = Modifier.height(12.dp))
-
-            Divider(color = LightGreenBackground.copy(alpha=0.8f), thickness = 1.dp)
-            Spacer(modifier = Modifier.height(12.dp))
-
-
-            // Hiển thị ga vào - ga ra
             Row (
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center
+                horizontalArrangement = Arrangement.SpaceAround
             ) {
                 StationDisplay(name = entryStationName, isEntry = true)
-                Spacer(modifier = Modifier.width(16.dp))
                 Icon(
                     imageVector = Icons.Default.ArrowForward,
                     contentDescription = "to",
-                    tint = TextSecondaryColor,
-                    modifier = Modifier.size(24.dp)
+                    tint = TextSecondaryColor.copy(alpha = 0.7f),
+                    modifier = Modifier.size(32.dp)
                 )
-                Spacer(modifier = Modifier.width(16.dp))
                 StationDisplay(name = exitStationName, isEntry = false)
             }
 
-            Spacer(modifier = Modifier.height(24.dp))
-            Divider(color = LightGreenBackground)
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(32.dp)) // Increased spacing
 
-            // Hiển thị giá
-            Text("TỔNG CỘNG", fontSize = 14.sp, color = TextSecondaryColor, fontWeight = FontWeight.Bold)
+            Divider(color = AppLightGray, thickness = 1.dp) // Used AppLightGray directly
+            Spacer(modifier = Modifier.height(24.dp)) // Increased spacing after divider
+
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(16.dp) // Increased spacing between info rows
+            ) {
+                InfoRow(title = "Hạn sử dụng:", value = "Trong ngày")
+                InfoRow(title = "Lưu ý:", value = "Tự động kích hoạt sau 30 ngày kể từ ngày mua.", valueColor = WarningColor)
+                InfoRow(title = "Mô tả:", value = "Vé cho phép di chuyển một lượt giữa ${entryStationName} và ${exitStationName}.")
+            }
+            Spacer(modifier = Modifier.height(24.dp))
+
+            Divider(color = AppLightGray, thickness = 1.dp) // Used AppLightGray directly
+            Spacer(modifier = Modifier.height(24.dp)) // Increased spacing after divider
+
+
+            // Price display
+            Text("TỔNG CỘNG", fontSize = 14.sp, color = TextSecondaryColor, fontWeight = FontWeight.Bold, letterSpacing = 0.5.sp)
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 "${fare.price} đ",
-                fontSize = 36.sp,
+                fontSize = 40.sp, // Larger fare text
                 fontWeight = FontWeight.ExtraBold,
-                color = DarkGreen
+                color = BlueDark
             )
         }
     }
@@ -234,27 +211,30 @@ fun FareDetailCard(entryStationName: String, exitStationName: String, fare: Fare
 fun StationDisplay(name: String, isEntry: Boolean) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.width(120.dp)
+        modifier = Modifier.width(140.dp) // Wider column for station names
     ) {
         Box(
-            modifier = Modifier.size(48.dp).clip(CircleShape).background(if (isEntry) PrimaryGreen else Color(0xFFFFA726)),
+            modifier = Modifier
+                .size(56.dp) // Larger circle
+                .clip(CircleShape)
+                .background(if (isEntry) BluePrimary else AccentOrange), // Using AccentOrange for exit station
             contentAlignment = Alignment.Center
         ) {
             Icon(
                 imageVector = Icons.Default.DirectionsBus,
                 contentDescription = "Station",
                 tint = Color.White,
-                modifier = Modifier.size(28.dp)
+                modifier = Modifier.size(32.dp) // Larger icon
             )
         }
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(12.dp)) // Increased spacing
         Text(
             text = name,
-            fontWeight = FontWeight.SemiBold,
-            fontSize = 16.sp,
+            fontWeight = FontWeight.Bold, // Bolder station names
+            fontSize = 17.sp, // Slightly larger font size
             textAlign = TextAlign.Center,
             maxLines = 2,
-            lineHeight = 20.sp,
+            lineHeight = 22.sp,
             color = TextPrimaryColor
         )
     }
@@ -278,12 +258,3 @@ private fun InfoRow(title: String, value: String, valueColor: Color = TextPrimar
         )
     }
 }
-//@Preview(showBackground = true)
-//@Composable
-//fun CalculatedFareScreenPreview() {
-//    CalculatedFareScreen(
-//        navController = rememberNavController(),
-//        entryStationId = 1,
-//        exitStationId = 2
-//    )
-//}

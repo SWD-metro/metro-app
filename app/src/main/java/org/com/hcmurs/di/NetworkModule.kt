@@ -14,8 +14,6 @@ import okhttp3.Request
 import okhttp3.logging.HttpLoggingInterceptor
 import org.com.hcmurs.repositories.SharedPreferencesTokenProvider
 import org.com.hcmurs.repositories.apis.auth.AuthApi
-import org.com.hcmurs.repositories.apis.auth.SharedPreferencesTokenProvider
-import org.com.hcmurs.repositories.apis.auth.TokenProvider
 import org.com.hcmurs.repositories.apis.blog.BlogRepository
 import org.com.hcmurs.repositories.apis.blog.PublicBlogApi
 import org.com.hcmurs.repositories.apis.currency.CurrencyApi

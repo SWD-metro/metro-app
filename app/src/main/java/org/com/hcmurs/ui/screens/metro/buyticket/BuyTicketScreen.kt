@@ -367,7 +367,6 @@ fun BuyTicketScreen(
 //            selectedStationTo = selectedStationTo
 //        )
         Spacer(modifier = Modifier.height(24.dp))
-        Spacer(modifier = Modifier.height(12.dp))
         TicketOptionsSection(navController, buyTicketViewModel, loginViewModel, currencyManager)
 
     }
