@@ -40,7 +40,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import org.com.hcmurs.ui.theme.DarkGreen
 import org.com.hcmurs.ui.theme.ErrorRed
-import org.com.hcmurs.ui.theme.BluePrimary
+import org.com.hcmurs.ui.theme.PrimaryGreen
 import org.com.hcmurs.utils.navigateToHome
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -50,6 +50,7 @@ fun RedeemCodeForTicketScreen(navController: NavHostController) {
     var isError by remember { mutableStateOf(false) }
 
     Scaffold(
+        topBar = { TopBar(navController) },
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White)
@@ -116,7 +117,7 @@ fun RedeemCodeForTicketScreen(navController: NavHostController) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 8.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = BluePrimary)
+                colors = ButtonDefaults.buttonColors(containerColor = PrimaryGreen)
             ) {
                 Text("Redeem Code", color = Color.White)
             }
@@ -158,7 +159,7 @@ fun TopBar(navController: NavController) {
             }
         },
         colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = BluePrimary
+            containerColor = PrimaryGreen
         )
     )
 }

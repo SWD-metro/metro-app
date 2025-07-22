@@ -39,7 +39,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import org.com.hcmurs.ui.theme.BluePrimary
+import org.com.hcmurs.ui.theme.PrimaryGreen
 
 @Composable
 fun SettingsItem(
@@ -121,7 +121,7 @@ fun SettingScreen(
                 }
             },
             colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = BluePrimary
+                containerColor = PrimaryGreen
             )
         )
 

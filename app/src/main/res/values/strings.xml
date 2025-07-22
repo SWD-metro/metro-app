@@ -87,7 +87,7 @@ and secure shopping experience</string>
     <string name="not_found_ticket">Not found any ticket</string>
     <string name="ticket_detail">Ticket Detail</string>
     <string name="ticket_price">Ticket Price</string>
-
+    
     <!-- Currency and Translation -->
     <string name="validity">Validity:</string>
     <string name="note">Note:</string>
@@ -95,7 +95,7 @@ and secure shopping experience</string>
     <string name="updating_price">Updating price...</string>
     <string name="exchange_rate_updated">Exchange rate updated</string>
     <string name="failed_to_update_rate">Failed to update exchange rate</string>
-
+    
     <!-- Buy Ticket Screen -->
     <string name="welcome_message">Welcome to GO!METRO</string>
     <string name="route_ticket_section">Buy tickets by route</string>
@@ -108,7 +108,7 @@ and secure shopping experience</string>
     <string name="ok">OK</string>
     <string name="loading_routes">Loading routes...</string>
     <string name="error_loading_routes">Error loading routes: %s</string>
-
+    
     <!-- Order Information Screen -->
     <string name="order_information">Order Information</string>
     <string name="payment_method">Payment Method</string>
@@ -129,7 +129,7 @@ and secure shopping experience</string>
     <string name="pay_amount">Pay: %s</string>
     <string name="processing">Processing...</string>
     <string name="loading_ellipsis">Loading...</string>
-
+    
     <!-- My Ticket Screen -->
     <string name="not_used">Not Used</string>
     <string name="used">Used</string>

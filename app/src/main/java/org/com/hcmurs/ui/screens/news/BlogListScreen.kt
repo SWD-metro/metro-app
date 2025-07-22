@@ -56,6 +56,7 @@ import androidx.navigation.NavController
 import coil3.compose.AsyncImage
 import org.com.hcmurs.R
 import org.com.hcmurs.model.BlogResponse
+import org.com.hcmurs.ui.components.topbar.BlogListTopBar
 import org.com.hcmurs.ui.screens.metro.account.PrimaryGreen
 import org.com.hcmurs.utils.formatDate
 
@@ -91,6 +92,14 @@ fun BlogListScreen(
     }
 
     Scaffold(
+        topBar = {
+            BlogListTopBar(
+                navController = navController,
+                onSearch = { query ->
+                    viewModel.searchBlogs(query)
+                }
+            )
+        }
     ) { paddingValues ->        BlogListContent(
             blogsState = blogsState,
             isLoadingMore = isLoadingMore,
@@ -159,13 +168,13 @@ private fun BlogListContent(
                 ) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Text(
-                            text = "Không tìm thấy kết quả",
+                            text = stringResource(R.string.not_found),
                             fontSize = 16.sp,
                             color = Color.Gray
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
-                            text = "Thử tìm kiếm với từ khóa khác",
+                            text =  stringResource(R.string.try_search_again),
                             fontSize = 14.sp,
                             color = Color.Gray
                         )

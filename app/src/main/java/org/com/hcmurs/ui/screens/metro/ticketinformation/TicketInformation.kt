@@ -30,6 +30,7 @@ import androidx.navigation.compose.rememberNavController
 import org.com.hcmurs.R
 import org.com.hcmurs.model.TicketInformation
 import org.com.hcmurs.ui.components.card.ticketinformation.TicketInformationCard
+import org.com.hcmurs.ui.components.topbar.TicketInformationTopBar
 
 @Composable
 fun getTicketList(): List<TicketInformation> {
@@ -66,6 +67,11 @@ fun TicketInformationScreen(navController: NavHostController) {
     val events = getTicketList()
 
     Scaffold(
+        topBar = {
+            TicketInformationTopBar(
+                navController = navController,
+            )
+        },
         containerColor = Color.White,
         modifier = Modifier.fillMaxSize()
     ) { padding ->

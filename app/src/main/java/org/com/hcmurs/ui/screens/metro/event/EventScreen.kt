@@ -38,7 +38,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import org.com.hcmurs.model.Event
 import org.com.hcmurs.ui.components.card.event.EventCard
-import org.com.hcmurs.ui.theme.BluePrimary
+import org.com.hcmurs.ui.components.topbar.EventTopBar
+import org.com.hcmurs.ui.theme.PrimaryGreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -91,8 +92,8 @@ fun EventScreen(navController: NavHostController) {
 //                        colors = TextFieldDefaults.colors(
 //                            unfocusedContainerColor = Color.White,
 //                            focusedContainerColor = Color.White,
-//                            unfocusedIndicatorColor = BluePrimary,
-//                            focusedIndicatorColor = BluePrimary
+//                            unfocusedIndicatorColor = PrimaryGreen,
+//                            focusedIndicatorColor = PrimaryGreen
 //                        )
                     )
                 }
@@ -106,7 +107,7 @@ fun EventScreen(navController: NavHostController) {
                         descriptionInput = ""
                     },
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = BluePrimary, // Background color
+                        containerColor = PrimaryGreen, // Background color
                         contentColor = Color.White  // Text color
                     )
                 ) {
@@ -127,6 +128,14 @@ fun EventScreen(navController: NavHostController) {
     }
 
     Scaffold(
+        topBar = {
+            EventTopBar(
+                navController = navController,
+                onAddEvent = { showDialog = true }
+            )
+        },
+        containerColor = Color.White,
+        modifier = Modifier.fillMaxSize()
     ) { padding ->
         Column(
             modifier = Modifier

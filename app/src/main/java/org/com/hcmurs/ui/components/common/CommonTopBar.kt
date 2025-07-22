@@ -18,8 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation.NavController
-import org.com.hcmurs.ui.theme.DarkGreen
-import org.com.hcmurs.ui.theme.GreenPrimary
+import org.com.hcmurs.ui.theme.PrimaryGreen
 import org.com.hcmurs.utils.navigateToHome
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -55,7 +54,7 @@ fun CommonTopBar(
             },
             actions = actions,
             colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = DarkGreen
+                containerColor = PrimaryGreen
             )
         )
 

@@ -1,6 +1,5 @@
 package org.com.hcmurs.ui.screens.metro.route
 
-import androidx.compose.foundation.lazy.items
 import android.Manifest
 import android.content.pm.PackageManager
 import android.graphics.Paint
@@ -25,6 +24,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MyLocation
@@ -43,7 +43,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -57,6 +56,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -141,6 +141,9 @@ fun RouteScreen(
     }
 
     Scaffold(
+        topBar = {
+            CommonTopBar(navController, stringResource(R.string.journey_title))
+        }
     ) { paddingValues ->
         Box(
             modifier = Modifier
@@ -180,6 +183,8 @@ fun RouteScreen(
                         setMultiTouchControls(true)
                         controller.setZoom(14.0)
 
+                        // Center the map on a default location
+                        //val startPoint = GeoPoint(10.763032, 106.682397) // Ho Chi Minh City
                         controller.setCenter(initialView)
 
                         // Add a marker at the center
@@ -217,8 +222,13 @@ fun RouteScreen(
                 modifier = Modifier.fillMaxSize(),
                 update = { mapView ->
                     if (mapUpdateKey > 0) {
+                        // This block will be called on recomposition
                         val currentZoom = mapView.zoomLevelDouble
+
+                        // Clear old overlays before drawing new ones
                         mapView.overlays.clear()
+
+                        // Add metro line polyline first (so it appears under markers)
                         val polyline = Polyline().apply {
                             stationPoints.forEach { addPoint(it) }
                             outlinePaint.strokeWidth = when {
@@ -231,9 +241,14 @@ fun RouteScreen(
                             outlinePaint.isAntiAlias = true
                         }
                         mapView.overlays.add(polyline)
+
+                        // Add metro stations with larger, more prominent icons
                         stationPoints.forEachIndexed { index, stationPoint ->
 
+                            // Find corresponding MetroStation for this GeoPoint
                             val metroStationAtPoint = metroStations.find { it.location.distanceToAsDouble(stationPoint) < 100 }
+
+                            // Determine if this is start or end station
                             val isStartOrEndStation = metroStationAtPoint?.isTerminal == true
 
                             val metroMarker = Marker(mapView).apply {
@@ -241,21 +256,39 @@ fun RouteScreen(
                                 setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_CENTER)
                                 title = "Metro Station ${index + 1}"
 
-                                val iconRes = if (isStartOrEndStation) R.drawable.ic_point else R.drawable.ic_point
+                                val iconRes = if (isStartOrEndStation) R.drawable.ic_metro else R.drawable.ic_point
                                 val metroIcon = ContextCompat.getDrawable(context, iconRes)?.mutate()
+
+                                // Use a bitmap-based approach for icon creation
+                                // Apply tint based on station type
+//                                metroIcon?.setTint(
+//                                    when (index) {
+////                                        0 -> "#FFFF5722".toColorInt() // Orange for start
+////                                        station.size - 1 -> "#FF4CAF50".toColorInt() // Green for end
+//                                        else -> "#FF1976D2".toColorInt() // Blue for regular
+//                                    }
+//                                )
+
                                 metroIcon?.let { drawable ->
+                                    // Determine size based on zoom
                                     val iconSize = when {
                                         currentZoom < 12 -> 64
                                         currentZoom < 15 -> 96
                                         currentZoom < 18 -> 128
                                         else -> 160
                                     }
+
+                                    // Create bitmap with proper dimensions
                                     val bitmap = android.graphics.Bitmap.createBitmap(
                                         iconSize, iconSize, android.graphics.Bitmap.Config.ARGB_8888
                                     )
                                     val canvas = android.graphics.Canvas(bitmap)
+
+                                    // Set bounds to fill the bitmap
                                     drawable.setBounds(0, 0, iconSize, iconSize)
                                     drawable.draw(canvas)
+
+                                    // Use bitmap as icon
                                     icon = bitmap.toDrawable(context.resources)
                                 }
 
@@ -292,92 +325,164 @@ fun RouteScreen(
                 }
             )
 
+            // Route Selection Box with floating swap button
+            Box(
+                modifier = Modifier
+                    .width(300.dp)
+                    .align(Alignment.TopCenter)
+                    .padding(16.dp)
+            ) {
+                Card(
+                    modifier = Modifier.align(Alignment.TopCenter),
+                    shape = RoundedCornerShape(8.dp),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+                ) {
+                    Column(
+                        modifier = Modifier.padding(16.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        // Start station selector
+                        Column(modifier = Modifier.fillMaxWidth()) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Image(
+                                    painter = painterResource(id = R.drawable.ic_home_50),
+                                    contentDescription = "Điểm đi",
+                                    modifier = Modifier.size(24.dp)
+                                )
+                                Spacer(modifier = Modifier.width(8.dp))
+                                FilledTonalButton(
+                                    onClick = { showStartStationDialog = true },
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .height(35.dp), // Reduced height
+                                    shape = RoundedCornerShape(4.dp),
+                                    colors = ButtonDefaults.filledTonalButtonColors(
+                                        containerColor = MaterialTheme.colorScheme.surfaceVariant
+                                    ),
+                                    contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
+                                ) {
+                                    Text(
+                                        selectedStartStation?.name ?: "Chọn ga đi",
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis,
+                                        fontWeight = FontWeight.Medium,
+                                        style = MaterialTheme.typography.bodyMedium
+                                    )
+                                }
+                            }
+                        }
+
+                        // End station selector
+                        Column(modifier = Modifier.fillMaxWidth()) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Image(
+                                    painter = painterResource(id = R.drawable.ic_red_point_50),
+                                    contentDescription = "Điểm đến",
+                                    modifier = Modifier.size(24.dp)
+                                )
+                                Spacer(modifier = Modifier.width(8.dp))
+                                FilledTonalButton(
+                                    onClick = { showEndStationDialog = true },
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .height(35.dp), // Reduced height
+                                    shape = RoundedCornerShape(4.dp),
+                                    colors = ButtonDefaults.filledTonalButtonColors(
+                                        containerColor = MaterialTheme.colorScheme.surfaceVariant
+                                    ),
+                                    contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
+                                ) {
+                                    Text(
+                                        selectedEndStation?.name ?: "Chọn ga đến",
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis,
+                                        fontWeight = FontWeight.Medium,
+                                        style = MaterialTheme.typography.bodyMedium
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // Floating swap button
+                FloatingActionButton(
+                    onClick = {
+                        val temp = selectedStartStation
+                        selectedStartStation = selectedEndStation
+                        selectedEndStation = temp
+                    },
+                    modifier = Modifier
+                        .align(Alignment.CenterEnd)
+                        .offset(x = 16.dp), // Offset to float outside the card
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary,
+                    elevation = FloatingActionButtonDefaults.elevation(defaultElevation = 6.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.SwapVert,
+                        contentDescription = "Đảo ga"
+                    )
+                }
+            }
+
+            // Bottom Time Information Box
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clickable { isBottomCardExpanded = !isBottomCardExpanded }
                     .animateContentSize() // Add this for animation
-                    .align(Alignment.BottomCenter)
-                    .padding(16.dp), // Add padding here to lift it from the edges
-                shape = RoundedCornerShape(16.dp), // More rounded corners
-                elevation = CardDefaults.cardElevation(defaultElevation = 8.dp), // Increased elevation for prominence
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(3.dp)) // Use a slightly elevated surface color
+                    .align(Alignment.BottomCenter),
+                shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
+                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
             ) {
                 Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp)
+                    modifier = Modifier.padding(16.dp)
                 ) {
                     Text(
                         "Thông tin chuyến đi",
-                        style = MaterialTheme.typography.titleLarge, // Larger title
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onSurface
+                        style = MaterialTheme.typography.titleMedium
                     )
-                    Spacer(modifier = Modifier.height(8.dp)) // Added space
 
                     if (isCalculatingRoute) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(24.dp),
+                            strokeWidth = 2.dp
+                        )
+                    }
+
+                    if (selectedStartStation != null && selectedEndStation != null) {
                         Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.Center,
-                            verticalAlignment = Alignment.CenterVertically
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 8.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween
                         ) {
-                            CircularProgressIndicator(
-                                modifier = Modifier.size(32.dp), // Larger loading indicator
-                                strokeWidth = 3.dp,
-                                color = MaterialTheme.colorScheme.primary
-                            )
-                            Spacer(modifier = Modifier.width(16.dp))
-                            Text("Đang tính toán lộ trình...", style = MaterialTheme.typography.bodyMedium)
-                        }
-                    } else if (selectedStartStation != null && selectedEndStation != null) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceAround, // Changed to SpaceAround for better distribution
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                Text(
-                                    "Thời gian",
-                                    style = MaterialTheme.typography.bodySmall,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                                )
-                                Text(
-                                    "25 phút",
-                                    style = MaterialTheme.typography.headlineSmall, // Larger and bolder
-                                    fontWeight = FontWeight.Bold,
-                                    color = MaterialTheme.colorScheme.primary
-                                )
+                            Column {
+                                Text("Thời gian")
+                                Text("25 phút", style = MaterialTheme.typography.bodyLarge)
                             }
-                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                Text(
-                                    "Khoảng cách",
-                                    style = MaterialTheme.typography.bodySmall,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                                )
-                                Text(
-                                    "12.5 km",
-                                    style = MaterialTheme.typography.headlineSmall, // Larger and bolder
-                                    fontWeight = FontWeight.Bold,
-                                    color = MaterialTheme.colorScheme.primary
-                                )
+                            Column {
+                                Text("Khoảng cách")
+                                Text("12.5 km", style = MaterialTheme.typography.bodyLarge)
+                            }
+                            Column {
+                                Text("Giá vé")
+                                Text("10000 VND", style = MaterialTheme.typography.bodyLarge)
                             }
                         }
                     } else {
                         Text(
-                            "Vui lòng chọn ga đi và ga đến để xem thông tin chuyến đi.", // More descriptive message
-                            style = MaterialTheme.typography.bodyMedium.copy(color = MaterialTheme.colorScheme.onSurfaceVariant),
-                            modifier = Modifier.padding(vertical = 8.dp)
-                        )
-                    }
-
-                    // Optional: Expanded content if needed
-                    if (isBottomCardExpanded) {
-                        Spacer(modifier = Modifier.height(16.dp))
-                        Text(
-                            "Chi tiết lộ trình sẽ hiển thị ở đây khi tính toán xong.",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                            "Vui lòng chọn ga đi và ga đến để xem thông tin",
+                            style = MaterialTheme.typography.bodyMedium,
+                            modifier = Modifier.padding(top = 8.dp)
                         )
                     }
                 }
@@ -425,7 +530,7 @@ fun RouteScreen(
                 },
                 confirmButton = {
                     TextButton(onClick = { showStartStationDialog = false }) {
-                        Text("Hủy")
+                        Text(androidx.compose.ui.res.stringResource(org.com.hcmurs.R.string.cancel))
                     }
                 }
             )
@@ -450,7 +555,7 @@ fun RouteScreen(
                 },
                 confirmButton = {
                     TextButton(onClick = { showEndStationDialog = false }) {
-                        Text("Hủy")
+                        Text(androidx.compose.ui.res.stringResource(org.com.hcmurs.R.string.cancel))
                     }
                 }
             )

@@ -4,7 +4,6 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.net.Uri
 import android.provider.MediaStore
-import android.util.Base64
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,6 +18,7 @@ import java.io.ByteArrayOutputStream
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
+import android.util.Base64
 
 
 data class RegisterFormState(

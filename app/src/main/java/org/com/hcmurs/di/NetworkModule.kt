@@ -51,7 +51,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 class NetworkModule {
     private val BASE_URL = "http://10.0.2.2:4003/"
-    //    private val BASE_URL = "http://192.168.88.172:4003/"
+//    private val BASE_URL = "http://192.168.88.172:4003/"
     // private val BASE_URL = "http://172.20.10.9:4003/"
     private val BASE_BLOG = "http://10.0.2.2:4007/"
     private val BASE_STATION = "http://192.168.88.172:4004/"
@@ -353,25 +353,25 @@ class NetworkModule {
     fun provideRequestRepository(api: RequestApi): RequestRepository {
         return RequestRepository(api)
     }
-
-    //feedback
-    @Provides
-    @Singleton
-    fun provideFeedbackApi(retrofit: Retrofit): FeedbackApi {
-        return retrofit.create(FeedbackApi::class.java)
-    }
+    
+//feedback
+@Provides
+@Singleton
+fun provideFeedbackApi(retrofit: Retrofit): FeedbackApi {
+    return retrofit.create(FeedbackApi::class.java)
+}
 
     @Provides
     @Singleton
     fun provideFeedbackRepository(api: FeedbackApi): FeedbackRepository {
         return FeedbackRepository(api)
     }
-    // payment
-    @Provides
-    @Singleton
+// payment
+@Provides
+@Singleton
     fun providePaymentApi(retrofit: Retrofit): PaymentApi {
-        return retrofit.create(PaymentApi::class.java)
-    }
+    return retrofit.create(PaymentApi::class.java)
+}
 
     @Provides
     @Singleton

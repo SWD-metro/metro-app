@@ -7,6 +7,7 @@ A modern Android application for Ho Chi Minh City Metro system built with Kotlin
 Metro App is a comprehensive mobile application designed to help users navigate and utilize the Ho Chi Minh City Metro system. The app provides real-time information, route planning, ticket management, and various metro-related services.
 
 ## ✨ Features
+
 - **🏠 Home Dashboard**: Quick access to metro services and information
 - **🎫 Ticket Management**: 
   - Buy tickets digitally

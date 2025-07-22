@@ -1,7 +1,6 @@
 package org.com.hcmurs
 
 import android.content.Context
-import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -10,24 +9,20 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.ui.graphics.Color
-import androidx.compose.material3.Surface
-import androidx.compose.ui.Modifier
 import androidx.lifecycle.lifecycleScope
 import com.stripe.android.PaymentConfiguration
-import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.com.hcmurs.ui.screens.login.LoginViewModel
-import org.com.hcmurs.ui.theme.HcmursAppTheme
+import org.com.hcmurs.ui.theme.AppTheme
 import org.com.hcmurs.utils.CurrencyManager
 import org.com.hcmurs.utils.LanguageManager
+import android.content.res.Configuration
 import java.util.Locale
 import javax.inject.Inject
 
-
-@AndroidEntryPoint
+@dagger.hilt.android.AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
     private val mainViewModel: MainViewModel by viewModels()
     private val loginViewModel: LoginViewModel by viewModels()
 
@@ -75,7 +70,7 @@ class MainActivity : ComponentActivity() {
         }
 
         setContent {
-            HcmursAppTheme {
+            AppTheme {
                 Navigation()
             }
         }
@@ -94,4 +89,3 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-

@@ -55,50 +55,50 @@ fun IntroductionScreen(navController: NavHostController) {
 
     }
 }
-@Composable
-fun AboutContent() {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(20.dp)
-            .verticalScroll(rememberScrollState())
-    ) {
-        // Main title
-        Text(
-            text = "Giới thiệu Công ty TNHH MTV Đường sắt đô thị số 1\nThành phố Hồ Chí Minh",
-            fontSize =14.sp,
-            fontWeight = FontWeight.Bold,
-            color = Color(0xFF1976D2),
-            lineHeight = 26.sp,
-            modifier = Modifier.padding(bottom = 24.dp)
-        )
+    @Composable
+    fun AboutContent() {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(20.dp)
+                .verticalScroll(rememberScrollState())
+        ) {
+            // Main title
+            Text(
+                text = "Giới thiệu Công ty TNHH MTV Đường sắt đô thị số 1\nThành phố Hồ Chí Minh",
+                fontSize =14.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color(0xFF1976D2),
+                lineHeight = 26.sp,
+                modifier = Modifier.padding(bottom = 24.dp)
+            )
 
-        // Section 1
-        SectionHeader("1. Thông tin giới thiệu")
+            // Section 1
+            SectionHeader("1. Thông tin giới thiệu")
 
-        Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(12.dp))
 
-        SectionContent(
-            """Thành phố Hồ Chí Minh là thành phố lớn nhất Việt Nam và là một siêu đô thị trong tương lai gần. Đây còn là trung tâm kinh tế, văn hóa, giải trí và giáo dục tại Việt Nam. Nhờ điều kiện tự nhiên thuận lợi, Thành phố Hồ Chí Minh trở thành một đầu mối giao thông quan trọng của Việt Nam và khu vực Đông Nam Á."""
-        )
+            SectionContent(
+                """Thành phố Hồ Chí Minh là thành phố lớn nhất Việt Nam và là một siêu đô thị trong tương lai gần. Đây còn là trung tâm kinh tế, văn hóa, giải trí và giáo dục tại Việt Nam. Nhờ điều kiện tự nhiên thuận lợi, Thành phố Hồ Chí Minh trở thành một đầu mối giao thông quan trọng của Việt Nam và khu vực Đông Nam Á."""
+            )
 
-        Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
-        SectionContent(
-            """Tuy nhiên giao thông trong nội đô, dưới áp lực tốc độ tăng dân số nhanh, hệ thống đường sá nhỏ, lượng phương tiện cá nhân lớn... khiến thành phố luôn phải đối mặt với vấn đề ùn tắc, tai nạn giao thông, ô nhiễm môi trường, thiệt hại kinh tế... Vấn đề ưu tiên phát triển giao thông công cộng với xương sống là các tuyến đường sắt đô thị là một trong những phương thức tốt nhất để giải quyết những vấn đề đã và đang đặt ra đối với giao thông đô thị Thành phố Hồ Chí Minh đồng thời tạo dựng văn minh đô thị hiện đại."""
-        )
+            SectionContent(
+                """Tuy nhiên giao thông trong nội đô, dưới áp lực tốc độ tăng dân số nhanh, hệ thống đường sá nhỏ, lượng phương tiện cá nhân lớn... khiến thành phố luôn phải đối mặt với vấn đề ùn tắc, tai nạn giao thông, ô nhiễm môi trường, thiệt hại kinh tế... Vấn đề ưu tiên phát triển giao thông công cộng với xương sống là các tuyến đường sắt đô thị là một trong những phương thức tốt nhất để giải quyết những vấn đề đã và đang đặt ra đối với giao thông đô thị Thành phố Hồ Chí Minh đồng thời tạo dựng văn minh đô thị hiện đại."""
+            )
 
-        Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
-        SectionContent(
-            """Với quyết tâm đó, Công ty TNHH MTV Đường sắt đô thị số 1 Thành phố Hồ Chí Minh – Ho Chi Minh City Urban Railways No.1 Company Limited (HURC1) được thành lập theo quyết định số 6339/QĐ-UBND của UBND TPHCM ngày 01 tháng 12 năm 2015. Công ty TNHH MTV Đường sắt đô thị Thành phố Hồ Chí Minh thuộc loại hình công ty TNHH MTV 100% vốn nhà nước, UBND TPHCM làm chủ sở hữu. Với nhiệm vụ xây dựng kế hoạch tuyến dùng nhân sự phù hợp công tác đào tạo, chuyển giao công nghệ...; hoàn..."""
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        SectionHeader("2. Thông tin Tuyến tham khảo")
+            SectionContent(
+                """Với quyết tâm đó, Công ty TNHH MTV Đường sắt đô thị số 1 Thành phố Hồ Chí Minh – Ho Chi Minh City Urban Railways No.1 Company Limited (HURC1) được thành lập theo quyết định số 6339/QĐ-UBND của UBND TPHCM ngày 01 tháng 12 năm 2015. Công ty TNHH MTV Đường sắt đô thị Thành phố Hồ Chí Minh thuộc loại hình công ty TNHH MTV 100% vốn nhà nước, UBND TPHCM làm chủ sở hữu. Với nhiệm vụ xây dựng kế hoạch tuyến dùng nhân sự phù hợp công tác đào tạo, chuyển giao công nghệ...; hoàn..."""
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            SectionHeader("2. Thông tin Tuyến tham khảo")
 
 
+        }
     }
-}
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -131,7 +131,7 @@ fun AboutTopBar(onBackClick: () -> Unit) {
             containerColor = Color(0xFF4A90E2)
         ),
 
-        )
+    )
 }
 @Composable
 fun SectionHeader(title: String) {

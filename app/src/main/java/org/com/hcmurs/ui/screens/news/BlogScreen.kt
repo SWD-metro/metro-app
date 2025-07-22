@@ -40,18 +40,22 @@ import androidx.navigation.compose.rememberNavController
 import coil3.compose.AsyncImage
 import org.com.hcmurs.R
 import org.com.hcmurs.model.BlogResponse
+import org.com.hcmurs.ui.theme.LightBeige
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun BlogTile(
     blog: BlogResponse,
-    onClick: () -> Unit = {}
+    onClick: () -> Unit = {},
+    color: Color = Color.White,
+    textColor: Color = Color.Black
 ) {
     Card(
         modifier = Modifier
             .width(280.dp)
             .height(160.dp)
             .clickable { onClick() },
+        colors = CardDefaults.cardColors(containerColor = color),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         shape = RoundedCornerShape(12.dp)
     ) {
@@ -78,6 +82,7 @@ fun BlogTile(
                 Text(
                     text = blog.title,
                     fontWeight = FontWeight.Bold,
+                    color = textColor,
                     fontSize = 14.sp,
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis
@@ -92,7 +97,7 @@ fun BlogTile(
                 )
                 Spacer(modifier = Modifier.weight(1f))
                 Text(
-                    text = blog.date ?: "",
+                    text = blog.readTime ?: "",
                     fontSize = 10.sp,
                     color = Color.Gray
                 )
@@ -110,6 +115,8 @@ fun BlogSection(
 ) {
     val homeBlogsState by viewModel.homeBlogsState.collectAsState()
 
+    val featuredBlogs = viewModel.featuredBlogs.collectAsState(initial = emptyList())
+
     Column {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -124,7 +131,7 @@ fun BlogSection(
             TextButton(onClick = {
                 navController.navigate("blog_list")
             }) {
-                Text(stringResource(R.string.see_all))
+                Text(stringResource(R.string.see_all), fontSize = 14.sp, color = Color(0xFF2196F3))
             }
         }
 
@@ -139,6 +146,7 @@ fun BlogSection(
                     CircularProgressIndicator()
                 }
             }
+
             is BlogUiState.Error -> {
                 Text(
                     text = "Failed to load blogs",
@@ -146,15 +154,20 @@ fun BlogSection(
                     modifier = Modifier.padding(16.dp)
                 )
             }
+
             is BlogUiState.Success -> {
                 val scrollState = rememberScrollState()
+                val allBlogs = (homeBlogsState as BlogUiState.Success).blogs
+                val featured = featuredBlogs.value
+                val remainingBlogs = allBlogs.filter { blog -> blog !in featured }
+
                 Row(
                     modifier = Modifier
                         .horizontalScroll(scrollState)
                         .fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
-                    (homeBlogsState as BlogUiState.Success).blogs.forEach { blog ->
+                    remainingBlogs.forEach { blog ->
                         BlogTile(
                             blog = blog,
                             onClick = { navController.navigate("blog_detail/${blog.id}") }
@@ -163,6 +176,7 @@ fun BlogSection(
                     Spacer(modifier = Modifier.width(16.dp))
                 }
             }
+
         }
     }
 }

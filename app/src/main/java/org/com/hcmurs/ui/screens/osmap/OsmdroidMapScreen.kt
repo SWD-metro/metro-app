@@ -2,6 +2,8 @@ package org.com.hcmurs.ui.screens.osmap
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.graphics.Color
+import android.graphics.Paint
 import android.preference.PreferenceManager
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -17,8 +19,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import android.graphics.Color
-import android.graphics.Paint
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.viewinterop.AndroidView
@@ -32,52 +32,13 @@ import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Marker
 import org.osmdroid.views.overlay.Polyline
-// Data classes for API responses
-data class BusStation(
-    val id: Int,
-    val name: String,
-    val latitude: Double,
-    val longitude: Double,
-    val isActive: Int,
-    val address: String,
-    val code: String
-)
 
-data class BusRoute(
-    val id: Int,
-    val name: String,
-    val distance: Double,
-    val duration: Int,
-    val startTime: String,
-    val endTime: String,
-    val isActive: Int,
-    val routeNum: Int,
-    val direction: String,
-    val tripSpacing: Int
-)
-
-data class RouteStation(
-    val id: Int,
-    val priority: Int,
-    val routeId: Int,
-    val stationId: Int
-)
-
-data class Schedule(
-    val id: Int,
-    val startTime: String,
-    val routeId: Int
-)
 @Composable
 fun OsmdroidMapScreen(navController: NavController) {
     val context = LocalContext.current
     val lifecycleOwner = androidx.lifecycle.compose.LocalLifecycleOwner.current
     var hasLocationPermission by remember { mutableStateOf(false) }
-    var busStations by remember { mutableStateOf<List<BusStation>>(emptyList()) }
-    var busRoutes by remember { mutableStateOf<List<BusRoute>>(emptyList()) }
-    var routeStations by remember { mutableStateOf<List<RouteStation>>(emptyList()) }
-    var schedules by remember { mutableStateOf<List<Schedule>>(emptyList()) }
-    var mapView by remember { mutableStateOf<MapView?>(null) }
+
     val permissionLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { isGranted ->

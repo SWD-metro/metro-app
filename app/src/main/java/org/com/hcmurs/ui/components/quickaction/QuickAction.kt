@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.pager.HorizontalPager
@@ -41,15 +42,16 @@ import org.com.hcmurs.R
 import org.com.hcmurs.constant.ScreenTitle
 import org.com.hcmurs.constant.UserRole
 import org.com.hcmurs.ui.theme.LightOrange
+import org.com.hcmurs.ui.theme.PrimaryGreen
 import org.com.hcmurs.utils.getNavigationRoute
 import org.com.hcmurs.utils.screenTitleIconMap
-import kotlin.collections.chunked
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun QuickActionsSection(
     navController: NavHostController,
-    userRole: UserRole = UserRole.GUEST
+    userRole: UserRole = UserRole.GUEST,
+    onGridItemClick: (String) -> Unit
 ) {
     // Filter the list based on user role
     val allScreenTitles = ScreenTitle.values().toList()
@@ -77,7 +79,7 @@ fun QuickActionsSection(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(210.dp)
+            .height(210.dp) // đủ để chứa cả Card và indicator
             .padding(horizontal = 10.dp)
     ) {
         // Card chứa grid
@@ -85,9 +87,10 @@ fun QuickActionsSection(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(190.dp)
-                .align(Alignment.TopCenter),
+                .align(Alignment.TopCenter), // đảm bảo nó nằm trên
             elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
-            shape = RoundedCornerShape(16.dp)
+            shape = RoundedCornerShape(16.dp),
+            colors = CardDefaults.cardColors(containerColor = Color.White) // Màu nền trắng
         ) {
             Box(
                 modifier = Modifier.fillMaxSize(),
@@ -99,8 +102,9 @@ fun QuickActionsSection(
                 ) { page ->
                     LazyVerticalGrid(
                         columns = GridCells.Fixed(4),
-                        contentPadding = PaddingValues(horizontal = 8.dp),
-                        modifier = Modifier.fillMaxSize()
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(8.dp)
                     ) {
                         items(pages[page].size) { index ->
                             val item = pages[page][index]
@@ -114,7 +118,7 @@ fun QuickActionsSection(
                                 onClick = {
                                     val route = getNavigationRoute(item)
                                     try {
-                                        navController.navigate(route)
+                                        onGridItemClick(route)
                                     } catch (e: Exception) {
                                         println("Navigation failed: $route - ${e.message}")
                                     }
@@ -126,10 +130,11 @@ fun QuickActionsSection(
             }
         }
 
+        // ✅ Page indicator floating ở đáy
         if (pages.size > 1) {
             Row(
                 modifier = Modifier
-                    .align(Alignment.BottomCenter)
+                    .align(Alignment.BottomCenter) // ✅ Bảo đảm nằm ở đáy của Box
                     .padding(bottom = 8.dp),
                 horizontalArrangement = Arrangement.Center
             ) {
@@ -156,6 +161,7 @@ fun QuickActionItem(
     onClick: () -> Unit
 ) {
     Card(
+        colors = CardDefaults.cardColors(containerColor = Color.White), // Màu nền trắng
         modifier = Modifier
             .height(90.dp) // FIXED: Set fixed height to prevent overlap
             .padding(4.dp) // FIXED: Reduced padding to fit better
@@ -173,14 +179,14 @@ fun QuickActionItem(
                 modifier = Modifier
                     .size(32.dp) // FIXED: Slightly smaller icon to save space
                     .clip(CircleShape)
-                    .background(Color(0xFF64B5F6).copy(alpha = 0.2f)),
+                    .background(PrimaryGreen.copy(alpha = 0.2f)),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
                     painter = icon,
                     contentDescription = title,
-                    modifier = Modifier.size(18.dp),
-                    tint = Color(0xFF2196F3)
+                    modifier = Modifier.size(18.dp), // FIXED: Smaller icon size
+                    tint = PrimaryGreen
                 )
             }
 

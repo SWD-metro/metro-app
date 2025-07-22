@@ -1,15 +1,23 @@
 package org.com.hcmurs.ui.components.bottomNav
-
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.QrCodeScanner
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
@@ -37,7 +45,7 @@ fun AppBottomNavigationBar(
         BottomNavItem(Icons.Default.Home, "Home", Screen.Home.route),
         BottomNavItem(Icons.Default.Search, "Search", Screen.BuyTicket.route),
         BottomNavItem(Icons.Default.QrCodeScanner, "My Ticket", Screen.Home.route),
-        BottomNavItem(Icons.Default.Settings, "Account", Screen.Account.route)
+        BottomNavItem(Icons.Default.Settings, "Account", Screen.Home.route)
     )
 
     val selectedColor = Color(0xFF4A6FA5)

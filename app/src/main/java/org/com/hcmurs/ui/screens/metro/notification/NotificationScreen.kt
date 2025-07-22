@@ -95,6 +95,19 @@ fun NotificationScreen(navController: NavController) {
     )
 
     Scaffold (
+        topBar = {
+            CenterAlignedTopAppBar(
+                title = { Text("Thông báo",
+                    fontWeight = FontWeight.Bold,
+                    color = DarkGreen) },
+                navigationIcon = {
+                    IconButton (onClick = { navController.popBackStack() }) {
+                        Icon(Icons.Default.ArrowBack, contentDescription = "Quay lại", tint = DarkGreen)
+                    }
+                },
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = CardBackgroundColor)
+            )
+        },
         containerColor = LightGreenBackground
     ) { padding ->
         LazyColumn (
