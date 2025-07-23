@@ -70,10 +70,11 @@ import org.com.hcmurs.R
 import org.com.hcmurs.Screen
 import org.com.hcmurs.Station
 import org.com.hcmurs.ui.screens.metro.buyticket.FareMatrixViewModel
+import org.com.hcmurs.ui.theme.DarkGreen
+import org.com.hcmurs.ui.theme.PrimaryGreen
 
-private val PrimaryGreen = Color(0xFF4CAF50)
-private val DarkGreen = Color(0xFF388E3C)
-private val LightGreenBackground = Color(0xFFF1F8E9)
+
+private val LightGreenBackground = Color(0xFFE9EDF8)
 private val TextPrimaryColor = Color(0xFF212121)
 private val TextSecondaryColor = Color(0xFF757575)
 private val CardBackgroundColor = Color.White
