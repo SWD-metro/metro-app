@@ -34,6 +34,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import androidx.navigation.navDeepLink
 import androidx.navigation.navigation
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
@@ -84,6 +85,7 @@ import org.com.hcmurs.ui.screens.stationselection.StationSelectionScreen
 import org.com.hcmurs.ui.screens.stationselection.StationSelectionViewModel
 import org.com.hcmurs.ui.components.topNav.CustomTopAppBar
 import org.com.hcmurs.ui.screens.metro.buyticket.BuyTicketViewModel
+import org.com.hcmurs.ui.screens.metro.buyticket.PaymentRedirectScreen
 
 @EntryPoint
 @InstallIn(SingletonComponent::class)
@@ -626,7 +628,35 @@ fun Navigation(
                     ChangeLanguageScreen(navController, fallbackManager)
                 }
             }
+
+            composable(
+                route = "payment_handler?status={status}&orderCode={orderCode}",
+                arguments = listOf(
+                    navArgument("status") {
+                        type = NavType.StringType
+                        nullable = true
+                    },
+                    navArgument("orderCode") {
+                        type = NavType.IntType
+                        nullable = false
+                    }
+                ),
+                deepLinks = listOf(
+                    navDeepLink {
+                        uriPattern = "org.com.hcmurs://callback?status={status}&orderCode={orderCode}"
+                    }
+                )
+            ) { backStackEntry ->
+                val status = backStackEntry.arguments?.getString("status")
+                val orderCode = backStackEntry.arguments?.getInt("orderCode") ?: 0
+                PaymentRedirectScreen(
+                    navController = navController,
+                    status = status,
+                    orderCode = orderCode
+                )
+            }
         }
+
     }
 }
 
