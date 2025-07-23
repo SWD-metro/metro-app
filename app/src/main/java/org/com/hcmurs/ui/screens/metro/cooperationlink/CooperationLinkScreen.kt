@@ -36,7 +36,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import org.com.hcmurs.R
 import org.com.hcmurs.model.CooperationLink
-import org.com.hcmurs.ui.components.topbar.CooperationLinkTopBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -50,7 +49,6 @@ fun CooperationLinkScreen(navController: NavHostController) {
     )
 
     Scaffold(
-        topBar = { CooperationLinkTopBar(navController = navController) },
         containerColor = Color.White,
         modifier = Modifier.fillMaxSize()
     ) { padding ->

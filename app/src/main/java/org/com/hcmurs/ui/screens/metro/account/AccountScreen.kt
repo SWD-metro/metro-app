@@ -46,9 +46,9 @@ import androidx.navigation.NavController
 import org.com.hcmurs.R
 import org.com.hcmurs.Screen
 import org.com.hcmurs.ui.screens.login.LoginViewModel
-import org.com.hcmurs.ui.theme.DarkGreen
+import org.com.hcmurs.ui.theme.BlueDark
 import org.com.hcmurs.ui.theme.PaleYellow
-import org.com.hcmurs.ui.theme.PrimaryGreen
+import org.com.hcmurs.ui.theme.BluePrimary
 import androidx.compose.material3.Divider as HorizontalDivider
 
 
@@ -198,9 +198,9 @@ fun AccountScreen(
             .background(
                 brush = Brush.verticalGradient(
                     colors = listOf(
-                        PrimaryGreen,
+                        BluePrimary,
                         PaleYellow,
-                        DarkGreen
+                        BlueDark
                     )
                 )
             )

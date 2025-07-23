@@ -35,13 +35,6 @@ import androidx.navigation.compose.rememberNavController
 @Composable
 fun IntroductionScreen(navController: NavHostController) {
     Scaffold(
-        topBar = {
-            AboutTopBar(
-                onBackClick = {
-                    navController.popBackStack()
-                }
-            )
-        },
         modifier = Modifier.background(Color.White)
 
     ) { padding ->

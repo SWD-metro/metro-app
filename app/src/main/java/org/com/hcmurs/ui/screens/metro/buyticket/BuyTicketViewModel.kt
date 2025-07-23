@@ -8,11 +8,13 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import org.com.hcmurs.repositories.apis.ticket.TicketRepository
 import org.com.hcmurs.repositories.apis.ticket.TicketType
+import org.com.hcmurs.utils.CurrencyManager
 import javax.inject.Inject
 
 @HiltViewModel
 class BuyTicketViewModel @Inject constructor(
-    private val ticketRepository: TicketRepository
+    private val ticketRepository: TicketRepository,
+    private val currencyManager: CurrencyManager // Inject CurrencyManager tại đây
 ) : ViewModel() {
 
     private val _ticketTypes = MutableStateFlow<List<TicketType>>(emptyList())
@@ -29,8 +31,7 @@ class BuyTicketViewModel @Inject constructor(
     }
 
     fun fetchTicketTypes() {
-        viewModelScope.launch()
-        {
+        viewModelScope.launch {
             _isLoading.value = true
             _errorMessage.value = null
             val result = ticketRepository.getTicketTypes()
@@ -41,5 +42,11 @@ class BuyTicketViewModel @Inject constructor(
             }
             _isLoading.value = false
         }
+    }
+
+    // Hàm mới để định dạng giá tiền, sử dụng CurrencyManager đã được inject
+    fun getFormattedPrice(price: Long): String {
+        // Mặc định sử dụng ngôn ngữ "vi" để định dạng VND
+        return currencyManager.convertPrice(price.toDouble(), "vi")
     }
 }

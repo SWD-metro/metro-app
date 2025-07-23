@@ -48,9 +48,11 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import org.com.hcmurs.R
+import org.com.hcmurs.ui.theme.BlueDark
+import org.com.hcmurs.ui.theme.BluePrimary
 import org.com.hcmurs.utils.LanguageManager
-private val PrimaryGreen = Color(0xFF4CAF50)
-private val DarkGreen = Color(0xFF388E3C)
+
+
 private val LightGreenBackground = Color(0xFFF1F8E9)
 private val TextSecondaryColor = Color(0xFF757575)
 
@@ -80,17 +82,6 @@ fun TicketQRCodeScreen(
     }
 
     Scaffold(
-        topBar = {
-            CenterAlignedTopAppBar(
-                title = { Text(ticketDigitalTitle, color = DarkGreen, fontWeight = FontWeight.Bold) },
-                navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Back", tint = DarkGreen)
-                    }
-                },
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = Color.White)
-            )
-        }
     ) { padding ->
         // Make the entire content scrollable
         Column(
@@ -109,7 +100,7 @@ fun TicketQRCodeScreen(
                         .height(400.dp),
                     contentAlignment = Alignment.Center
                 ) {
-                    CircularProgressIndicator(color = PrimaryGreen)
+                    CircularProgressIndicator(color = BluePrimary)
                 }
             } else if (uiState.errorMessage != null) {
                 // Error state with proper spacing
@@ -139,7 +130,7 @@ fun TicketQRCodeScreen(
                         "",
                         fontSize = 20.sp, // Slightly smaller
                         fontWeight = FontWeight.Bold,
-                        color = DarkGreen
+                        color = BlueDark
                     )
 
                     Spacer(Modifier.height(8.dp))
@@ -176,7 +167,7 @@ fun TicketQRCodeScreen(
                             fontSize = 16.sp, // Slightly smaller
                             fontWeight = FontWeight.Medium,
                             letterSpacing = 1.5.sp, // Slightly reduced
-                            color = DarkGreen
+                            color = BlueDark
                         )
                     }
 
@@ -228,22 +219,22 @@ private fun CountdownAndReset(seconds: Int, onResetClick: () -> Unit) {
             String.format("0:%02d", seconds),
             fontSize = 18.sp, // Slightly smaller
             fontWeight = FontWeight.Bold,
-            color = if (seconds <= 10) Color.Red else DarkGreen
+            color = if (seconds <= 10) Color.Red else BlueDark
         )
         OutlinedButton(
             onClick = onResetClick,
             shape = RoundedCornerShape(50),
-            border = BorderStroke(1.dp, PrimaryGreen),
+            border = BorderStroke(1.dp, BluePrimary),
             modifier = Modifier.height(44.dp) // Slightly more compact
         ) {
             Icon(
                 Icons.Default.Refresh,
                 contentDescription = "Reset QR Code",
-                tint = PrimaryGreen,
+                tint = BluePrimary,
                 modifier = Modifier.size(18.dp) // Slightly smaller icon
             )
             Spacer(Modifier.width(8.dp))
-            Text(refreshCode, color = PrimaryGreen, fontSize = 14.sp) // Slightly smaller text
+            Text(refreshCode, color = BluePrimary, fontSize = 14.sp) // Slightly smaller text
         }
     }
 }

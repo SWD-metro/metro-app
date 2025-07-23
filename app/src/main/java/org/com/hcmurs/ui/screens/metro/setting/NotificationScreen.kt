@@ -59,38 +59,6 @@ import org.com.hcmurs.ui.screens.metro.account.SecondaryGreen
 @Composable
 fun NotificationScreen(navController: NavController) {
     Scaffold (
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        "Thông báo",
-                        color = Color.White,
-                        fontWeight = FontWeight.Bold
-                    )
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = PrimaryGreen
-                ),
-                navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(
-                            Icons.Default.ArrowBack,
-                            contentDescription = "Back",
-                            tint = Color.White
-                        )
-                    }
-                },
-                actions = {
-                    IconButton(onClick = { /* Mark all as read */ }) {
-                        Icon(
-                            Icons.Default.DoneAll,
-                            contentDescription = "Mark all read",
-                            tint = Color.White
-                        )
-                    }
-                }
-            )
-        }
     ) { paddingValues ->
         Column (
             modifier = Modifier

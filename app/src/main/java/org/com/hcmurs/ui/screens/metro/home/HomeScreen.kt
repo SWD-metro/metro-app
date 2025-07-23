@@ -22,6 +22,7 @@ import org.com.hcmurs.ui.components.featured.FeaturedBlogsSection
 import org.com.hcmurs.ui.screens.login.LoginViewModel
 import org.com.hcmurs.ui.screens.news.BlogSection
 import androidx.compose.runtime.getValue
+import org.com.hcmurs.ui.screens.metro.myticket.YourTicket
 import androidx.compose.runtime.setValue
 import org.com.hcmurs.Screen
 import org.com.hcmurs.ui.components.dialog.LoginRequiredDialog
@@ -35,6 +36,8 @@ fun HomeScreen(
 ) {
     val isAuthenticated by loginViewModel.isAuthenticated.collectAsState()
     var showLoginDialog by remember { mutableStateOf(false) }
+    val userProfile by loginViewModel.userProfile.collectAsState()
+    val userName = userProfile?.name ?: "Guest"
 
     val protectedRoutesWithDialog = setOf(
         Screen.RedeemCodeForTicket.route,
@@ -67,8 +70,14 @@ fun HomeScreen(
         role = UserRole.USER,
         onGridItemClick = { screen ->
             handleNavigation(screen)
-        }
+        },
+        userName = userName
     ) {
+        item {
+            Spacer(modifier = Modifier.height(20.dp))
+            YourTicket(navController)
+        }
+
         item {
             Spacer(modifier = Modifier.height(30.dp))
             Box(modifier = Modifier.padding(start = 16.dp)) {

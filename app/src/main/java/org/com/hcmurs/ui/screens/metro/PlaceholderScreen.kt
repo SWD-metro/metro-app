@@ -28,16 +28,6 @@ import androidx.navigation.NavController
 @Composable
 fun PlaceholderScreen(navController: NavController, title: String) {
     Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text(title) },
-                navigationIcon = {
-                    IconButton(onClick = { navController.navigateUp() }) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Back")
-                    }
-                }
-            )
-        }
     ) { padding ->
         Box(
             modifier = Modifier

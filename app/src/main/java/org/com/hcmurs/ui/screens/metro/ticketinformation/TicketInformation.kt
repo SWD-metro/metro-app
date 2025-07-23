@@ -67,11 +67,6 @@ fun TicketInformationScreen(navController: NavHostController) {
     val events = getTicketList()
 
     Scaffold(
-        topBar = {
-            TicketInformationTopBar(
-                navController = navController,
-            )
-        },
         containerColor = Color.White,
         modifier = Modifier.fillMaxSize()
     ) { padding ->

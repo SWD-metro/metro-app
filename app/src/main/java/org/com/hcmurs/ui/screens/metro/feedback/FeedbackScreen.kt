@@ -85,8 +85,9 @@ import androidx.compose.ui.graphics.asImageBitmap
 
 import android.util.Base64
 import androidx.compose.foundation.Image
+import org.com.hcmurs.ui.theme.BluePrimary
 
-private val PrimaryGreen = Color(0xFF4CAF50)
+
 private val SecondaryGreen = Color(0xFF66BB6A)
 private val LightGreen = Color(0xFFE8F5E8)
 private val DarkGreen = Color(0xFF2E7D32)
@@ -112,39 +113,12 @@ fun FeedbackScreen(
     }
 
     Scaffold(
-        topBar = {
-            CenterAlignedTopAppBar(
-                title = {
-                    Text(
-                        "Phản ánh/Góp ý",
-                        fontWeight = FontWeight.Bold,
-                        color = Color.White,
-                        fontSize = 20.sp
-                    )
-                },
-                navigationIcon = {
-                    IconButton(onClick = { navigateToHome(navController) }) {
-                        Icon(
-                            Icons.Default.Home,
-                            contentDescription = "Home",
-                            tint = Color.White,
-                            modifier = Modifier.size(24.dp)
-                        )
-                    }
-                },
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = Brush.horizontalGradient(
-                        colors = listOf(PrimaryGreen, SecondaryGreen)
-                    ).let { PrimaryGreen } // Fallback cho gradient
-                )
-            )
-        },
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
                     navController.navigate(Screen.CreateFeedback.route)
                 },
-                containerColor = PrimaryGreen,
+                containerColor = BluePrimary,
                 contentColor = Color.White,
                 modifier = Modifier
                     .shadow(16.dp, RoundedCornerShape(20.dp))
@@ -184,7 +158,7 @@ fun FeedbackScreen(
                             modifier = Modifier.padding(40.dp)
                         ) {
                             CircularProgressIndicator(
-                                color = PrimaryGreen,
+                                color = BluePrimary,
                                 strokeWidth = 4.dp,
                                 modifier = Modifier.size(56.dp)
                             )
@@ -282,7 +256,7 @@ fun FeedbackCard(feedback: FeedbackDto) {
                         modifier = Modifier
                             .padding(8.dp)
                             .clickable { showImageDialog = false },
-                        color = PrimaryGreen
+                        color = BluePrimary
                     )
                 },
                 text = {
@@ -328,7 +302,7 @@ fun FeedbackCard(feedback: FeedbackDto) {
                             modifier = Modifier
                                 .size(40.dp)
                                 .background(
-                                    PrimaryGreen,
+                                    BluePrimary,
                                     RoundedCornerShape(10.dp)
                                 ),
                             contentAlignment = Alignment.Center
@@ -377,13 +351,13 @@ fun FeedbackCard(feedback: FeedbackDto) {
                     Icon(
                         imageVector = Icons.Default.Visibility,
                         contentDescription = "Xem ảnh",
-                        tint = PrimaryGreen,
+                        tint = BluePrimary,
                         modifier = Modifier.size(18.dp)
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
                         text = "Xem ảnh đính kèm",
-                        color = PrimaryGreen,
+                        color = BluePrimary,
                         fontWeight = FontWeight.Medium,
                         fontSize = 14.sp
                     )
@@ -533,7 +507,7 @@ fun EmptyFeedbackContent(message: String, showSearch: Boolean = false) {
                         Icon(
                             Icons.Default.Feedback,
                             contentDescription = null,
-                            tint = PrimaryGreen,
+                            tint = BluePrimary,
                             modifier = Modifier.size(72.dp)
                         )
                     }
@@ -582,14 +556,14 @@ fun SearchBarWithButtons() {
                     Icon(
                         Icons.Default.Search,
                         contentDescription = "Search",
-                        tint = PrimaryGreen
+                        tint = BluePrimary
                     )
                 },
                 colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = PrimaryGreen,
+                    focusedBorderColor = BluePrimary,
                     unfocusedBorderColor = BorderColor,
-                    cursorColor = PrimaryGreen,
-                    focusedLabelColor = PrimaryGreen
+                    cursorColor = BluePrimary,
+                    focusedLabelColor = BluePrimary
                 ),
                 shape = RoundedCornerShape(16.dp)
             )
@@ -604,7 +578,7 @@ fun SearchBarWithButtons() {
                     onClick = { /* TODO: Gửi phản ánh */ },
                     modifier = Modifier.weight(1f),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = PrimaryGreen
+                        containerColor = BluePrimary
                     ),
                     shape = RoundedCornerShape(16.dp)
                 ) {
@@ -647,7 +621,7 @@ fun BottomNavBar(selectedIndex: Int, onTabSelected: (Int) -> Unit) {
         modifier = Modifier
             .fillMaxWidth()
             .shadow(16.dp, RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp)),
-        colors = CardDefaults.cardColors(containerColor = PrimaryGreen),
+        colors = CardDefaults.cardColors(containerColor = BluePrimary),
         shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp)
     ) {
         Row(

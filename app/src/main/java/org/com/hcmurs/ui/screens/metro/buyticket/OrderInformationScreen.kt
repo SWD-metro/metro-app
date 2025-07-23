@@ -218,12 +218,6 @@ fun OrderInfoScreen(
 
 
     Scaffold(
-        topBar = {
-            OrderInfoTopBar(
-                title = stringResource(R.string.order_information),
-                onBackClick = { navController.popBackStack() }
-            )
-        }
     ) { padding ->
         Column(
             modifier = Modifier

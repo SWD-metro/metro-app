@@ -42,7 +42,7 @@ import org.com.hcmurs.R
 import org.com.hcmurs.constant.ScreenTitle
 import org.com.hcmurs.constant.UserRole
 import org.com.hcmurs.ui.theme.LightOrange
-import org.com.hcmurs.ui.theme.PrimaryGreen
+import org.com.hcmurs.ui.theme.BluePrimary
 import org.com.hcmurs.utils.getNavigationRoute
 import org.com.hcmurs.utils.screenTitleIconMap
 
@@ -179,14 +179,14 @@ fun QuickActionItem(
                 modifier = Modifier
                     .size(32.dp) // FIXED: Slightly smaller icon to save space
                     .clip(CircleShape)
-                    .background(PrimaryGreen.copy(alpha = 0.2f)),
+                    .background(BluePrimary.copy(alpha = 0.2f)),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
                     painter = icon,
                     contentDescription = title,
                     modifier = Modifier.size(18.dp), // FIXED: Smaller icon size
-                    tint = PrimaryGreen
+                    tint = BluePrimary
                 )
             }
 

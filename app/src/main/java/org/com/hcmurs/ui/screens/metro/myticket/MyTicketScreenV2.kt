@@ -101,7 +101,6 @@ fun MyTicketScreen(
 
 
     Scaffold (
-        topBar = { MyTicketTopBar(navController) },
         containerColor = Color.Transparent
     ) { padding ->
         Column (
@@ -298,23 +297,3 @@ private fun getStatusColor(status: String): Color {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun MyTicketTopBar(navController: NavController) {
-    CenterAlignedTopAppBar(
-        title = {
-            Text(text = stringResource(R.string.my_ticket),
-                color = DarkGreen,
-                fontWeight = FontWeight.Bold)
-                },
-        navigationIcon = {
-            IconButton (onClick = { navController.navigate(Screen.Home.route) }) {
-                Icon(
-                    Icons.Default.ArrowBack,
-                    contentDescription = "Back",
-                    tint = DarkGreen)
-            }
-        },
-        colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.White)
-    )
-}

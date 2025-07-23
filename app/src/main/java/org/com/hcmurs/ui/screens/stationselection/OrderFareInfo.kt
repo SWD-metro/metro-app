@@ -171,17 +171,6 @@ fun OrderFareInfoScreen(
     }
 
     Scaffold(
-        topBar = {
-            CenterAlignedTopAppBar(
-                title = { Text("Thông tin đơn hàng", fontWeight = FontWeight.SemiBold, color = DarkGreen) },
-                navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Back", tint = DarkGreen)
-                    }
-                },
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = CardBackgroundColor)
-            )
-        },
         bottomBar = {
             if (fareInfo != null) {
                 PaymentBottomBar(

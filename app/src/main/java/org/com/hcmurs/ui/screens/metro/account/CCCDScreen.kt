@@ -49,52 +49,15 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.navigation.compose.rememberNavController
 import org.com.hcmurs.Screen
-
-val PrimaryGreen = Color(0xFF4CAF50)
-val SecondaryGreen = Color(0xFF66BB6A)
-val LightGreen = Color(0xFFE8F5E8)
-val DarkGreen = Color(0xFF2E7D32)
-
+import org.com.hcmurs.ui.theme.BlueDark
+import org.com.hcmurs.ui.theme.BlueLight
+import org.com.hcmurs.ui.theme.BluePrimary
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CCCDScreen(navController: NavController) {
     Scaffold (
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        "Liên kết CCCD gắn chip",
-                        color = Color.White,
-                        fontWeight = FontWeight.Bold
-                    )
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = PrimaryGreen
-                ),
-                navigationIcon = {
-                    IconButton (onClick = {
-                        navController.navigate(Screen.Account.route)
-                    }) {
-                        Icon(
-                            Icons.Default.ArrowBack,
-                            contentDescription = "Back",
-                            tint = Color.White
-                        )
-                    }
-                },
-                actions = {
-                    IconButton(onClick = { navController.navigate(Screen.Setting.route)}) {
-                        Icon(
-                            Icons.Default.Notifications,
-                            contentDescription = "Notifications",
-                            tint = Color.White
-                        )
-                    }
-                }
-            )
-        }
     ) { paddingValues ->
         Column (
             modifier = Modifier
@@ -110,7 +73,7 @@ fun CCCDScreen(navController: NavController) {
                     .fillMaxWidth()
                     .align(Alignment.CenterHorizontally),
                 shape = RoundedCornerShape(16.dp),
-                colors = CardDefaults.cardColors(containerColor = LightGreen),
+                colors = CardDefaults.cardColors(containerColor = BlueLight),
                 elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
             ) {
                 Column(
@@ -122,14 +85,14 @@ fun CCCDScreen(navController: NavController) {
                         Icons.Default.CreditCard,
                         contentDescription = null,
                         modifier = Modifier.size(64.dp),
-                        tint = PrimaryGreen
+                        tint = BluePrimary
                     )
                     Spacer(modifier = Modifier.height(12.dp))
                     Text(
                         "Liên kết CCCD gắn chip",
                         fontSize = 24.sp,
                         fontWeight = FontWeight.Bold,
-                        color = DarkGreen,
+                        color = BlueDark,
                         textAlign = TextAlign.Center
                     )
                 }
@@ -171,7 +134,7 @@ fun CCCDScreen(navController: NavController) {
                 "Tính năng chính",
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
-                color = DarkGreen
+                color = BlueDark
             )
 
             Row(
@@ -245,7 +208,7 @@ fun InfoCard(
                 Icon(
                     icon,
                     contentDescription = null,
-                    tint = PrimaryGreen,
+                    tint = BluePrimary,
                     modifier = Modifier.size(24.dp)
                 )
                 Spacer(modifier = Modifier.width(12.dp))
@@ -253,7 +216,7 @@ fun InfoCard(
                     title,
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
-                    color = DarkGreen
+                    color = BlueDark
                 )
             }
             Text(
@@ -276,7 +239,7 @@ fun ActionButton(
         onClick = onClick,
         modifier = modifier.height(64.dp),
         shape = RoundedCornerShape(16.dp),
-        colors = ButtonDefaults.buttonColors(containerColor = PrimaryGreen),
+        colors = ButtonDefaults.buttonColors(containerColor = BluePrimary),
         elevation = ButtonDefaults.buttonElevation(defaultElevation = 4.dp)
     ) {
         Column (
@@ -321,7 +284,7 @@ fun FeatureCard(
             Icon(
                 icon,
                 contentDescription = null,
-                tint = PrimaryGreen,
+                tint = BluePrimary,
                 modifier = Modifier.size(32.dp)
             )
             Spacer(modifier = Modifier.height(8.dp))
@@ -329,7 +292,7 @@ fun FeatureCard(
                 title,
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Bold,
-                color = DarkGreen,
+                color = BlueDark,
                 textAlign = TextAlign.Center
             )
             Text(

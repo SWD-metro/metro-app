@@ -45,6 +45,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import org.com.hcmurs.ui.theme.BlueDark
+import org.com.hcmurs.ui.theme.BlueLight
+import org.com.hcmurs.ui.theme.BluePrimary
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -52,29 +55,6 @@ fun LinkCCCDScreen(navController: NavController) {
     var cccdNumber by remember { mutableStateOf("") }
 
     Scaffold (
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        "Liên kết CCCD gắn chip",
-                        color = Color.White,
-                        fontWeight = FontWeight.Bold
-                    )
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = PrimaryGreen
-                ),
-                navigationIcon = {
-                    IconButton (onClick = { navController.popBackStack() }) {
-                        Icon(
-                            Icons.Default.ArrowBack,
-                            contentDescription = "Back",
-                            tint = Color.White
-                        )
-                    }
-                }
-            )
-        }
     ) { paddingValues ->
         Column (
             modifier = Modifier
@@ -87,7 +67,7 @@ fun LinkCCCDScreen(navController: NavController) {
             Card (
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(16.dp),
-                colors = CardDefaults.cardColors(containerColor = LightGreen),
+                colors = CardDefaults.cardColors(containerColor = BlueLight),
                 elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
             ) {
 
@@ -100,7 +80,7 @@ fun LinkCCCDScreen(navController: NavController) {
                         Icons.Default.ContactPage,
                         contentDescription = null,
                         modifier = Modifier.size(48.dp),
-                        tint = PrimaryGreen
+                        tint = BluePrimary
                     )
 
                     Spacer(modifier = Modifier.height(12.dp))
@@ -110,7 +90,7 @@ fun LinkCCCDScreen(navController: NavController) {
                         "Xác thực CCCD gắn chip Online",
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
-                        color = DarkGreen,
+                        color = BlueDark,
                         textAlign = TextAlign.Center
                     )
                     Text(
@@ -137,7 +117,7 @@ fun LinkCCCDScreen(navController: NavController) {
                         "Số CCCD *",
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Medium,
-                        color = DarkGreen
+                        color = BlueDark
                     )
 
                     OutlinedTextField(
@@ -149,14 +129,14 @@ fun LinkCCCDScreen(navController: NavController) {
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(12.dp),
                         colors = OutlinedTextFieldDefaults.colors(
-                            focusedBorderColor = PrimaryGreen,
-                            focusedLabelColor = PrimaryGreen
+                            focusedBorderColor = BluePrimary,
+                            focusedLabelColor = BluePrimary
                         ),
                         leadingIcon = {
                             Icon(
                                 Icons.Default.CreditCard,
                                 contentDescription = null,
-                                tint = PrimaryGreen
+                                tint = BluePrimary
                             )
                         }
                     )
@@ -170,7 +150,7 @@ fun LinkCCCDScreen(navController: NavController) {
                     .fillMaxWidth()
                     .height(56.dp),
                 shape = RoundedCornerShape(16.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = PrimaryGreen)
+                colors = ButtonDefaults.buttonColors(containerColor = BluePrimary)
             ) {
                 Icon(
                     Icons.Default.VerifiedUser,

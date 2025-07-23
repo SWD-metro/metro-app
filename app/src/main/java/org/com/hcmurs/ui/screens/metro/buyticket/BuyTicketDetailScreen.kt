@@ -59,9 +59,11 @@ import org.com.hcmurs.utils.CurrencyManager
 import org.com.hcmurs.utils.LanguageManager
 import org.com.hcmurs.utils.TranslationHelper
 import org.com.hcmurs.MainActivity
+import org.com.hcmurs.ui.theme.BlueDark
+import org.com.hcmurs.ui.theme.BlueLight
+import org.com.hcmurs.ui.theme.BluePrimary
 
-private val PrimaryGreen = Color(0xFF4CAF50)
-private val DarkGreen = Color(0xFF388E3C)
+
 private val LightGreenBackground = Color(0xFFE8F5E9)
 private val TextPrimaryColor = Color(0xFF212121)
 private val TextSecondaryColor = Color(0xFF757575)
@@ -92,7 +94,7 @@ fun TicketDetailTopBar(
         title = {
             Text(
                 text = title,
-                color = DarkGreen,
+                color = BlueDark,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold
             )
@@ -102,7 +104,7 @@ fun TicketDetailTopBar(
                 Icon(
                     imageVector = Icons.Default.ArrowBack,
                     contentDescription = "Back",
-                    tint = DarkGreen
+                    tint = BlueDark
                 )
             }
         },
@@ -238,13 +240,13 @@ fun TicketDetailCard(
                             ) {
                                 CircularProgressIndicator(
                                     modifier = Modifier.size(16.dp),
-                                    color = DarkGreen
+                                    color = BlueDark
                                 )
                                 Spacer(modifier = Modifier.width(8.dp))
                                 Text(
                                     text = stringResource(R.string.updating_price),
                                     fontSize = 14.sp,
-                                    color = DarkGreen
+                                    color = BlueDark
                                 )
                             }
                         }
@@ -253,7 +255,7 @@ fun TicketDetailCard(
                             text = "${stringResource(R.string.ticket_price)}: $convertedPrice",
                             fontSize = 20.sp,
                             fontWeight = FontWeight.ExtraBold,
-                            color = DarkGreen,
+                            color = BlueDark,
                             textAlign = TextAlign.Center,
                             modifier = Modifier.fillMaxWidth()
                         )
@@ -264,14 +266,14 @@ fun TicketDetailCard(
                             Text(
                                 text = "≈ ${ticketDetail.price}",
                                 fontSize = 12.sp,
-                                color = DarkGreen.copy(alpha = 0.7f),
+                                color = BlueDark.copy(alpha = 0.7f),
                                 textAlign = TextAlign.Center,
                                 modifier = Modifier.fillMaxWidth()
                             )
                             Text(
                                 text = currencyManager.getExchangeRateDisplay(),
                                 fontSize = 10.sp,
-                                color = DarkGreen.copy(alpha = 0.5f),
+                                color = BlueDark.copy(alpha = 0.5f),
                                 textAlign = TextAlign.Center,
                                 modifier = Modifier.fillMaxWidth()
                             )
@@ -333,7 +335,7 @@ fun TicketDetailScreen(
             when {
                 uiState.isLoading -> {
                     Box(Modifier.fillMaxSize(), Alignment.Center) {
-                        CircularProgressIndicator(color = PrimaryGreen)
+                        CircularProgressIndicator(color = BluePrimary)
                     }
                 }
 
@@ -368,7 +370,7 @@ fun TicketDetailScreen(
                                 .fillMaxWidth()
                                 .height(56.dp),
                             shape = RoundedCornerShape(16.dp),
-                            colors = ButtonDefaults.buttonColors(containerColor = PrimaryGreen)
+                            colors = ButtonDefaults.buttonColors(containerColor = BluePrimary)
                         ) {
                             Text(
                                 text = stringResource(org.com.hcmurs.R.string.next),
@@ -387,8 +389,8 @@ fun TicketDetailScreen(
                                 .fillMaxWidth()
                                 .height(56.dp),
                             shape = RoundedCornerShape(16.dp),
-                            border = BorderStroke(1.dp, PrimaryGreen.copy(alpha = 0.5f)),
-                            colors = ButtonDefaults.outlinedButtonColors(contentColor = PrimaryGreen)
+                            border = BorderStroke(1.dp, BluePrimary.copy(alpha = 0.5f)),
+                            colors = ButtonDefaults.outlinedButtonColors(contentColor = BluePrimary)
                         ) {
                             Text(
                                 text = stringResource(org.com.hcmurs.R.string.cancel),

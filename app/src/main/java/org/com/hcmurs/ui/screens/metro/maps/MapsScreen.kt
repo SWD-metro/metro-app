@@ -124,9 +124,6 @@ fun MapScreen(
     }
 
     Scaffold(
-        topBar = {
-            CommonTopBar(navController, stringResource(R.string.map_title))
-        }
     ) { paddingValues ->
 
         // Show loading indicator if needed

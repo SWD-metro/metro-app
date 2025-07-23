@@ -9,7 +9,7 @@ fun getNavigationRoute(screenTitle: ScreenTitle): String {
         ScreenTitle.MY_TICKET -> Screen.MyTicket.route
         ScreenTitle.REDEEM_CODE_FOR_TICKET -> Screen.RedeemCodeForTicket.route
         ScreenTitle.FEEDBACK -> Screen.Feedback.route
-        ScreenTitle.BUY_TICKET -> Screen.BuyTicket.route
+        ScreenTitle.BUY_TICKET -> Screen.TicketFlow.route
         ScreenTitle.ROUTE -> Screen.Route.route
         ScreenTitle.MAPS -> Screen.Maps.route
         ScreenTitle.VIRTUAL_TOUR -> Screen.VirtualTour.route

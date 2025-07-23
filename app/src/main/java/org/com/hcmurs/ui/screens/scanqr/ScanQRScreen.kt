@@ -159,9 +159,6 @@ fun ScanQRScreen(
     }
 
     Scaffold(
-        topBar = {
-            ScanQRTopBar(navController)
-        }
     ) { paddingValues ->
         Box(
             modifier = Modifier
