@@ -57,7 +57,6 @@ import coil3.compose.AsyncImage
 import org.com.hcmurs.R
 import org.com.hcmurs.model.BlogResponse
 import org.com.hcmurs.ui.components.topbar.BlogListTopBar
-import org.com.hcmurs.ui.screens.metro.account.PrimaryGreen
 import org.com.hcmurs.utils.formatDate
 
 @RequiresApi(Build.VERSION_CODES.O)

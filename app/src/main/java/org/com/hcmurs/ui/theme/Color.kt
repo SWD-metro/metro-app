@@ -17,6 +17,8 @@ val LightBeige = Color(0xFFB4D2BA)
 val PaleYellow = Color(0xFFDCE2AA)
 val EarthBrown = Color(0xFFB57F50)
 val ErrorRed = Color(0xFFD32F2F)
+val LightGreen = Color(0xFF64B5F6)
+val SecondaryGreen = Color(0xFF2196F3)
 
 
 val LightColorScheme = lightColorScheme(

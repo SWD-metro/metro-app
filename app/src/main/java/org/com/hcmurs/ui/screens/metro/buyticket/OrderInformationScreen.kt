@@ -64,8 +64,8 @@ import com.stripe.android.paymentsheet.PaymentSheetResultCallback
 import com.stripe.android.paymentsheet.rememberPaymentSheet
 import org.com.hcmurs.R
 import org.com.hcmurs.Screen
-import org.com.hcmurs.ui.screens.metro.account.PrimaryGreen
 import org.com.hcmurs.ui.theme.DarkGreen
+import org.com.hcmurs.ui.theme.PrimaryGreen
 import org.com.hcmurs.utils.CurrencyManager
 import org.com.hcmurs.utils.LanguageManager
 import org.com.hcmurs.utils.TranslationHelper

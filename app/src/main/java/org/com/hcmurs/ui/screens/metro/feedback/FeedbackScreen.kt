@@ -88,10 +88,9 @@ import androidx.compose.foundation.Image
 import org.com.hcmurs.ui.theme.BluePrimary
 
 
-private val SecondaryGreen = Color(0xFF66BB6A)
-private val LightGreen = Color(0xFFE8F5E8)
-private val DarkGreen = Color(0xFF2E7D32)
-private val AccentGreen = Color(0xFF81C784)
+private val SecondaryGreen = Color(0xFF6671BB)
+private val LightGreen = Color(0xFF64B5F6)
+private val DarkGreen = Color(0xFF1976D2)
 private val BackgroundGray = Color(0xFFF5F7FA)
 private val CardBackground = Color(0xFFFFFFFF)
 private val BorderColor = Color(0xFFE1E5E9)
@@ -99,6 +98,8 @@ private val TextSecondary = Color(0xFF6B7280)
 private val TextPrimary = Color(0xFF1F2937)
 private val SuccessGreen = Color(0xFF10B981)
 private val WarningOrange = Color(0xFFF59E0B)
+
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

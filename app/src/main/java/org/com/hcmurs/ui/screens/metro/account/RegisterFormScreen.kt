@@ -79,6 +79,8 @@ import java.time.format.DateTimeFormatter
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.text.input.KeyboardType
+import org.com.hcmurs.ui.theme.BlueDark
+import org.com.hcmurs.ui.theme.BluePrimary
 
 
 private val LightGray = Color(0xFFF0F0F0)
@@ -172,7 +174,7 @@ fun RegisterFormScreen(
                 onClick = { viewModel.submitRequest(context) },
                 modifier = Modifier.fillMaxWidth().height(56.dp),
                 shape = RoundedCornerShape(16.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = PrimaryGreen),
+                colors = ButtonDefaults.buttonColors(containerColor = BluePrimary),
                 enabled = !uiState.isLoading
             ) {
                 if (uiState.isLoading) {
@@ -198,7 +200,7 @@ private fun ImagePicker(
     }
 
     Column {
-        Text(label, fontWeight = FontWeight.SemiBold, color = DarkGreen)
+        Text(label, fontWeight = FontWeight.SemiBold, color = BlueDark)
         Spacer(Modifier.height(8.dp))
         Box(
             modifier = Modifier
@@ -258,7 +260,7 @@ private fun DatePicker(
     }
 
     Column {
-        Text(label, fontWeight = FontWeight.SemiBold, color = DarkGreen)
+        Text(label, fontWeight = FontWeight.SemiBold, color = BlueDark)
         Spacer(Modifier.height(8.dp))
         OutlinedTextField(
             value = selectedDate?.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) ?: "",
@@ -273,7 +275,7 @@ private fun DatePicker(
             colors = OutlinedTextFieldDefaults.colors(
                 disabledTextColor = TextSecondaryColor,
                 disabledBorderColor = Color.Gray,
-                disabledLeadingIconColor = PrimaryGreen
+                disabledLeadingIconColor = BluePrimary
             )
         )
     }
