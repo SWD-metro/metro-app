@@ -65,7 +65,7 @@ import java.util.TimeZone
 
 
 
-private val LightGreenBackground = Color(0xFFF1F8E9)
+private val LightGreenBackground = Color(0xFFE9EDF8)
 private val TextPrimaryColor = Color(0xFF212121)
 private val TextSecondaryColor = Color(0xFF757575)
 
@@ -102,11 +102,10 @@ fun MyTicketScreen(
 
 
     Scaffold (
-        containerColor = Color.Transparent
     ) { padding ->
         Column (
             modifier = Modifier
-                .padding(padding)
+//                .padding(padding)
                 .fillMaxSize()
                 .background(LightGreenBackground)
         ) {
