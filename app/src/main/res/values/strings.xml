@@ -1,173 +1,156 @@
 <resources>
     <string name="app_name">hcmurs</string>
     <string name="intro_title">
-        Welcome to <font color="#39c7a5">Digital Store</font>\n
-        a <font color="#39c7a5">Gateway</font> to the Latest Tech
+        Chào mừng đến với <font color="#39c7a5">Cửa hàng Số</font>\n
+        <font color="#39c7a5">Cánh cổng</font> đến với Công nghệ Mới nhất
     </string>
-    <string name="intro_sub_title">Sign in to explore a wide range of cutting-edge
- digital products. Don’t have an account yet?
- Register now and enjoy a seamless
-and secure shopping experience</string>
-    <string name="letgo">"Let's Get Started"</string>
-    <string name="auth_navigation">Already have an account?</string>
-    <string name="sign">"Sign in"</string>
-    <string name="change_language">Change Language</string>
-    <string name="select_language">Select Language</string>
-    <string name="language_note_title">Language Selection</string>
-    <string name="language_note_description">Choose your preferred language for a personalized experience.</string>
+    <string name="intro_sub_title">Đăng nhập để khám phá loạt sản phẩm kỹ thuật số tiên tiến.
+Chưa có tài khoản? Đăng ký ngay và tận hưởng trải nghiệm
+mua sắm liền mạch và an toàn</string>
+    <string name="letgo">"Bắt đầu nào"</string>
+    <string name="auth_navigation">Đã có tài khoản?</string>
+    <string name="sign">"Đăng nhập"</string>
+    <string name="change_language">Đổi ngôn ngữ</string>
+    <string name="select_language">Chọn ngôn ngữ</string>
+    <string name="language_note_title">Lựa chọn Ngôn ngữ</string>
+    <string name="language_note_description">Chọn ngôn ngữ bạn muốn để có trải nghiệm được cá nhân hóa.</string>
 
-    <!-- Screen Titles -->
-    <string name="buy_ticket">Buy Ticket</string>
-    <string name="route">Journey</string>
-    <string name="my_ticket">My Ticket</string>
-    <string name="maps">Map</string>
-    <string name="redeem_code_for_ticket">Redeem</string>
-    <string name="virtual_tour">Virtual Tour</string>
-    <string name="ticket_information">Ticket</string>
-    <string name="account">Account</string>
-    <string name="feedback">Feedback</string>
-    <string name="event">Event</string>
-    <string name="construction_image">Construction images</string>
-    <string name="setting">Setting</string>
-    <string name="cooperation_link">Link</string>
-    <string name="introduction">About us</string>
-    <string name="scan_qr_code">Scan QR</string>
+    <string name="buy_ticket">Mua vé</string>
+    <string name="route">Hành trình</string>
+    <string name="my_ticket">Vé của tôi</string>
+    <string name="maps">Bản đồ</string>
+    <string name="redeem_code_for_ticket">Đổi mã</string>
+    <string name="virtual_tour">Tham quan ảo</string>
+    <string name="ticket_information">Thông tin vé</string>
+    <string name="account">Tài khoản</string>
+    <string name="feedback">Góp ý</string>
+    <string name="event">Sự kiện</string>
+    <string name="construction_image">Hình ảnh thi công</string>
+    <string name="setting">Cài đặt</string>
+    <string name="cooperation_link">Liên kết</string>
+    <string name="introduction">Giới thiệu</string>
+    <string name="scan_qr_code">Quét mã QR</string>
 
-    <!-- Home Screen -->
-    <string name="news">News</string>
-    <string name="see_all">See all</string>
+    <string name="news">Tin tức</string>
+    <string name="see_all">Xem tất cả</string>
     <string name="vietnamese">Tiếng Việt</string>
     <string name="english">English</string>
-    <string name="metro_upgrade_title">New Metro system upgraded</string>
-    <string name="metro_guide_title">GO!METRO with diverse travel modes</string>
-    <string name="account_guide_title">Account usage guide</string>
-    <string name="tap_to_view">Tap to view now</string>
+    <string name="metro_upgrade_title">Hệ thống Metro mới đã được nâng cấp</string>
+    <string name="metro_guide_title">GO!METRO với các hình thức di chuyển đa dạng</string>
+    <string name="account_guide_title">Hướng dẫn sử dụng tài khoản</string>
+    <string name="tap_to_view">Chạm để xem ngay</string>
 
-    <!-- Login Screen -->
-    <string name="login_title">Welcome to HCMURS</string>
-    <string name="login_introduction">Ho Chi Minh Urban Railway System</string>
+    <string name="login_title">Chào mừng đến với HCMURS</string>
+    <string name="login_introduction">Hệ thống Đường sắt Đô thị TP.HCM</string>
     //continue_with_google
-    <string name="continue_with_google">Continue with Google</string>
-    <string name="continue_with_facebook">Continue with Facebook</string>
+    <string name="continue_with_google">Tiếp tục với Google</string>
+    <string name="continue_with_facebook">Tiếp tục với Facebook</string>
 
-    <!--  Account Screen  -->
-    <string name="account_information">Account Information</string>
-    <string name="full_name">Full name</string>
-    <string name="student_account">You are a student</string>
-    <string name="account_verification">Account Verification</string>
-    <string name="logout">Logout</string>
+    <string name="account_information">Thông tin tài khoản</string>
+    <string name="full_name">Họ và tên</string>
+    <string name="student_account">Bạn là sinh viên</string>
+    <string name="account_verification">Xác minh tài khoản</string>
+    <string name="logout">Đăng xuất</string>
 
-    <!-- Blog Screen -->
-    <string name="blog_detail">Blog Detail</string>
+    <string name="blog_detail">Chi tiết Blog</string>
 
-    <!--  ConstructionImageScreen  -->
-    <string name="construction_topbar">Construction Image</string>
+    <string name="construction_topbar">Hình ảnh Thi công</string>
 
-    <!-- Ticket Information - English -->
-    <string name="ticket_title_1">GO!METRO with various train options</string>
-    <string name="ticket_desc_1">Getting around the city has never been this convenient</string>
-    <string name="ticket_time_1">4 months ago</string>
+    <string name="ticket_title_1">GO!METRO với nhiều loại vé tàu đa dạng</string>
+    <string name="ticket_desc_1">Việc di chuyển quanh thành phố chưa bao giờ thuận tiện đến thế</string>
+    <string name="ticket_time_1">4 tháng trước</string>
 
-    <string name="ticket_title_2">Fare table for Metro Line 1 Ben Thanh - Suoi Tien</string>
-    <string name="ticket_desc_2">🔊 Students get 50% off, only 150,000 VND/month</string>
-    <string name="ticket_time_2">6 months ago</string>
+    <string name="ticket_title_2">Bảng giá vé cho tuyến Metro số 1 Bến Thành - Suối Tiên</string>
+    <string name="ticket_desc_2">🔊 Sinh viên được giảm 50%, chỉ còn 150.000 VNĐ/tháng</string>
+    <string name="ticket_time_2">6 tháng trước</string>
 
-    <string name="ticket_title_3">Proposed fare for Ben Thanh - Suoi Tien Metro Line</string>
-    <string name="ticket_desc_3">Maximum fare for Ben Thanh - Suoi Tien metro is 24,000 VND/trip</string>
-    <string name="ticket_time_3">about 1 year ago</string>
+    <string name="ticket_title_3">Đề xuất giá vé cho tuyến Metro Bến Thành - Suối Tiên</string>
+    <string name="ticket_desc_3">Giá vé tối đa cho metro Bến Thành - Suối Tiên là 24.000 VNĐ/lượt</string>
+    <string name="ticket_time_3">khoảng 1 năm trước</string>
 
-    <!--  QR Screen -->
-    <string name="place_qr_code">Place the QR code inside the frame</string>
-    <string name="camera_permission_required">Camera permission is required to scan QR codes</string>
-    <string name="grant_permission">Grant Permission</string>
+    <string name="place_qr_code">Vui lòng đặt mã QR vào trong khung</string>
+    <string name="camera_permission_required">Yêu cầu quyền truy cập máy ảnh để quét mã QR</string>
+    <string name="grant_permission">Cấp quyền</string>
 
-    <!-- Ticket Screen-->
-    <string name="ticket_screen_title">My Ticket</string>
-    <string name="ticket_screen_subtitle">View and manage your tickets</string>
-    <string name="not_found_ticket">Not found any ticket</string>
-    <string name="ticket_detail">Ticket Detail</string>
-    <string name="ticket_price">Ticket Price</string>
-    
-    <!-- Currency and Translation -->
-    <string name="validity">Validity:</string>
-    <string name="note">Note:</string>
-    <string name="description">Description:</string>
-    <string name="updating_price">Updating price...</string>
-    <string name="exchange_rate_updated">Exchange rate updated</string>
-    <string name="failed_to_update_rate">Failed to update exchange rate</string>
-    
-    <!-- Buy Ticket Screen -->
-    <string name="welcome_message">Welcome to GO!METRO</string>
-    <string name="route_ticket_section">Buy tickets by route</string>
-    <string name="student_ticket_section">Monthly tickets for students</string>
-    <string name="other_tickets_section">Other ticket types</string>
-    <string name="loading_tickets">Loading tickets...</string>
-    <string name="error_loading_tickets">Error loading data: %s</string>
-    <string name="student_verification_required">You are not a student, please verify to continue.</string>
-    <string name="notification">Notification</string>
-    <string name="ok">OK</string>
-    <string name="loading_routes">Loading routes...</string>
-    <string name="error_loading_routes">Error loading routes: %s</string>
-    
-    <!-- Order Information Screen -->
-    <string name="order_information">Order Information</string>
-    <string name="payment_method">Payment Method</string>
-    <string name="select_payment_method">Select payment method</string>
-    <string name="payment_info">Payment Information</string>
-    <string name="product">Product:</string>
-    <string name="unit_price">Unit Price:</string>
-    <string name="quantity">Quantity:</string>
-    <string name="subtotal">Subtotal:</string>
-    <string name="total_price">Total Price:</string>
-    <string name="final_amount">Final Amount:</string>
-    <string name="ticket_type">Ticket Type:</string>
-    <string name="validity_period">Validity Period:</string>
-    <string name="terms_agreement">By clicking Pay, you agree to Metro\'s terms and conditions</string>
-    <string name="terms_title">Terms of Service</string>
-    <string name="terms_content">By using this service, you agree to comply with all regulations regarding public passenger transportation. Purchased tickets cannot be refunded. Please keep your ticket carefully for inspection when required. Any fraudulent activities will be handled according to legal regulations. Thank you for using Metro services.</string>
-    <string name="understood">Understood</string>
-    <string name="pay_amount">Pay: %s</string>
-    <string name="processing">Processing...</string>
-    <string name="loading_ellipsis">Loading...</string>
-    
-    <!-- My Ticket Screen -->
-    <string name="not_used">Not Used</string>
-    <string name="used">Used</string>
-    <string name="expired">Expired</string>
-    <string name="no_tickets_in_category">You have no tickets in this category</string>
-    <string name="error_label">Error: %s</string>
-    <string name="order_code">Order Code:</string>
-    <string name="route_label">Route:</string>
-    <string name="status_label">Status:</string>
-    <string name="ticket_price_label">Ticket Price:</string>
-    <string name="validity_label">Validity:</string>
-    <string name="use_ticket">USE TICKET</string>
-    <string name="welcome_subtitle">Welcome to GO!METRO</string>
-    <string name="price_label">$</string>
-    <string name="ticket_digital">Ticket Digital</string>
-    <string name="scan_qr_code_guide">Please scan the QR code at the ticket gate</string>
-    <string name="code_refresh">Ticket QR will be refresh after:</string>
-    <string name="refresh_code">Refresh Ticket QR</string>
-    <string name="qr_code_not_loaded">Unable to load QR code.</string>
+    <string name="ticket_screen_title">Vé của tôi</string>
+    <string name="ticket_screen_subtitle">Xem và quản lý vé của bạn</string>
+    <string name="not_found_ticket">Không tìm thấy vé nào</string>
+    <string name="ticket_detail">Chi tiết vé</string>
+    <string name="ticket_price">Giá vé</string>
 
-    <!--    Map Screen-->
-    <string name="map_title">Map</string>
+    <string name="validity">Hiệu lực:</string>
+    <string name="note">Lưu ý:</string>
+    <string name="description">Mô tả:</string>
+    <string name="updating_price">Đang cập nhật giá...</string>
+    <string name="exchange_rate_updated">Đã cập nhật tỷ giá</string>
+    <string name="failed_to_update_rate">Cập nhật tỷ giá thất bại</string>
 
-    <!--    Journey Screen-->
-    <string name="journey_title">Journey</string>
+    <string name="welcome_message">Chào mừng đến với GO!METRO</string>
+    <string name="route_ticket_section">Mua vé theo tuyến</string>
+    <string name="student_ticket_section">Vé tháng cho sinh viên</string>
+    <string name="other_tickets_section">Các loại vé khác</string>
+    <string name="loading_tickets">Đang tải vé...</string>
+    <string name="error_loading_tickets">Lỗi tải dữ liệu: %s</string>
+    <string name="student_verification_required">Bạn chưa phải là sinh viên, vui lòng xác minh để tiếp tục.</string>
+    <string name="notification">Thông báo</string>
+    <string name="ok">Đồng ý</string>
+    <string name="loading_routes">Đang tải các tuyến đường...</string>
+    <string name="error_loading_routes">Lỗi tải các tuyến đường: %s</string>
 
-    <!-- Utilities-->
-    <string name="authentication_loading">Authenticating...</string>
-    <string name="loading">Loading...</string>
-    <string name="error">An error occurred</string>
-    <string name="not_updated">Not updated</string>
-    <string name="no_data">No data available</string>
-    <string name="not_found">Not found</string>
-    <string name="try_search_again">Try searching again with difference keyword</string>
-    <string name="cancel">Cancel</string>
-    <string name="next">Next</string>
-    <string name="previous">Previous</string>
-    <string name="view">View</string>
-    <string name="creating_order">Creating order...</string>
+    <string name="order_information">Thông tin đơn hàng</string>
+    <string name="payment_method">Phương thức thanh toán</string>
+    <string name="select_payment_method">Chọn phương thức thanh toán</string>
+    <string name="payment_info">Thông tin thanh toán</string>
+    <string name="product">Sản phẩm:</string>
+    <string name="unit_price">Đơn giá:</string>
+    <string name="quantity">Số lượng:</string>
+    <string name="subtotal">Tạm tính:</string>
+    <string name="total_price">Tổng cộng:</string>
+    <string name="final_amount">Tổng thanh toán:</string>
+    <string name="ticket_type">Loại vé:</string>
+    <string name="validity_period">Thời hạn sử dụng:</string>
+    <string name="terms_agreement">Bằng việc nhấn Thanh toán, bạn đồng ý với các điều khoản và điều kiện của Metro</string>
+    <string name="terms_title">Điều khoản Dịch vụ</string>
+    <string name="terms_content">Khi sử dụng dịch vụ này, bạn đồng ý tuân thủ mọi quy định về vận tải hành khách công cộng. Vé đã mua không thể hoàn lại. Vui lòng giữ vé cẩn thận để xuất trình khi có yêu cầu. Mọi hành vi gian lận sẽ bị xử lý theo quy định của pháp luật. Cảm ơn bạn đã sử dụng dịch vụ của Metro.</string>
+    <string name="understood">Đã hiểu</string>
+    <string name="pay_amount">Thanh toán: %s</string>
+    <string name="processing">Đang xử lý...</string>
+    <string name="loading_ellipsis">Đang tải...</string>
+
+    <string name="not_used">Chưa sử dụng</string>
+    <string name="used">Đã sử dụng</string>
+    <string name="expired">Đã hết hạn</string>
+    <string name="no_tickets_in_category">Bạn không có vé nào trong mục này</string>
+    <string name="error_label">Lỗi: %s</string>
+    <string name="order_code">Mã đơn hàng:</string>
+    <string name="route_label">Tuyến:</string>
+    <string name="status_label">Trạng thái:</string>
+    <string name="ticket_price_label">Giá vé:</string>
+    <string name="validity_label">Hiệu lực:</string>
+    <string name="use_ticket">SỬ DỤNG VÉ</string>
+    <string name="welcome_subtitle">Chào mừng đến với GO!METRO</string>
+    <string name="price_label">Giá:</string>
+    <string name="ticket_digital">Vé điện tử</string>
+    <string name="scan_qr_code_guide">Vui lòng quét mã QR tại cổng soát vé</string>
+    <string name="code_refresh">Mã QR của vé sẽ được làm mới sau:</string>
+    <string name="refresh_code">Làm mới mã QR</string>
+    <string name="qr_code_not_loaded">Không thể tải mã QR.</string>
+
+    <string name="map_title">Bản đồ</string>
+
+    <string name="journey_title">Hành trình</string>
+
+    <string name="authentication_loading">Đang xác thực...</string>
+    <string name="loading">Đang tải...</string>
+    <string name="error">Đã xảy ra lỗi</string>
+    <string name="not_updated">Chưa cập nhật</string>
+    <string name="no_data">Không có dữ liệu</string>
+    <string name="not_found">Không tìm thấy</string>
+    <string name="try_search_again">Thử tìm lại với từ khóa khác</string>
+    <string name="cancel">Hủy</string>
+    <string name="next">Tiếp theo</string>
+    <string name="previous">Trước đó</string>
+    <string name="view">Xem</string>
+    <string name="creating_order">Đang tạo đơn hàng...</string>
 
 </resources>

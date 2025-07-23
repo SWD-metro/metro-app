@@ -193,7 +193,7 @@ fun OrderFareInfoScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues)
+//                .padding(paddingValues)
                 .background(LightGreenBackground)
                 .verticalScroll(rememberScrollState())
                 .padding(16.dp),

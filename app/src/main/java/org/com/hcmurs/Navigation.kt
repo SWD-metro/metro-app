@@ -236,6 +236,8 @@ fun Navigation(
                     Screen.OrderFareInfo.route -> "Thông tin đơn hàng"
                     Screen.BuyTicketDetail.route -> "Chi tiết vé"
                     Screen.OrderInfo.route -> "Thông tin vé"
+
+
 //                    Screen.Search.route -> "Tìm kiếm"
 //                    Screen.Notification.route -> "Thông báo"
                     else -> "Metro App"
