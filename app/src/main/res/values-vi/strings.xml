@@ -171,4 +171,18 @@ and secure shopping experience</string>
     <string name="view">Xem</string>
     <string name="creating_order">Đang tạo đơn hàng...</string>
 
+
+    <string name="your_tickets">Vé Của Bạn</string>
+    <string name="no_active_tickets">Không có vé nào đang hoạt động</string>
+    <string name="unknown_station">Không rõ</string>
+    <string name="fastest_tag">Nhanh nhất</string>
+    <string name="departure_info">Khởi hành: %1$s</string>
+    <string name="departure">Điểm đi</string>
+    <string name="arrival">Điểm đến</string>
+    <string name="est_35_min">Ước tính 35 phút</string>
+    <string name="train_arrival_info">Tuyến 1 | Tàu đến Ga %1$s lúc 15:30</string>
+    <string name="view_ticket_qr_code">Xem Mã QR Của Vé</string>
+    <string name="no_ticket_message">Bạn chưa có vé</string>
+    <string name="book_ticket_now">Đặt vé ngay</string>
+
 </resources>

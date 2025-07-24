@@ -216,7 +216,7 @@ fun ScanQRScreen(
                                 containerColor = if (isSuccess) Color.White else Color(0xFFFBE9E7), // Light red for error
                                 titleContentColor = if (isSuccess) Color.Black else Color(0xFFD32F2F), // Red for error title
                                 textContentColor = if (isSuccess) Color.DarkGray else Color(0xFFD32F2F), // Red for error text
-                                iconContentColor = if (isSuccess) Color(0xFF4CAF50) else Color(0xFFD32F2F) // Green for success, red for error
+                                iconContentColor = if (isSuccess) Color(0xFF4C56AF) else Color(0xFFD32F2F) // Green for success, red for error
                             )
                         }
                     }

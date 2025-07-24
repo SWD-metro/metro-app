@@ -155,6 +155,7 @@ sealed class Screen(val route: String) {
     object CooperationLink : Screen("cooperationLink")
     object Introduction : Screen("introduction")
     object StationSelection : Screen("stationSelect")
+    object TicketQRCodeScreen : Screen("ticketQRCodeScreen")
     object ScanQrCode : Screen("scanQR/{stationId}/{stationName}") {
         fun createRoute(stationId: Int, stationName: String) =
             "scanQR/$stationId/$stationName"
@@ -238,6 +239,7 @@ fun Navigation(
                     Screen.OrderFareInfo.route -> "Thông tin đơn hàng"
                     Screen.BuyTicketDetail.route -> "Chi tiết vé"
                     Screen.OrderInfo.route -> "Thông tin vé"
+                    Screen.TicketQRCodeScreen.route -> "Mã QR"
 
 
 //                    Screen.Search.route -> "Tìm kiếm"

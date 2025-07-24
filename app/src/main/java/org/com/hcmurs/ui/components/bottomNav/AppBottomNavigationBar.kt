@@ -43,7 +43,7 @@ fun AppBottomNavigationBar(
 ) {
     val navItems = listOf(
         BottomNavItem(Icons.Default.Home, "Home", Screen.Home.route),
-        BottomNavItem(Icons.Default.Search, "Search", Screen.BuyTicket.route),
+        BottomNavItem(Icons.Default.Search, "Search", Screen.TicketFlow.route),
         BottomNavItem(Icons.Default.QrCodeScanner, "My Ticket", Screen.MyTicket.route),
         BottomNavItem(Icons.Default.Settings, "Account", Screen.Account.route)
     )
