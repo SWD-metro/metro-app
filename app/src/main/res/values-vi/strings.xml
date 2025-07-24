@@ -184,5 +184,6 @@ and secure shopping experience</string>
     <string name="view_ticket_qr_code">Xem Mã QR Của Vé</string>
     <string name="no_ticket_message">Bạn chưa có vé</string>
     <string name="book_ticket_now">Đặt vé ngay</string>
+    
 
 </resources>
