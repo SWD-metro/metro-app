@@ -8,6 +8,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Subway
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect // Thêm import này
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -23,7 +24,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import org.com.hcmurs.R
-import org.com.hcmurs.Screen // Giả sử bạn có Screen.BuyTicket
+import org.com.hcmurs.Screen
 import org.com.hcmurs.repositories.apis.order.OrderWithTicketDetails
 import org.com.hcmurs.ui.theme.PrimaryGreen
 import java.text.SimpleDateFormat
@@ -40,6 +41,10 @@ fun YourTicket(
     navController: NavController,
     viewModel: MyTicketViewModel = hiltViewModel()
 ) {
+
+    LaunchedEffect(Unit) {
+    }
+
     val uiState by viewModel.uiState.collectAsState()
 
     val activeTicketOrder = remember(uiState.orders) {
@@ -61,7 +66,7 @@ fun YourTicket(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .defaultMinSize(minHeight = 150.dp), // Tăng chiều cao tối thiểu để vừa button
+                .defaultMinSize(minHeight = 150.dp),
             contentAlignment = Alignment.Center
         ) {
             when {
@@ -77,7 +82,6 @@ fun YourTicket(
                 activeTicketOrder != null -> {
                     ActiveTicketCard(navController = navController, order = activeTicketOrder)
                 }
-                // ✨ THAY ĐỔI: Cập nhật giao diện khi không có vé
                 else -> {
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
@@ -92,9 +96,6 @@ fun YourTicket(
                         Spacer(modifier = Modifier.height(16.dp))
                         Button(
                             onClick = {
-                                // Giả sử bạn có một đối tượng Screen.BuyTicket để điều hướng
-                                // navController.navigate(Screen.BuyTicket.route)
-                                // Tạm thời dùng một route giả định:
                                 navController.navigate("buy_ticket_screen")
                             },
                             colors = ButtonDefaults.buttonColors(containerColor = primaryBlue),
@@ -113,6 +114,7 @@ fun YourTicket(
 }
 
 
+// ... Các hàm còn lại giữ nguyên ...
 @Composable
 private fun ActiveTicketCard(navController: NavController, order: OrderWithTicketDetails) {
     val ticket = order.ticket!!
