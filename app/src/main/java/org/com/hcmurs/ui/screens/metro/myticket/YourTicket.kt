@@ -8,7 +8,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Subway
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect // Thêm import này
+import androidx.compose.runtime.LaunchedEffect // Đảm bảo đã import
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -25,6 +25,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import org.com.hcmurs.R
 import org.com.hcmurs.Screen
+// Giả định bạn có các data class này. Nếu chúng ở file khác, hãy import đúng.
 import org.com.hcmurs.repositories.apis.order.OrderWithTicketDetails
 import org.com.hcmurs.ui.theme.PrimaryGreen
 import java.text.SimpleDateFormat
@@ -41,12 +42,15 @@ fun YourTicket(
     navController: NavController,
     viewModel: MyTicketViewModel = hiltViewModel()
 ) {
-
+    // ✨ BƯỚC 1: Ra lệnh cho ViewModel tải dữ liệu khi Composable được hiển thị lần đầu.
     LaunchedEffect(Unit) {
+        viewModel.fetchUserOrders()
     }
 
+    // ✨ BƯỚC 2: Lắng nghe trạng thái từ ViewModel.
     val uiState by viewModel.uiState.collectAsState()
 
+    // ✨ BƯỚC 3: Lọc ra vé "NOT_USED" đầu tiên từ danh sách. Logic này đã chính xác.
     val activeTicketOrder = remember(uiState.orders) {
         uiState.orders.firstOrNull { it.ticket?.status.equals("NOT_USED", ignoreCase = true) }
     }
@@ -69,19 +73,24 @@ fun YourTicket(
                 .defaultMinSize(minHeight = 150.dp),
             contentAlignment = Alignment.Center
         ) {
+            // ✨ BƯỚC 4: Hiển thị giao diện tương ứng với từng trạng thái.
             when {
+                // Trạng thái đang tải
                 uiState.isLoading -> {
                     CircularProgressIndicator(color = PrimaryGreen)
                 }
+                // Trạng thái có lỗi
                 uiState.errorMessage != null -> {
                     Text(
                         text = stringResource(R.string.error_label, uiState.errorMessage!!),
                         color = Color.Red
                     )
                 }
+                // Tải thành công và tìm thấy vé hợp lệ
                 activeTicketOrder != null -> {
                     ActiveTicketCard(navController = navController, order = activeTicketOrder)
                 }
+                // Tải thành công nhưng không có vé hợp lệ
                 else -> {
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
@@ -114,7 +123,6 @@ fun YourTicket(
 }
 
 
-// ... Các hàm còn lại giữ nguyên ...
 @Composable
 private fun ActiveTicketCard(navController: NavController, order: OrderWithTicketDetails) {
     val ticket = order.ticket!!
@@ -275,5 +283,6 @@ private fun formatDisplayDate(dateString: String): String {
 @Composable
 fun YourTicketPreview() {
     val navController = rememberNavController()
+    // Preview sẽ không có ViewModel nên sẽ hiển thị trạng thái "không có vé"
     YourTicket(navController = navController)
 }
